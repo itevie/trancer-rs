@@ -1,14 +1,17 @@
-mod command;
+mod cmd_util;
 mod commands;
+mod database;
+mod models;
 
-use std::env;
+use crate::cmd_util::TrancerResponseType;
+use crate::database::Database;
 use dotenvy::dotenv;
 use serenity::{
     async_trait,
     model::{channel::Message, gateway::Ready},
     prelude::*,
 };
-use crate::command::TrancerResponseType;
+use std::env;
 
 struct Handler;
 
@@ -21,14 +24,22 @@ impl EventHandler for Handler {
 
         let commands = commands::init();
         let Some(cmd) = commands.iter().find(|cmd| cmd.name == msg.content) else {
-          return;
+            return;
         };
 
-        let response = (cmd.handler)(&ctx, &msg).await;
+        let response = match (cmd.handler)(ctx.clone(), msg.clone()).await {
+            Ok(response) => response,
+            Err(err) => {
+                msg.reply(&ctx, err.to_string()).await.unwrap();
+                return;
+            }
+        };
 
         match response {
-            TrancerResponseType::Content(string) => {msg.reply(&ctx, string).await.unwrap();},
-            TrancerResponseType::None => ()
+            TrancerResponseType::Content(string) => {
+                msg.reply(&ctx, string).await.unwrap();
+            }
+            TrancerResponseType::None => (),
         };
     }
 
@@ -41,8 +52,7 @@ impl EventHandler for Handler {
 async fn main() {
     dotenv().ok();
 
-    let token = env::var("BOT_TOKEN")
-        .expect("Expected a token in the environment");
+    let token = env::var("BOT_TOKEN").expect("Expected a token in the environment");
 
     let intents = GatewayIntents::GUILD_MESSAGES | GatewayIntents::MESSAGE_CONTENT;
 
@@ -50,6 +60,13 @@ async fn main() {
         .event_handler(Handler)
         .await
         .expect("Err creating client");
+
+    {
+        let mut data = client.data.write().await;
+
+        let db = Database::new();
+        data.insert::<Database>(db);
+    }
 
     if let Err(why) = client.start().await {
         println!("Client error: {:?}", why);

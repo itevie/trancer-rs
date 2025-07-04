@@ -1,17 +1,26 @@
-use std::sync::Arc;
-use crate::command::{TrancerCommand, TrancerResponseType};
+use crate::models::user_data::{UserData, UserDataFields};
+use crate::cmd_util::trancer_handler;
+use crate::cmd_util::{TrancerCommand, TrancerResponseType};
+use crate::command_file;
 
-pub fn init() -> Vec<TrancerCommand> {
-    vec![
-        TrancerCommand {
-            name: "ping".to_string(),
-            description: "This is a test".to_string(),
-            aliases: None,
-            flags: None,
+command_file! {
+    TrancerCommand {
+        name: "ping".to_string(),
+        description: "This is a test".to_string(),
+        details: Default::default(),
 
-            handler: Arc::new(|ctx, msg| Box::pin(async move {
-                TrancerResponseType::Content("Hi!".to_string())
-            }))
-        }
-    ]
+        handler: trancer_handler!(|ctx, msg| {
+            let user = UserData::fetch(&ctx, msg.author.id, msg.guild_id.unwrap()).await?;
+
+            msg.reply(
+                ctx.clone(),
+                format!("Your birthday before: {:?}", user.birthday),
+            )
+            .await?;
+            user.update_key(&ctx, UserDataFields::birthday, &"2007/02/28")
+                .await?;
+
+            Ok(TrancerResponseType::None)
+        }),
+    }
 }

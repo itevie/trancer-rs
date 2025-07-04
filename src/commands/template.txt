@@ -1,0 +1,15 @@
+use crate::cmd_util::{trancer_handler, TrancerCommand, TrancerResponseType};
+use crate::command_file;
+
+command_file!(
+    TrancerCommand {
+        name: "".to_string(),
+        aliases: None,
+        description: "".to_string(),
+        flags: None,
+
+        handler: trancer_handler!(|ctx, msg| {
+            Ok(TrancerResponseType::None)
+        })
+    }
+);
