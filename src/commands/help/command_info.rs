@@ -5,6 +5,7 @@ use crate::cmd_util::{
     trancer_handler, ArgumentError, CommandTrait, TrancerCommand, TrancerDetails, TrancerError,
     TrancerResponseType,
 };
+use crate::util::embeds::create_embed;
 use crate::{command_argument_struct, command_file};
 use serenity::all::{CreateEmbed, CreateMessage};
 use std::collections::HashMap;
@@ -37,7 +38,3 @@ command_file!(TrancerCommand::<ComamndInfoArgs> {
         ))
     })
 });
-
-fn create_embed() -> CreateEmbed {
-    CreateEmbed::new().title("content")
-}

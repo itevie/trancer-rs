@@ -5,13 +5,13 @@ use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{
     ArgumentError, TrancerCommand, TrancerDetails, TrancerError, TrancerResponseType,
 };
+use crate::models::user_data::UserData;
 use crate::models::user_imposition::{ImpositionTag, UserImposition};
+use crate::util::lang::pronoun;
 use crate::{command_argument_struct, command_file};
+use rand::random;
 use serenity::all::User;
 use std::collections::HashMap;
-use rand::random;
-use crate::models::user_data::UserData;
-use crate::util::lang::pronoun;
 
 command_argument_struct!(SendTriggerArgs {
    user: User, PCACV::User
@@ -43,7 +43,8 @@ command_file!(TrancerCommand::<SendTriggerArgs> {
 
     handler: trancer_handler!(|ctx, args| {
         let user_data = UserData::fetch(&ctx.sy, args.user.id, ctx.msg.guild_id.unwrap()).await?;
-        let mut tags: Vec<ImpositionTag> = vec![ImpositionTag::from(user_data.hypno_status.clone())];
+        let mut tags: Vec<ImpositionTag> =
+            vec![ImpositionTag::from(user_data.hypno_status.clone())];
 
         if args.user.id != ctx.msg.author.id {
             tags.push(ImpositionTag::ByOthers);
@@ -55,13 +56,15 @@ command_file!(TrancerCommand::<SendTriggerArgs> {
         if triggers.is_empty() {
             return Ok(TrancerResponseType::Content(format!(
                 "I couldn't find a trigger for **{}**!\nNote: {} status is: **{:?}**",
-                pronoun(&ctx.msg.author, &args.user , "you", "$name"),
+                pronoun(&ctx.msg.author, &args.user, "you", "$name"),
                 pronoun(&ctx.msg.author, &args.user, "you", "their"),
                 user_data.hypno_status
-            )))
+            )));
         };
 
         let number = random::<usize>() % triggers.len();
-        Ok(TrancerResponseType::Content(triggers.get(number).unwrap().what.clone()))
+        Ok(TrancerResponseType::Content(
+            triggers.get(number).unwrap().what.clone(),
+        ))
     })
 });
