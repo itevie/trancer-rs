@@ -1750,6 +1750,7 @@ dependencies = [
  "dotenvy",
  "log",
  "once_cell",
+ "rand",
  "rusqlite",
  "serenity",
  "tokio",

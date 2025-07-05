@@ -1,4 +1,4 @@
-use crate::cmd_util::{CommandTrait};
+use crate::cmd_util::CommandTrait;
 
 mod command_info;
 mod ping;

@@ -1,10 +1,12 @@
 use crate::cmd_util::CommandTrait;
 
 mod help;
+mod hypnosis;
 
 pub fn init() -> Vec<Box<dyn CommandTrait>> {
     let mut commands = vec![];
     commands.extend(help::init());
+    commands.extend(hypnosis::init());
     commands
 }
 

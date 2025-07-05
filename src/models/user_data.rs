@@ -1,9 +1,29 @@
 use crate::database::Database;
 use crate::impl_from_row;
+use rusqlite::types::{FromSql, FromSqlError, FromSqlResult};
 use rusqlite::Error::QueryReturnedNoRows;
 use rusqlite::ToSql;
 use serenity::all::{GuildId, UserId};
 use serenity::client::Context;
+
+#[derive(Debug, Clone)]
+pub enum HypnoStatus {
+    Green,
+    Yellow,
+    Red,
+}
+
+impl FromSql for HypnoStatus {
+    fn column_result(value: rusqlite::types::ValueRef<'_>) -> FromSqlResult<Self> {
+        let s = value.as_str()?;
+        match s {
+            "green" => Ok(HypnoStatus::Green),
+            "yellow" => Ok(HypnoStatus::Yellow),
+            "red" => Ok(HypnoStatus::Red),
+            _ => Err(FromSqlError::InvalidType),
+        }
+    }
+}
 
 impl_from_row!(UserData, UserDataFields,
     user_id: String,
@@ -22,12 +42,12 @@ impl_from_row!(UserData, UserDataFields,
     allow_requests: bool,
     allow_triggers: bool,
     count_ruined: i32,
-    hypno_status: String,
+    hypno_status: HypnoStatus,
     relationships: bool,
     count_banned: bool,
     birthday: Option<String>,
     talking_streak: i32,
-    last_talking_streak: String,
+    last_talking_streak: Option<String>,
     highest_talking_streak: i32,
 );
 

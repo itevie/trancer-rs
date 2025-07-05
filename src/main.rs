@@ -2,16 +2,22 @@ mod cmd_util;
 mod commands;
 mod database;
 mod models;
+mod util;
 
 use crate::cmd_util::arg_parser::parse_args;
-use crate::cmd_util::TrancerResponseType;
+use crate::cmd_util::{TrancerResponseType, TrancerRunnerContext};
 use crate::database::Database;
+use crate::models::server_settings::ServerSettings;
+use crate::models::user_data::UserData;
 use dotenvy::dotenv;
+use rusqlite::fallible_iterator::FallibleIterator;
+use serenity::all::{Channel, ChannelType};
 use serenity::{
     async_trait,
     model::{channel::Message, gateway::Ready},
     prelude::*,
 };
+use std::any::Any;
 use std::env;
 
 struct Handler;
@@ -23,15 +29,37 @@ impl EventHandler for Handler {
             return;
         }
 
-        let prefix = "!";
+        // Check if it's sent in a guild text channel
+        let channel = if let Ok(channel) = msg.channel_id.to_channel(&ctx).await {
+            match channel {
+                Channel::Guild(channel) => {
+                    if channel.kind == ChannelType::Text {
+                        channel
+                    } else {
+                        return;
+                    }
+                }
+                _ => return,
+            }
+        } else {
+            return;
+        };
 
-        if !msg.content.starts_with(prefix) {
+        let server_settings = match ServerSettings::fetch(&ctx, msg.guild_id.unwrap()).await {
+            Ok(ok) => ok,
+            Err(e) => {
+                eprintln!("{:#?}", e);
+                return;
+            }
+        };
+
+        if !msg.content.starts_with(server_settings.prefix.as_str()) {
             return;
         }
 
-        let contents = msg.content[prefix.len()..].trim();
+        let contents = msg.content[server_settings.prefix.len()..].trim();
         let commands = commands::init();
-        let mut args = parse_args(contents.to_string()).unwrap();
+        let mut args = parse_args(contents.to_string());
 
         if args.args.is_empty() {
             return;
@@ -47,7 +75,23 @@ impl EventHandler for Handler {
             return;
         };
 
-        let response = match cmd.run(ctx.clone(), msg.clone(), args).await {
+        let user_data = match UserData::fetch(&ctx, msg.author.id, msg.guild_id.unwrap()).await {
+            Ok(ok) => ok,
+            Err(e) => {
+                eprintln!("{:#?}", e);
+                return;
+            }
+        };
+
+        let context = TrancerRunnerContext {
+            sy: ctx.clone(),
+            msg: msg.clone(),
+            server_settings,
+            channel,
+            user_data,
+        };
+
+        let response = match cmd.run(context, args).await {
             Ok(response) => response,
             Err(err) => {
                 msg.reply(&ctx, err.to_string()).await.unwrap();
@@ -58,6 +102,10 @@ impl EventHandler for Handler {
         match response {
             TrancerResponseType::Content(string) => {
                 msg.reply(&ctx, string).await.unwrap();
+            }
+            TrancerResponseType::Big(big) => {
+                let new = big.reference_message(&msg);
+                msg.channel_id.send_message(&ctx.http, new).await.unwrap();
             }
             TrancerResponseType::None => (),
         };

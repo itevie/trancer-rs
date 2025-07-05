@@ -1,12 +1,12 @@
-use serenity::all::Message;
+use crate::cmd_util::arg_parser::{map_and_validate, CommandArgumentStruct, ParsedArguments};
+use crate::cmd_util::args::TrancerArguments;
+use serenity::all::{GuildChannel, Message};
+use serenity::builder::CreateMessage;
 use serenity::client::Context;
 use std::collections::HashMap;
 use std::future::Future;
 use std::pin::Pin;
 use std::sync::Arc;
-
-use crate::cmd_util::arg_parser::{map_and_validate, CommandArgumentStruct, ParsedArguments};
-use crate::cmd_util::args::TrancerArguments;
 
 pub mod arg_parser;
 pub mod args;
@@ -24,6 +24,9 @@ pub enum TrancerResponseType {
 
     /// Reply to the user with a new message of String
     Content(String),
+
+    /// For returning a full MessageCreate
+    Big(CreateMessage),
 }
 
 /// The future returned from commands
@@ -32,12 +35,12 @@ pub type TrancerFuture<'a> =
 
 /// The type of the command handler
 pub type TrancerHandler<T> =
-    Arc<dyn Fn(Context, Message, T) -> TrancerFuture<'static> + Send + Sync>;
+    Arc<dyn Fn(TrancerRunnerContext, T) -> TrancerFuture<'static> + Send + Sync>;
 
 /// This is just some magic to allow typing to work
 pub trait CommandTrait: Send + Sync {
     /// The function to run the command
-    fn run(&self, ctx: Context, msg: Message, args: ParsedArguments) -> TrancerFuture;
+    fn run(&self, ctx: TrancerRunnerContext, args: ParsedArguments) -> TrancerFuture;
 
     /// Get the name of the command
     fn name(&self) -> String;
@@ -59,17 +62,17 @@ pub struct TrancerCommand<T: CommandArgumentStruct> {
 impl<T: CommandArgumentStruct + Send + 'static + std::fmt::Debug> CommandTrait
     for TrancerCommand<T>
 {
-    fn run(&self, ctx: Context, msg: Message, args: ParsedArguments) -> TrancerFuture {
+    fn run(&self, ctx: TrancerRunnerContext, args: ParsedArguments) -> TrancerFuture {
         Box::pin(async move {
             let arg_schema = self.details().arguments;
 
             let mapped_args = if let Some(arg_schema) = arg_schema {
-                map_and_validate::<T>(args, arg_schema)?
+                map_and_validate::<T>(args, arg_schema, &ctx).await?
             } else {
                 T::construct(HashMap::new())?
             };
 
-            (self.handler)(ctx, msg, *mapped_args).await
+            (self.handler)(ctx, *mapped_args).await
         })
     }
 
@@ -86,6 +89,15 @@ impl<T: CommandArgumentStruct + Send + 'static + std::fmt::Debug> CommandTrait
     }
 }
 
+#[derive(Clone)]
+pub struct TrancerRunnerContext {
+    pub sy: Context,
+    pub msg: Message,
+    pub channel: GuildChannel,
+    pub server_settings: ServerSettings,
+    pub user_data: UserData,
+}
+
 #[derive(Default, Clone)]
 pub struct TrancerDetails {
     pub aliases: Option<Vec<String>>,
@@ -95,10 +107,13 @@ pub struct TrancerDetails {
 
 /// Helps create the handler for commands
 macro_rules! trancer_handler {
-    (|$ctx:ident, $msg:ident, $args:ident| $body:block) => {
-        std::sync::Arc::new(move |$ctx, $msg, $args| {
+    (|$ctx:ident, $args:ident| $body:block) => {
+        std::sync::Arc::new(move |$ctx, $args| {
             Box::pin(async move $body)
         })
     };
 }
 pub(crate) use trancer_handler;
+
+use crate::models::server_settings::ServerSettings;
+use crate::models::user_data::UserData;

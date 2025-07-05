@@ -13,10 +13,8 @@ command_file! {
         description: "This is a test".to_string(),
         details: Default::default(),
 
-        handler: trancer_handler!(|ctx, msg, args| {
-            msg.reply(&ctx, format!("{:#?}", args)).await?;
-
-            Ok(TrancerResponseType::None)
+        handler: trancer_handler!(|ctx, args| {
+            Ok(TrancerResponseType::Content("pong".to_string()))
         }),
     }
 }
