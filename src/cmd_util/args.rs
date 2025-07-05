@@ -1,20 +1,17 @@
+#[derive(Debug, Clone)]
 pub struct TrancerArguments {
-    pub required: i32,
-    pub args: Vec<Argument>
+    pub required: usize,
+    pub args: Vec<Argument>,
 }
 
-pub enum StringArgTypeFlag {
-    TakeContent,
-    TakeRest,
-}
-
+#[derive(Debug, Clone)]
 pub struct Argument {
     pub name: String,
     pub details: ArgumentDetails,
     pub t: ArgType,
 }
 
-#[derive(Default)]
+#[derive(Default, Clone, Debug)]
 pub struct ArgumentDetails {
     pub description: Option<String>,
     pub must_be: Option<String>,
@@ -22,18 +19,38 @@ pub struct ArgumentDetails {
     pub wick_style: Option<WickArgumentOptions>,
 }
 
-#[derive(Default)]
+#[derive(Default, Debug, Clone)]
 pub struct WickArgumentOptions {
     pub aliases: Option<Vec<String>>,
 }
 
+#[derive(Debug, Clone)]
 pub enum ArgType {
     Any,
     Boolean,
-    String { flags: Option<Vec<StringArgTypeFlag>> },
+    String {
+        flags: Option<Vec<StringArgTypeFlag>>,
+    },
     Attachment,
-    Number { min: Option<i32>, max: Option<i32> },
-    Array { inner: Box<ArgType> },
-    Currency { min: Option<i32>, max: Option<i32>, allow_negative: bool },
-    User { allow_bots: bool },
+    Number {
+        min: Option<i32>,
+        max: Option<i32>,
+    },
+    Array {
+        inner: Box<ArgType>,
+    },
+    Currency {
+        min: Option<i32>,
+        max: Option<i32>,
+        allow_negative: bool,
+    },
+    User {
+        allow_bots: bool,
+    },
+}
+
+#[derive(Debug, Clone)]
+pub enum StringArgTypeFlag {
+    TakeContent,
+    TakeRest,
 }

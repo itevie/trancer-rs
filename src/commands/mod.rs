@@ -1,27 +1,23 @@
+use crate::cmd_util::arg_parser::CommandArgumentStruct;
+use crate::cmd_util::{CommandTrait, TrancerCommand};
 use once_cell::sync::Lazy;
-use crate::cmd_util::TrancerCommand;
 
 mod help;
 
-pub static COMMANDS: Lazy<Vec<TrancerCommand>> = Lazy::new(|| {
-    init()
-});
-
-pub fn init() -> Vec<TrancerCommand> {
+pub fn init() -> Vec<Box<dyn CommandTrait>> {
     let mut commands = vec![];
     commands.extend(help::init());
     commands
 }
 
-
 #[macro_export]
 macro_rules! command_file {
     ($($body:expr),*) => {
-        pub fn init() -> Vec<TrancerCommand> {
+        pub fn init() -> Vec<Box<dyn CommandTrait>> {
             vec![
                 $(
-                    $body
-                )*
+                    Box::from($body),
+                ),*
             ]
         }
     };

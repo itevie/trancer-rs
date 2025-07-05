@@ -1,24 +1,20 @@
-use crate::models::user_data::{UserData, UserDataFields};
+use crate::cmd_util::arg_parser::{CommandArgumentStruct, PCACV};
 use crate::cmd_util::trancer_handler;
-use crate::cmd_util::{TrancerCommand, TrancerResponseType};
-use crate::command_file;
+use crate::cmd_util::CommandTrait;
+use crate::cmd_util::{TrancerCommand, TrancerError, TrancerResponseType};
+use crate::{command_argument_struct, command_file};
+use std::collections::HashMap;
+
+command_argument_struct!(PingArgs {});
 
 command_file! {
-    TrancerCommand {
+    TrancerCommand::<PingArgs> {
         name: "ping".to_string(),
         description: "This is a test".to_string(),
         details: Default::default(),
 
-        handler: trancer_handler!(|ctx, msg| {
-            let user = UserData::fetch(&ctx, msg.author.id, msg.guild_id.unwrap()).await?;
-
-            msg.reply(
-                ctx.clone(),
-                format!("Your birthday before: {:?}", user.birthday),
-            )
-            .await?;
-            user.update_key(&ctx, UserDataFields::birthday, &"2007/02/28")
-                .await?;
+        handler: trancer_handler!(|ctx, msg, args| {
+            msg.reply(&ctx, format!("{:#?}", args)).await?;
 
             Ok(TrancerResponseType::None)
         }),

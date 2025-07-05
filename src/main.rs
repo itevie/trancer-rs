@@ -3,7 +3,9 @@ mod commands;
 mod database;
 mod models;
 
-use crate::cmd_util::TrancerResponseType;
+use crate::cmd_util::arg_parser::{map_and_validate, parse_args, CommandArgumentStruct, PCACV};
+use crate::cmd_util::args::{ArgType, Argument, TrancerArguments};
+use crate::cmd_util::{TrancerError, TrancerResponseType};
 use crate::database::Database;
 use dotenvy::dotenv;
 use serenity::{
@@ -11,6 +13,7 @@ use serenity::{
     model::{channel::Message, gateway::Ready},
     prelude::*,
 };
+use std::collections::HashMap;
 use std::env;
 
 struct Handler;
@@ -22,12 +25,31 @@ impl EventHandler for Handler {
             return;
         }
 
+        let prefix = "!";
+
+        if !msg.content.starts_with(prefix) {
+            return;
+        }
+
+        let contents = msg.content[prefix.len()..].trim();
         let commands = commands::init();
-        let Some(cmd) = commands.iter().find(|cmd| cmd.name == msg.content) else {
+        let mut args = parse_args(contents.to_string()).unwrap();
+
+        if args.args.is_empty() {
+            return;
+        }
+
+        let command_name = args.args[0].clone();
+        args.args.remove(0);
+
+        let Some(cmd) = commands
+            .iter()
+            .find(|cmd| cmd.name().eq(command_name.as_str()))
+        else {
             return;
         };
 
-        let response = match (cmd.handler)(ctx.clone(), msg.clone()).await {
+        let response = match cmd.run(ctx.clone(), msg.clone(), args).await {
             Ok(response) => response,
             Err(err) => {
                 msg.reply(&ctx, err.to_string()).await.unwrap();
