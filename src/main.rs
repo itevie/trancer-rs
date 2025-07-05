@@ -3,9 +3,8 @@ mod commands;
 mod database;
 mod models;
 
-use crate::cmd_util::arg_parser::{map_and_validate, parse_args, CommandArgumentStruct, PCACV};
-use crate::cmd_util::args::{ArgType, Argument, TrancerArguments};
-use crate::cmd_util::{TrancerError, TrancerResponseType};
+use crate::cmd_util::arg_parser::parse_args;
+use crate::cmd_util::TrancerResponseType;
 use crate::database::Database;
 use dotenvy::dotenv;
 use serenity::{
@@ -13,7 +12,6 @@ use serenity::{
     model::{channel::Message, gateway::Ready},
     prelude::*,
 };
-use std::collections::HashMap;
 use std::env;
 
 struct Handler;
