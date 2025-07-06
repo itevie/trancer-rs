@@ -22,3 +22,23 @@ macro_rules! command_file {
         }
     };
 }
+
+#[macro_export]
+macro_rules! reply {
+    ($ctx:expr, $body:expr) => {
+        match $ctx
+            .msg
+            .channel_id
+            .send_message(&$ctx.sy.http, $body.reference_message(&$ctx.msg))
+            .await
+        {
+            Ok(ok) => Ok(ok),
+            Err(_) => $ctx
+                .msg
+                .channel_id
+                .send_message(&$ctx.sy.http, $body)
+                .await
+                .map_err(|x| TrancerError::ReplyError(x)),
+        }
+    };
+}

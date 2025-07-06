@@ -1,10 +1,11 @@
-use crate::cmd_util::TrancerRunnerContext;
+use crate::cmd_util::{TrancerError, TrancerRunnerContext};
 use serenity::all::{
     ButtonStyle, CreateActionRow, CreateButton, CreateEmbedFooter, CreateMessage, EditMessage,
 };
 use serenity::builder::CreateEmbed;
 use serenity::futures::StreamExt;
 use std::time::Duration;
+use crate::reply;
 
 pub struct PaginationOptions {
     pub ctx: TrancerRunnerContext,
@@ -39,7 +40,7 @@ impl PaginationDataType {
     }
 }
 
-pub async fn paginate(op: PaginationOptions) {
+pub async fn paginate(op: PaginationOptions) -> Result<(), TrancerError> {
     let old_embed = op.embed.clone();
     let mut current_index: usize = 0;
 
@@ -75,18 +76,9 @@ pub async fn paginate(op: PaginationOptions) {
     };
 
     if op.data.len() < op.page_size + 1 {
-        op.ctx
-            .msg
-            .channel_id
-            .send_message(
-                &op.ctx.sy,
-                CreateMessage::new()
-                    .embed(modify_embed(current_index))
-                    .reference_message(&op.ctx.msg),
-            )
-            .await
-            .unwrap();
-        return;
+        reply!(op.ctx, CreateMessage::new()
+            .embed(modify_embed(current_index))
+            .reference_message(&op.ctx.msg))?;
     }
 
     let buttons = CreateActionRow::Buttons(vec![
@@ -118,42 +110,39 @@ pub async fn paginate(op: PaginationOptions) {
                 .reference_message(&op.ctx.msg)
                 .components(vec![buttons]),
         )
-        .await
-        .unwrap();
+        .await?;
 
     let mut collector = msg
         .await_component_interactions(&op.ctx.sy)
-        .timeout(Duration::from_secs(5 * 60))
+        .timeout(Duration::from_secs(5))
         .stream();
 
     while let Some(ref i) = collector.next().await {
         match i.data.custom_id.as_str() {
             "first-page" => {
-                i.defer(&op.ctx.sy).await.unwrap();
+                i.defer(&op.ctx.sy).await?;
                 current_index = 0;
             }
             "page-prev" => {
-                i.defer(&op.ctx.sy).await.unwrap();
+                i.defer(&op.ctx.sy).await?;
                 if current_index < op.page_size {
-                    return;
+                    return Ok(());
                 }
                 current_index -= op.page_size;
             }
             "page-next" => {
-                i.defer(&op.ctx.sy).await.unwrap();
+                i.defer(&op.ctx.sy).await?;
                 if current_index >= op.data.len() - op.page_size {
-                    return;
+                    return Ok(())
                 }
                 current_index += op.page_size;
             }
             "last-page" => {
-                i.defer(&op.ctx.sy).await.unwrap();
+                i.defer(&op.ctx.sy).await?;
                 current_index = op.data.len() - (op.data.len() % op.page_size);
             }
             _ => {
-                i.defer(&op.ctx.sy).await.unwrap();
                 todo!();
-
             },
         }
 
@@ -161,7 +150,8 @@ pub async fn paginate(op: PaginationOptions) {
             &op.ctx.sy,
             EditMessage::new().embed(modify_embed(current_index)),
         )
-        .await
-        .unwrap();
+        .await?
     }
+
+    Ok(msg.edit(&op.ctx.sy, EditMessage::new().components(vec![])).await.map(|_| ())?)
 }

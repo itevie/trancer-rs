@@ -19,6 +19,7 @@ pub enum TrancerError {
     Serenity(serenity::Error),
     Argument(ArgumentError),
     NotImplemented(String),
+    ReplyError(serenity::Error),
 }
 
 impl std::error::Error for TrancerError {}
@@ -56,6 +57,7 @@ impl fmt::Display for TrancerError {
             TrancerError::NotImplemented(err) => {
                 write!(f, "This feature is not implemented yet: {}", err)
             }
+            TrancerError::ReplyError(err) => write!(f, "Reply error: {}", err),
         }
     }
 }

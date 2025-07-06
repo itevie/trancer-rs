@@ -5,13 +5,13 @@ mod models;
 mod util;
 
 use crate::cmd_util::arg_parser::parse_args;
-use crate::cmd_util::{TrancerResponseType, TrancerRunnerContext};
+use crate::cmd_util::{TrancerResponseType, TrancerRunnerContext, TrancerError};
 use crate::database::Database;
 use crate::models::server_settings::ServerSettings;
 use crate::models::user_data::UserData;
 use dotenvy::dotenv;
 use rusqlite::fallible_iterator::FallibleIterator;
-use serenity::all::{Channel, ChannelType};
+use serenity::all::{Channel, ChannelType, CreateMessage};
 use serenity::{
     async_trait,
     model::{channel::Message, gateway::Ready},
@@ -91,7 +91,7 @@ impl EventHandler for Handler {
             user_data,
         };
 
-        let response = match cmd.run(context, args).await {
+        let response = match cmd.run(context.clone(), args).await {
             Ok(response) => response,
             Err(err) => {
                 msg.reply(&ctx, err.to_string()).await.unwrap();
@@ -101,11 +101,12 @@ impl EventHandler for Handler {
 
         match response {
             TrancerResponseType::Content(string) => {
-                msg.reply(&ctx, string).await.unwrap();
+                // Ignore the error, because if it errors then it doesn't matter
+                // probably likely a timeout issue.
+                let _ = reply!(context, CreateMessage::new().content(string.as_str()));
             }
             TrancerResponseType::Big(big) => {
-                let new = big.reference_message(&msg);
-                msg.channel_id.send_message(&ctx.http, new).await.unwrap();
+                let _ = reply!(context, big.clone());
             }
             TrancerResponseType::None => (),
         };
