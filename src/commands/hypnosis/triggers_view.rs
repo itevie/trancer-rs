@@ -5,15 +5,14 @@ use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{
     ArgumentError, TrancerCommand, TrancerDetails, TrancerError, TrancerResponseType,
 };
-use crate::models::user_data::UserData;
-use crate::models::user_imposition::{ImpositionTag, UserImposition};
+use crate::models::user_imposition::{UserImposition};
 use crate::util::embeds::create_embed;
 use crate::util::lang::pronoun;
 use crate::util::pagination::{paginate, PaginationDataType, PaginationOptions};
 use crate::{command_argument_struct, command_file};
-use rand::random;
 use serenity::all::User;
 use std::collections::HashMap;
+use crate::cmd_util::types::TrancerCommandType;
 
 command_argument_struct!(ViewTriggersArgs {
    user: User, PCACV::User
@@ -21,6 +20,7 @@ command_argument_struct!(ViewTriggersArgs {
 
 command_file!(TrancerCommand::<ViewTriggersArgs> {
     name: "triggers".to_string(),
+    t: TrancerCommandType::Hypnosis,
     description: "View yours or someone else's triggers".to_string(),
     details: TrancerDetails {
         aliases: None,

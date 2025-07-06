@@ -54,6 +54,7 @@ pub trait CommandTrait: Send + Sync {
 
 pub struct TrancerCommand<T: CommandArgumentStruct> {
     pub name: String,
+    pub t: TrancerCommandType,
     pub description: String,
     pub details: TrancerDetails,
     pub handler: TrancerHandler<T>,
@@ -114,6 +115,6 @@ macro_rules! trancer_handler {
     };
 }
 pub(crate) use trancer_handler;
-
+use crate::cmd_util::types::TrancerCommandType;
 use crate::models::server_settings::ServerSettings;
 use crate::models::user_data::UserData;

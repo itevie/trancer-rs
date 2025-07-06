@@ -9,6 +9,7 @@ use crate::util::embeds::create_embed;
 use crate::{command_argument_struct, command_file};
 use serenity::all::{CreateEmbed, CreateMessage};
 use std::collections::HashMap;
+use crate::cmd_util::types::TrancerCommandType;
 
 command_argument_struct!(ComamndInfoArgs {
    name: String, PCACV::String
@@ -16,6 +17,7 @@ command_argument_struct!(ComamndInfoArgs {
 
 command_file!(TrancerCommand::<ComamndInfoArgs> {
     name: "command".to_string(),
+    t: TrancerCommandType::Help,
     description: "Get information on a command".to_string(),
     details: TrancerDetails {
         aliases: Some(vec!["cmd".to_string()]),

@@ -113,12 +113,12 @@ impl UserData {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
         let sql = format!(
-            "UPDATE user_data SET {} = {} + 1 WHERE user_id = ?1 AND guild_id = ?2",
+            "UPDATE user_data SET {} = {} + ?3 WHERE user_id = ?1 AND guild_id = ?2",
             key.as_str(),
             key.as_str()
         );
 
-        db.run(&sql, &[&value, &self.user_id, &self.guild_id])?;
+        db.run(&sql, &[&self.user_id, &self.guild_id, &value])?;
         Ok(())
     }
 

@@ -12,6 +12,7 @@ use crate::{command_argument_struct, command_file, reply};
 use rand::random;
 use serenity::all::User;
 use std::collections::HashMap;
+use crate::cmd_util::types::TrancerCommandType;
 
 command_argument_struct!(SendTriggerArgs {
    user: User, PCACV::User
@@ -19,6 +20,7 @@ command_argument_struct!(SendTriggerArgs {
 
 command_file!(TrancerCommand::<SendTriggerArgs> {
     name: "sendtrigger".to_string(),
+    t: TrancerCommandType::Hypnosis,
     description: "Send yours or someone else's trigger".to_string(),
     details: TrancerDetails {
         aliases: Some(vec![

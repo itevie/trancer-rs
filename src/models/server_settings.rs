@@ -61,16 +61,27 @@ impl ServerSettings {
         let db = data_lock.get::<Database>().unwrap();
 
         let result = db.get_one(
-            "SELECT * FROM server_settings WHERE server_id = ?1",
+            "SELECT * FROM server_settings WHERE server_id = ?1 LIMIT 1",
             &[&server_id.to_string()],
             |r| ServerSettings::from_row(r),
         );
 
         match result {
             Ok(result) => Ok(result),
-            Err(QueryReturnedNoRows) => todo!(),
+            Err(QueryReturnedNoRows) => ServerSettings::create(ctx, server_id),
             Err(e) => Err(e),
         }
+    }
+
+    pub async fn create(ctx: &Context, server_id: GuildId) -> rusqlite::Result<Self> {
+        let data_lock = ctx.data.read().await;
+        let db = data_lock.get::<Database>().unwrap();
+
+        db.get_one(
+            "INSERT INTO server_settings (guild_id) VALUES (?1) RETURNING *",
+            &[&server_id.to_string()],
+            |r| ServerSettings::from_row(r),
+        )
     }
 
     pub async fn update_key<T>(
