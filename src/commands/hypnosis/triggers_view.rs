@@ -50,7 +50,7 @@ command_file!(TrancerCommand::<ViewTriggersArgs> {
                 base_description: None,
             },
         })
-        .await;
+        .await?;
 
         Ok(TrancerResponseType::None)
     })

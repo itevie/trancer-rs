@@ -1,11 +1,11 @@
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
+use crate::reply;
 use serenity::all::{
     ButtonStyle, CreateActionRow, CreateButton, CreateEmbedFooter, CreateMessage, EditMessage,
 };
 use serenity::builder::CreateEmbed;
 use serenity::futures::StreamExt;
 use std::time::Duration;
-use crate::reply;
 
 pub struct PaginationOptions {
     pub ctx: TrancerRunnerContext,
@@ -38,6 +38,17 @@ impl PaginationDataType {
             PaginationDataType::Field(data) => data.len(),
         }
     }
+}
+
+macro_rules! p_err {
+    ($expr:expr) => {
+        match $expr {
+            Ok(ok) => Ok(ok),
+            Err(err) => Err(TrancerError::Generic(
+                "Pagination error: ".to_string() + &err.to_string(),
+            )),
+        }
+    };
 }
 
 pub async fn paginate(op: PaginationOptions) -> Result<(), TrancerError> {
@@ -76,9 +87,12 @@ pub async fn paginate(op: PaginationOptions) -> Result<(), TrancerError> {
     };
 
     if op.data.len() < op.page_size + 1 {
-        reply!(op.ctx, CreateMessage::new()
-            .embed(modify_embed(current_index))
-            .reference_message(&op.ctx.msg))?;
+        p_err!(reply!(
+            op.ctx,
+            CreateMessage::new()
+                .embed(modify_embed(current_index))
+                .reference_message(&op.ctx.msg)
+        ))?;
     }
 
     let buttons = CreateActionRow::Buttons(vec![
@@ -99,59 +113,65 @@ pub async fn paginate(op: PaginationOptions) -> Result<(), TrancerError> {
             .label(">>>"),
     ]);
 
-    let mut msg = op
-        .ctx
-        .msg
-        .channel_id
-        .send_message(
-            &op.ctx.sy,
-            CreateMessage::new()
-                .embed(modify_embed(current_index))
-                .reference_message(&op.ctx.msg)
-                .components(vec![buttons]),
-        )
-        .await?;
+    let mut msg = p_err!(
+        op.ctx
+            .msg
+            .channel_id
+            .send_message(
+                &op.ctx.sy,
+                CreateMessage::new()
+                    .embed(modify_embed(current_index))
+                    .reference_message(&op.ctx.msg)
+                    .components(vec![buttons]),
+            )
+            .await
+    )?;
 
     let mut collector = msg
         .await_component_interactions(&op.ctx.sy)
-        .timeout(Duration::from_secs(5))
+        .timeout(Duration::from_secs(5 * 60))
         .stream();
 
     while let Some(ref i) = collector.next().await {
+        p_err!(i.defer(&op.ctx.sy).await)?;
         match i.data.custom_id.as_str() {
             "first-page" => {
-                i.defer(&op.ctx.sy).await?;
                 current_index = 0;
             }
             "page-prev" => {
-                i.defer(&op.ctx.sy).await?;
                 if current_index < op.page_size {
                     return Ok(());
                 }
                 current_index -= op.page_size;
             }
             "page-next" => {
-                i.defer(&op.ctx.sy).await?;
                 if current_index >= op.data.len() - op.page_size {
-                    return Ok(())
+                    return Ok(());
                 }
                 current_index += op.page_size;
             }
             "last-page" => {
-                i.defer(&op.ctx.sy).await?;
                 current_index = op.data.len() - (op.data.len() % op.page_size);
             }
             _ => {
-                todo!();
-            },
+                p_err!(reply!(
+                    op.ctx,
+                    CreateMessage::new().content("Search is not implemented yet!".to_string())
+                ))?;
+            }
         }
 
-        msg.edit(
-            &op.ctx.sy,
-            EditMessage::new().embed(modify_embed(current_index)),
-        )
-        .await?
+        p_err!(
+            msg.edit(
+                &op.ctx.sy,
+                EditMessage::new().embed(modify_embed(current_index)),
+            )
+            .await
+        )?;
     }
 
-    Ok(msg.edit(&op.ctx.sy, EditMessage::new().components(vec![])).await.map(|_| ())?)
+    p_err!(msg
+        .edit(&op.ctx.sy, EditMessage::new().components(vec![]))
+        .await
+        .map(|_| ()))
 }
