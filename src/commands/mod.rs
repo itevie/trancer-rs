@@ -1,4 +1,8 @@
 use crate::cmd_util::CommandTrait;
+use crate::command_argument_struct;
+use crate::cmd_util::arg_parser::{CommandArgumentStruct, PCACV};
+use std::collections::HashMap;
+use crate::TrancerError;
 
 mod help;
 mod hypnosis;
@@ -42,3 +46,5 @@ macro_rules! reply {
         }
     };
 }
+
+command_argument_struct!(CommandHasNoArgs {});

@@ -4,16 +4,17 @@ use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{TrancerCommand, TrancerError, TrancerResponseType};
 use crate::{command_argument_struct, command_file};
 use std::collections::HashMap;
-
-command_argument_struct!(PingArgs {});
+use crate::cmd_util::types::TrancerCommandType;
+use crate::commands::CommandHasNoArgs;
 
 command_file! {
-    TrancerCommand::<PingArgs> {
+    TrancerCommand::<CommandHasNoArgs> {
         name: "ping".to_string(),
+        t: TrancerCommandType::Help,
         description: "This is a test".to_string(),
         details: Default::default(),
 
-        handler: trancer_handler!(|ctx, msg, args| {
+        handler: trancer_handler!(|ctx, args| {
             Ok(TrancerResponseType::Content("pong".to_string()))
         }),
     }

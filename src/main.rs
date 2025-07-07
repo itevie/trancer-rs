@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 mod cmd_util;
 mod commands;
 mod database;
@@ -10,7 +12,6 @@ use crate::database::Database;
 use crate::models::server_settings::ServerSettings;
 use crate::models::user_data::UserData;
 use dotenvy::dotenv;
-use rusqlite::fallible_iterator::FallibleIterator;
 use serenity::all::{Channel, ChannelType, CreateMessage};
 use serenity::{
     async_trait,
@@ -19,6 +20,7 @@ use serenity::{
 };
 use std::any::Any;
 use std::env;
+use crate::models::command_creation::CommandCreation;
 
 struct Handler;
 
@@ -112,7 +114,9 @@ impl EventHandler for Handler {
         };
     }
 
-    async fn ready(&self, _: Context, ready: Ready) {
+    async fn ready(&self, ctx: Context, ready: Ready) {
+        let commands = commands::init();
+        CommandCreation::insert_commands(&ctx, commands.iter().map(|x| x.name().clone()).collect()).await.unwrap();
         println!("{} is connected!", ready.user.name);
     }
 }

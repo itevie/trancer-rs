@@ -4,12 +4,12 @@ use crate::models::user_data::HypnoStatus;
 use serenity::all::{Context, UserId};
 use std::collections::HashMap;
 
-impl_from_row!(UserImposition, UserImpositionFields,
+impl_from_row!(UserImposition, UserImpositionFields {
     user_id: String,
     what: String,
     is_bombardable: bool,
     tags: String,
-);
+});
 
 #[derive(PartialEq, Clone, Debug)]
 pub enum ImpositionTag {

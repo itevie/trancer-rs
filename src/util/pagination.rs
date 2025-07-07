@@ -93,6 +93,7 @@ pub async fn paginate(op: PaginationOptions) -> Result<(), TrancerError> {
                 .embed(modify_embed(current_index))
                 .reference_message(&op.ctx.msg)
         ))?;
+        return Ok(());
     }
 
     let buttons = CreateActionRow::Buttons(vec![

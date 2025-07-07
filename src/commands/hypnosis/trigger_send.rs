@@ -8,7 +8,7 @@ use crate::cmd_util::{
 use crate::models::user_data::UserData;
 use crate::models::user_imposition::{ImpositionTag, UserImposition};
 use crate::util::lang::pronoun;
-use crate::{command_argument_struct, command_file, reply};
+use crate::{command_argument_struct, command_file};
 use rand::random;
 use serenity::all::User;
 use std::collections::HashMap;

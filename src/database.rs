@@ -22,7 +22,7 @@ impl Database {
     pub fn get_one<S: Into<String>, T, F>(
         &self,
         sql: S,
-        params: &[&dyn rusqlite::ToSql],
+        params: &[&(dyn rusqlite::ToSql)],
         map_row: F,
     ) -> rusqlite::Result<T>
     where
@@ -77,7 +77,7 @@ impl TypeMapKey for Database {
 
 #[macro_export]
 macro_rules! impl_from_row {
-    ($struct_name:ident, $enum_name:ident, $( $field:ident : $typ:ty ),* $(,)? ) => {
+    ($struct_name:ident, $enum_name:ident { $( $field:ident : $typ:ty ),* $(,)? }) => {
         #[derive(Debug, Clone)]
         pub struct $struct_name {
             $(
@@ -88,7 +88,7 @@ macro_rules! impl_from_row {
             pub fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Self> {
                 Ok(Self {
                     $(
-                        $field: row.get::<_, $typ>(stringify!($field))?,
+                        $field: row.get::<_, $typ>(stringify!($field).replace("r#", "").as_str())?,
                     )*
                 })
             }
@@ -102,7 +102,6 @@ macro_rules! impl_from_row {
             )*
         }
 
-        // 4. Convert enum to column string
         impl $enum_name {
             pub fn as_str(&self) -> &'static str {
                 match self {

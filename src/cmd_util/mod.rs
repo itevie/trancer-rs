@@ -50,6 +50,9 @@ pub trait CommandTrait: Send + Sync {
 
     /// Get the other details of the command
     fn details(&self) -> TrancerDetails;
+
+    /// Get the type
+    fn t(&self) -> TrancerCommandType;
 }
 
 pub struct TrancerCommand<T: CommandArgumentStruct> {
@@ -87,6 +90,10 @@ impl<T: CommandArgumentStruct + Send + 'static + std::fmt::Debug> CommandTrait
 
     fn details(&self) -> TrancerDetails {
         self.details.clone()
+    }
+
+    fn t(&self) -> TrancerCommandType {
+        self.t.clone()
     }
 }
 

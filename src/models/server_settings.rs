@@ -5,7 +5,7 @@ use rusqlite::ToSql;
 use serenity::all::GuildId;
 use serenity::client::Context;
 
-impl_from_row!(ServerSettings, ServerSettingsFields,
+impl_from_row!(ServerSettings, ServerSettingsFields {
     server_id: String,
     prefix: String,
 
@@ -53,7 +53,7 @@ impl_from_row!(ServerSettings, ServerSettingsFields,
 
     birthday_channel_id: Option<String>,
     birthday_announcement_text: String
-);
+});
 
 impl ServerSettings {
     pub async fn fetch(ctx: &Context, server_id: GuildId) -> rusqlite::Result<Self> {
@@ -68,7 +68,7 @@ impl ServerSettings {
 
         match result {
             Ok(result) => Ok(result),
-            Err(QueryReturnedNoRows) => ServerSettings::create(ctx, server_id),
+            Err(QueryReturnedNoRows) => ServerSettings::create(ctx, server_id).await,
             Err(e) => Err(e),
         }
     }

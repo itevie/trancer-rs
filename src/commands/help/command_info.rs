@@ -7,7 +7,7 @@ use crate::cmd_util::{
 };
 use crate::util::embeds::create_embed;
 use crate::{command_argument_struct, command_file};
-use serenity::all::{CreateEmbed, CreateMessage};
+use serenity::all::{CreateMessage};
 use std::collections::HashMap;
 use crate::cmd_util::types::TrancerCommandType;
 

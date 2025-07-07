@@ -1,55 +1,52 @@
+use std::fmt::Display;
 use crate::database::Database;
-use crate::impl_from_row;
-use rusqlite::types::{FromSql, FromSqlError, FromSqlResult};
+use crate::{enum_with_sql, impl_from_row};
 use rusqlite::Error::QueryReturnedNoRows;
 use rusqlite::ToSql;
 use serenity::all::{GuildId, UserId};
 use serenity::client::Context;
 
-#[derive(Debug, Clone)]
-pub enum HypnoStatus {
-    Green,
-    Yellow,
-    Red,
-}
+enum_with_sql!(HypnoStatus {
+    Green = "green",
+    Yellow = "yellow",
+    Red = "red"
+});
 
-impl FromSql for HypnoStatus {
-    fn column_result(value: rusqlite::types::ValueRef<'_>) -> FromSqlResult<Self> {
-        let s = value.as_str()?;
-        match s {
-            "green" => Ok(HypnoStatus::Green),
-            "yellow" => Ok(HypnoStatus::Yellow),
-            "red" => Ok(HypnoStatus::Red),
-            _ => Err(FromSqlError::InvalidType),
-        }
+impl Display for HypnoStatus {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", match self {
+            HypnoStatus::Green => "green 🟢",
+            HypnoStatus::Yellow => "yellow 🟡",
+            HypnoStatus::Red => "red 🔴",
+        }.to_string())
     }
 }
 
-impl_from_row!(UserData, UserDataFields,
+impl_from_row!(UserData, UserDataFields {
     user_id: String,
     guild_id: String,
-    bumps: i32,
-    messages_sent: i32,
-    vc_time: i32,
-    xp: i32,
+    bumps: u32,
+    messages_sent: u32,
+    vc_time: u32,
+    xp: u32,
     site_quote_opt_in: bool,
-    ttt_win: i32,
-    ttt_lose: i32,
-    ttt_tie: i32,
-    c4_win: i32,
-    c4_lose: i32,
-    c4_tie: i32,
+    ttt_win: u32,
+    ttt_lose: u32,
+    ttt_tie: u32,
+    c4_win: u32,
+    c4_lose: u32,
+    c4_tie: u32,
     allow_requests: bool,
     allow_triggers: bool,
-    count_ruined: i32,
+    count_ruined: u32,
     hypno_status: HypnoStatus,
     relationships: bool,
     count_banned: bool,
     birthday: Option<String>,
-    talking_streak: i32,
+    talking_streak: u32,
     last_talking_streak: Option<String>,
-    highest_talking_streak: i32,
-);
+    highest_talking_streak: u32,
+});
 
 impl UserData {
     /// Fetch a UserData for a specific user
