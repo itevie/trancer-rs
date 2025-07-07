@@ -5,6 +5,7 @@ mod commands;
 mod database;
 mod models;
 mod util;
+mod config;
 
 use crate::cmd_util::arg_parser::parse_args;
 use crate::cmd_util::{TrancerResponseType, TrancerRunnerContext, TrancerError};
@@ -20,6 +21,7 @@ use serenity::{
 };
 use std::any::Any;
 use std::env;
+use chrono::format::Item;
 use crate::models::command_creation::CommandCreation;
 
 struct Handler;
@@ -117,6 +119,8 @@ impl EventHandler for Handler {
     async fn ready(&self, ctx: Context, ready: Ready) {
         let commands = commands::init();
         CommandCreation::insert_commands(&ctx, commands.iter().map(|x| x.name().clone()).collect()).await.unwrap();
+        models::item::Item::insert_all(&ctx).await.unwrap();
+
         println!("{} is connected!", ready.user.name);
     }
 }
