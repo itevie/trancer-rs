@@ -1,10 +1,13 @@
+// This file really moos!
+type Cow = &'static str;
+
 pub struct PartialItem {
-    pub name: &'static str,
+    pub name: Cow,
     pub price: u32,
-    pub description: Option<&'static str>,
+    pub description: Option<Cow>,
     pub weight: f64,
-    pub emoji: Option<&'static str>,
-    pub tag: Option<&'static str>,
+    pub emoji: Option<Cow>,
+    pub tag: Option<Cow>,
     pub buyable: bool,
     pub droppable: bool,
     pub max: Option<u32>,
@@ -22,7 +25,7 @@ static LEGENDARY: (u32, f64) = (125, 0.04);
 static MYTHIC: (u32, f64) = (400, 0.01);
 static DIVINE: (u32, f64) = (1250, 0.005);
 
-const fn fish(name: &'static str, price_weight: (u32, f64), emoji: &'static str) -> PartialItem {
+const fn fish(name: Cow, price_weight: (u32, f64), emoji: Cow) -> PartialItem {
     PartialItem {
         name,
         price: price_weight.0,
@@ -37,10 +40,10 @@ const fn fish(name: &'static str, price_weight: (u32, f64), emoji: &'static str)
 }
 
 const fn fishd(
-    name: &'static str,
+    name: Cow,
     price_weight: (u32, f64),
-    emoji: &'static str,
-    description: &'static str,
+    emoji: Cow,
+    description: Cow,
 ) -> PartialItem {
     PartialItem {
         description: Some(description),
@@ -48,7 +51,7 @@ const fn fishd(
     }
 }
 
-const fn basic(name: &'static str, price: u32, weight: f64, description: Option<&'static str>, emoji: &'static str ) -> PartialItem {
+const fn basic(name: Cow, price: u32, weight: f64, description: Option<Cow>, emoji: Cow ) -> PartialItem {
     PartialItem {
         name,
         price,
@@ -62,25 +65,25 @@ const fn basic(name: &'static str, price: u32, weight: f64, description: Option<
     }
 }
 
-const fn tagged(name: &'static str, price: u32, weight: f64, description: Option<&'static str>, emoji: &'static str, tag: &'static str) -> PartialItem {
+const fn tagged(name: Cow, price: u32, weight: f64, description: Option<Cow>, emoji: Cow, tag: Cow) -> PartialItem {
     PartialItem {
         tag: Some(tag),
         ..basic(name, price, weight, description, emoji)
     }
 }
 
-const fn taggednb(name: &'static str, price: u32, weight: f64, description: Option<&'static str>, emoji: &'static str, tag: &'static str) -> PartialItem {
+const fn taggednb(name: Cow, price: u32, weight: f64, description: Option<Cow>, emoji: Cow, tag: Cow) -> PartialItem {
     PartialItem {
         buyable: false,
         ..tagged(name, price, weight, description, emoji, tag)
     }
 }
 
-const fn mineral(name: &'static str, price: u32, weight: f64, emoji: &'static str) -> PartialItem {
+const fn mineral(name: Cow, price: u32, weight: f64, emoji: Cow) -> PartialItem {
     taggednb(name, price, weight, None, emoji, "mineral")
 }
 
-const fn collectable(name: &'static str, price: u32, description: &'static str, emoji: &'static str) -> PartialItem {
+const fn collectable(name: Cow, price: u32, description: Cow, emoji: Cow) -> PartialItem {
     PartialItem {
         name,
         price,
