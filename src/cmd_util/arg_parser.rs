@@ -83,7 +83,7 @@ impl PCACV {
         };
 
         match arg.t {
-            ArgType::Number { min: _, max: _ } => {
+            ArgType::Number { min, max } => {
                 let ok = match value.parse::<i32>() {
                     Ok(ok) => ok,
                     Err(e) => {
@@ -93,6 +93,24 @@ impl PCACV {
                         ))?
                     }
                 };
+
+                if let Some(min) = min {
+                    if ok < min {
+                        return Err(ArgumentError::InvalidInput(
+                            format!("Minimum amount is {}", min),
+                            arg.clone()
+                        ))?;
+                    }
+                }
+
+                if let Some(max) = max {
+                    if ok > max {
+                        return Err(ArgumentError::InvalidInput(
+                            format!("Maximum amount is: {}", max),
+                            arg.clone()
+                        ))?;
+                    }
+                }
 
                 Ok(if required {
                     PCACV::Number(ok)

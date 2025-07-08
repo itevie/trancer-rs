@@ -6,12 +6,28 @@ use crate::TrancerError;
 
 mod help;
 mod hypnosis;
+mod economy;
+mod server;
 
 pub fn init() -> Vec<Box<dyn CommandTrait>> {
     let mut commands = vec![];
     commands.extend(help::init());
     commands.extend(hypnosis::init());
+    commands.extend(economy::init());
+    commands.extend(server::init());
     commands
+}
+
+#[macro_export]
+macro_rules! cmd_import_map {
+    ($($idents:tt),*) => {
+        use crate::cmd_util::CommandTrait;
+        pub fn init() -> Vec<Box<dyn CommandTrait>> {
+            let mut commands = vec![];
+            $(commands.extend($idents::init());)*
+            commands
+        }
+    };
 }
 
 #[macro_export]
@@ -41,8 +57,10 @@ macro_rules! reply {
                 .msg
                 .channel_id
                 .send_message(&$ctx.sy.http, $body)
-                .await
-                .map_err(|x| TrancerError::ReplyError(x)),
+                .await.map_err(|x| {
+                    error!("Failed to send message: {}", x);
+                    TrancerError::ReplyError(x)
+                }),
         }
     };
 }

@@ -2,18 +2,25 @@
 
 mod cmd_util;
 mod commands;
+mod trancer_config;
 mod database;
 mod models;
 mod util;
-mod config;
 
 use crate::cmd_util::arg_parser::parse_args;
-use crate::cmd_util::{TrancerResponseType, TrancerRunnerContext, TrancerError};
+use crate::cmd_util::{TrancerError, TrancerResponseType, TrancerRunnerContext};
 use crate::database::Database;
+use crate::models::command_creation::CommandCreation;
+use crate::models::ratelimit::Ratelimit;
 use crate::models::server_settings::ServerSettings;
 use crate::models::user_data::UserData;
+use crate::util::embeds::create_embed;
+use crate::util::lang::permission_names;
+use chrono::format::Item;
+use chrono::{DateTime, Utc};
 use dotenvy::dotenv;
 use serenity::all::{Channel, ChannelType, CreateMessage};
+use serenity::builder::EditChannel;
 use serenity::{
     async_trait,
     model::{channel::Message, gateway::Ready},
@@ -21,8 +28,54 @@ use serenity::{
 };
 use std::any::Any;
 use std::env;
-use chrono::format::Item;
-use crate::models::command_creation::CommandCreation;
+use config::Config;
+use tokio::io::AsyncWriteExt;
+use tracing::{error, info};
+use serde::Deserialize;
+
+async fn something_happened(ctx: &TrancerRunnerContext, m: impl Into<String>, e: TrancerError) {
+    let dev_error = format!(
+        "{}: {}\n> Command: {} ({})",
+        m.into(),
+        e.to_string(),
+        ctx.original_command,
+        ctx.command_name
+    );
+    error!(dev_error);
+
+    let m = format!(
+        ":red_circle: Sorry! I couldn't run the command as something bad happened!\n:information_source: Please report this to the bot owner\n> {}",
+        dev_error
+    );
+
+    let result = ctx.msg.reply(&ctx.sy, &m).await;
+    if result.is_err() {
+        let _ = ctx
+            .msg
+            .channel_id
+            .send_message(
+                &ctx.sy,
+                CreateMessage::new().content(format!("**{}**: {}", ctx.msg.author.name, m)),
+            )
+            .await;
+    }
+}
+
+macro_rules! something_happened {
+    ($ctx:ident, $what:expr) => {
+        match $what {
+            Ok(ok) => ok,
+            Err(e) => {
+                something_happened(
+                    &$ctx,
+                    "Failed to run something via something_happened macro",
+                    TrancerError::from(e),
+                );
+                return;
+            }
+        }
+    };
+}
 
 struct Handler;
 
@@ -49,10 +102,18 @@ impl EventHandler for Handler {
             return;
         };
 
-        let server_settings = match ServerSettings::fetch(&ctx, msg.guild_id.unwrap()).await {
+        let guild_id = match msg.guild_id {
+            Some(id) => id,
+            None => return,
+        };
+
+        let server_settings = match ServerSettings::fetch(&ctx, guild_id).await {
             Ok(ok) => ok,
             Err(e) => {
-                eprintln!("{:#?}", e);
+                error!(
+                    "Failed to fetch server_settings during message handler: {:?}",
+                    e
+                );
                 return;
             }
         };
@@ -79,10 +140,13 @@ impl EventHandler for Handler {
             return;
         };
 
-        let user_data = match UserData::fetch(&ctx, msg.author.id, msg.guild_id.unwrap()).await {
+        let user_data = match UserData::fetch(&ctx, msg.author.id, guild_id).await {
             Ok(ok) => ok,
             Err(e) => {
-                eprintln!("{:#?}", e);
+                error!(
+                    "Failed to fetch user_data during message handler: {}",
+                    e.to_string()
+                );
                 return;
             }
         };
@@ -91,14 +155,97 @@ impl EventHandler for Handler {
             sy: ctx.clone(),
             msg: msg.clone(),
             server_settings,
-            channel,
+            channel: channel.clone(),
             user_data,
+            command_name: cmd.name(),
+            original_command: msg.content.to_string(),
         };
+
+        let member = match guild_id.member(&ctx.http, msg.author.id).await {
+            Ok(m) => m,
+            Err(e) => {
+                error!(
+                    "Failed to fetch member during message handler: {}",
+                    e.to_string()
+                );
+                return;
+            }
+        };
+
+        if let Some(user_permission) = cmd.details().user_permissions {
+            let permissions = match guild_id.to_guild_cached(&ctx.cache).map(|x| x.clone()) {
+                Some(some) => some.user_permissions_in(&channel, &member),
+                None => match ctx.http.get_guild(guild_id).await {
+                    Ok(some) => some.user_permissions_in(&channel, &member),
+                    Err(e) => {
+                        something_happened(&context, "Failed to fetch the guild from cache or http, so I couldn't check your permissions",
+                        TrancerError::from(e)).await;
+                        return;
+                    }
+                },
+            };
+
+            if permissions.contains(user_permission) {
+                let _ = reply!(
+                    context,
+                    CreateMessage::new().embed(
+                        create_embed()
+                            .title("Sorry... you don't have permission to do that.")
+                            .description(format!(
+                                "You need the following permissions: {}",
+                                permission_names(user_permission)
+                            ))
+                    )
+                );
+                return;
+            }
+        }
+
+        if let Some(r) = cmd.details().ratelimit {
+            let ratelimit = match Ratelimit::fetch(&ctx, msg.author.id, cmd.name()).await {
+                Ok(ok) => ok,
+                Err(e) => {
+                    something_happened(
+                        &context,
+                        "Failed to fetch ratelimit",
+                        TrancerError::from(e),
+                    )
+                    .await;
+                    return;
+                }
+            };
+
+            let prev =
+                something_happened!(context, DateTime::parse_from_rfc3339(&*ratelimit.last_used))
+                    .timestamp();
+            let now = Utc::now().timestamp();
+
+            if now - prev < r as i64 {
+                // TODO: Add the proper in 14 minutes etc.
+                let _ = reply!(
+                    context,
+                    CreateMessage::new().embed(create_embed().title("Hey! You can't do that!"))
+                );
+                return;
+            }
+
+            match Ratelimit::update(&ctx, msg.author.id, cmd.name()).await {
+                Ok(_) => (),
+                Err(e) => {
+                    something_happened(
+                        &context,
+                        "Failed to update ratelimit",
+                        TrancerError::from(e),
+                    )
+                    .await;
+                }
+            }
+        }
 
         let response = match cmd.run(context.clone(), args).await {
             Ok(response) => response,
             Err(err) => {
-                msg.reply(&ctx, err.to_string()).await.unwrap();
+                something_happened(&context, "Error while executing command handler", err).await;
                 return;
             }
         };
@@ -118,19 +265,23 @@ impl EventHandler for Handler {
 
     async fn ready(&self, ctx: Context, ready: Ready) {
         let commands = commands::init();
-        CommandCreation::insert_commands(&ctx, commands.iter().map(|x| x.name().clone()).collect()).await.unwrap();
+        CommandCreation::insert_commands(&ctx, commands.iter().map(|x| x.name().clone()).collect())
+            .await
+            .unwrap();
         models::item::Item::insert_all(&ctx).await.unwrap();
 
-        println!("{} is connected!", ready.user.name);
+        info!("{} has connected and is ready", ready.user.name);
     }
 }
 
 #[tokio::main]
 async fn main() {
+    tracing_subscriber::fmt::init();
+    info!("Starting bot...");
+
     dotenv().ok();
 
     let token = env::var("BOT_TOKEN").expect("Expected a token in the environment");
-
     let intents = GatewayIntents::GUILD_MESSAGES | GatewayIntents::MESSAGE_CONTENT;
 
     let mut client = Client::builder(&token, intents)
@@ -140,12 +291,26 @@ async fn main() {
 
     {
         let mut data = client.data.write().await;
-
         let db = Database::new();
         data.insert::<Database>(db);
     }
 
     if let Err(why) = client.start().await {
-        println!("Client error: {:?}", why);
+        eprintln!("Client error: {:?}", why);
     }
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TrancerConfig {
+
+}
+
+fn load_config() -> Result<TrancerConfig, config::ConfigError> {
+    let config = Config::builder()
+        .add_source(config::File::with_name("config_dev"))
+        .add_source(config::File::with_name("config"))
+        .build()?
+        .try_deserialize::<TrancerConfig>()?;
+
+    Ok(config)
 }

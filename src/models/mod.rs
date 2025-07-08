@@ -12,6 +12,7 @@ pub mod confession;
 pub mod dawnagotchi;
 pub mod giveaway;
 pub mod giveaway_entry;
+pub mod ratelimit;
 
 #[macro_export]
 macro_rules! enum_with_sql {

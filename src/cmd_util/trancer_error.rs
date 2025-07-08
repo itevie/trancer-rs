@@ -12,6 +12,7 @@ pub enum ArgumentError {
     OptionalConversion(String, Argument),
     Constructor(String),
     Parser(String, Argument),
+    InvalidInput(String, Argument),
 }
 
 #[derive(Debug)]
@@ -53,6 +54,9 @@ impl fmt::Display for TrancerError {
                 }
                 ArgumentError::OptionalConversion(err, _) => {
                     write!(f, "The argument was required: {}", err)
+                }
+                ArgumentError::InvalidInput(err, _) => {
+                    write!(f, "Your input was invalid: {}", err)
                 }
                 ArgumentError::Parser(err, _) => write!(f, "Failed to parse argument: {}", err),
             },

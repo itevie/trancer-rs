@@ -35,6 +35,7 @@ command_file!(TrancerCommand::<ComamndInfoArgs> {
     },
 
     handler: trancer_handler!(|ctx, args| {
+        todo!("Implement this");
         Ok(TrancerResponseType::Big(
             CreateMessage::new().content("hi").embed(create_embed()),
         ))

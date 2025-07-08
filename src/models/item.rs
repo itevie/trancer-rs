@@ -1,7 +1,7 @@
 use rusqlite::Error::QueryReturnedNoRows;
 use serenity::Client;
 use serenity::client::Context;
-use crate::config::all_items::ALL_ITEMS;
+use crate::trancer_config::all_items::ALL_ITEMS;
 use crate::database::Database;
 use crate::impl_from_row;
 

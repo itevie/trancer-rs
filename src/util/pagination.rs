@@ -6,6 +6,7 @@ use serenity::all::{
 use serenity::builder::CreateEmbed;
 use serenity::futures::StreamExt;
 use std::time::Duration;
+use tracing::{error};
 
 pub struct PaginationOptions {
     pub ctx: TrancerRunnerContext,

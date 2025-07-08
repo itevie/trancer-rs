@@ -1,5 +1,5 @@
 use chrono::{DateTime, TimeZone};
-use serenity::all::User;
+use serenity::all::{Permissions, User};
 use std::fmt::Display;
 
 pub fn pronoun<S: Into<String>>(user1: &User, user2: &User, same_prn: S, diff_prn: S) -> String {
@@ -24,6 +24,10 @@ pub fn currency(val: i32) -> String {
     format!("**{val} 🌀**")
 }
 
+pub fn success<T: Into<String>>(val: T) -> String {
+    format!(":green_circle: {}", val.into())
+}
+
 pub fn date<T>(dt: DateTime<T>) -> String
 where
     T: TimeZone,
@@ -38,4 +42,26 @@ where
     T::Offset: Display,
 {
     dt.format("%Y/%m/%d %H:%M:%S").to_string()
+}
+
+pub fn permission_names(perms: Permissions) -> String {
+    Permissions::all()
+        .iter()
+        .filter(|&p| perms.contains(p))
+        .map(|p| match p {
+            Permissions::ADMINISTRATOR => "Administrator",
+            Permissions::MANAGE_GUILD => "Manage Server",
+            Permissions::MANAGE_CHANNELS => "Manage Channels",
+            Permissions::MANAGE_MESSAGES => "Manage Messages",
+            Permissions::KICK_MEMBERS => "Kick Members",
+            Permissions::BAN_MEMBERS => "Ban Members",
+            Permissions::SEND_MESSAGES => "Send Messages",
+            Permissions::VIEW_CHANNEL => "View Channel",
+            Permissions::MENTION_EVERYONE => "Mention Everyone",
+            Permissions::EMBED_LINKS => "Embed Links",
+            Permissions::READ_MESSAGE_HISTORY => "Read Message History",
+            // Add more as needed...
+            _ => "Unknown",
+        })
+        .collect::<Vec<&'static str>>().join(", ")
 }
