@@ -27,7 +27,8 @@ command_file!(TrancerCommand::<CommandHasNoArgs> {
                     .map(|x| {
                         DateTime::parse_from_rfc3339(&x.created_at)
                             .map(|dt| format!("**{}**: {}", x.name, date_time(dt)))
-                    }).rev()
+                    })
+                    .rev()
                     .collect::<Result<Vec<_>, _>>()?,
                 base_description: None,
             },

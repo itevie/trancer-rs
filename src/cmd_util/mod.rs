@@ -126,7 +126,7 @@ macro_rules! trancer_handler {
         })
     };
 }
-pub(crate) use trancer_handler;
 use crate::cmd_util::types::TrancerCommandType;
 use crate::models::server_settings::ServerSettings;
 use crate::models::user_data::UserData;
+pub(crate) use trancer_handler;

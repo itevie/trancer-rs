@@ -1,25 +1,32 @@
+use crate::database::Database;
+use crate::impl_from_row;
 use chrono::{TimeZone, Utc};
 use rusqlite::Error::QueryReturnedNoRows;
 use serenity::all::UserId;
 use serenity::client::Context;
-use crate::database::Database;
-use crate::impl_from_row;
 
-impl_from_row!(Ratelimit, RatelimitField {
-    user_id: String,
-    command_name: String,
-    last_used: String
-});
+impl_from_row!(
+    Ratelimit,
+    RatelimitField {
+        user_id: String,
+        command_name: String,
+        last_used: String
+    }
+);
 
 impl Ratelimit {
-    pub async fn fetch(ctx: &Context, user_id: UserId, command_name: String) -> rusqlite::Result<Ratelimit> {
+    pub async fn fetch(
+        ctx: &Context,
+        user_id: UserId,
+        command_name: String,
+    ) -> rusqlite::Result<Ratelimit> {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
 
         let result = db.get_one(
             "SELECT * FROM ratelimits WHERE user_id = ?1 AND command_name = ?2 LIMIT 1",
             &[&user_id.to_string(), &command_name],
-            |r| Ratelimit::from_row(r)
+            |r| Ratelimit::from_row(r),
         );
 
         match result {
@@ -33,13 +40,21 @@ impl Ratelimit {
         }
     }
 
-    pub async fn update(ctx: &Context, user_id: UserId, command_name: String) -> rusqlite::Result<()> {
+    pub async fn update(
+        ctx: &Context,
+        user_id: UserId,
+        command_name: String,
+    ) -> rusqlite::Result<()> {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
 
         db.run(
             "UPDATE ratelimits SET last_used = ?1 WHERE user_id = ?2 AND command_name = ?3",
-            &[&Utc::now().to_rfc3339(), &user_id.to_string(), &command_name]
+            &[
+                &Utc::now().to_rfc3339(),
+                &user_id.to_string(),
+                &command_name,
+            ],
         )
     }
 }

@@ -8,10 +8,10 @@ use crate::models::economy::Economy;
 use crate::models::user_data::UserData;
 use crate::util::embeds::create_embed;
 use crate::util::lang::{currency, list, pronoun};
+use crate::util::level_calc;
 use crate::{command_argument_struct, command_file};
 use serenity::all::{CreateMessage, User};
 use std::collections::HashMap;
-use crate::util::level_calc;
 
 command_argument_struct!(ProfileArgs {
     user: User, PCACV::User

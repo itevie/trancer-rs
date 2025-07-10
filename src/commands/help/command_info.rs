@@ -1,15 +1,15 @@
 use crate::cmd_util::arg_parser::CommandArgumentStruct;
 use crate::cmd_util::arg_parser::PCACV;
 use crate::cmd_util::args::{ArgType, Argument, TrancerArguments};
+use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::{
     trancer_handler, ArgumentError, CommandTrait, TrancerCommand, TrancerDetails, TrancerError,
     TrancerResponseType,
 };
 use crate::util::embeds::create_embed;
 use crate::{command_argument_struct, command_file};
-use serenity::all::{CreateMessage};
+use serenity::all::CreateMessage;
 use std::collections::HashMap;
-use crate::cmd_util::types::TrancerCommandType;
 
 command_argument_struct!(ComamndInfoArgs {
    name: String, PCACV::String

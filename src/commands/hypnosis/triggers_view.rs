@@ -1,18 +1,18 @@
 use crate::cmd_util::arg_parser::{CommandArgumentStruct, PCACV};
 use crate::cmd_util::args::{ArgType, Argument, TrancerArguments};
 use crate::cmd_util::trancer_handler;
+use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{
     ArgumentError, TrancerCommand, TrancerDetails, TrancerError, TrancerResponseType,
 };
-use crate::models::user_imposition::{UserImposition};
+use crate::models::user_imposition::UserImposition;
 use crate::util::embeds::create_embed;
 use crate::util::lang::pronoun;
 use crate::util::pagination::{paginate, PaginationDataType, PaginationOptions};
 use crate::{command_argument_struct, command_file};
 use serenity::all::User;
 use std::collections::HashMap;
-use crate::cmd_util::types::TrancerCommandType;
 
 command_argument_struct!(ViewTriggersArgs {
    user: User, PCACV::User
@@ -43,7 +43,10 @@ command_file!(TrancerCommand::<ViewTriggersArgs> {
 
         paginate(PaginationOptions {
             ctx: ctx.clone(),
-            embed: create_embed().title(format!("{} triggers", pronoun(&ctx.msg.author, &args.user, "Your", "$name's"))),
+            embed: create_embed().title(format!(
+                "{} triggers",
+                pronoun(&ctx.msg.author, &args.user, "Your", "$name's")
+            )),
             page_size: 20,
             data: PaginationDataType::Description {
                 data: triggers.iter().map(|x| x.what.clone()).collect(),

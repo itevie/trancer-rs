@@ -1,6 +1,6 @@
 use crate::cmd_util::args::Argument;
-use std::fmt;
 use chrono::ParseError;
+use std::fmt;
 
 #[derive(Debug)]
 pub enum ArgumentError {
@@ -22,7 +22,7 @@ pub enum TrancerError {
     Argument(ArgumentError),
     NotImplemented(String),
     ReplyError(serenity::Error),
-    Generic(String)
+    Generic(String),
 }
 
 impl std::error::Error for TrancerError {}
@@ -89,6 +89,10 @@ impl From<ArgumentError> for TrancerError {
 
 impl From<ParseError> for TrancerError {
     fn from(err: ParseError) -> Self {
-        TrancerError::Generic(format!("Failed to parse date/time: {} ({:?})", err.to_string(), err.kind()))
+        TrancerError::Generic(format!(
+            "Failed to parse date/time: {} ({:?})",
+            err.to_string(),
+            err.kind()
+        ))
     }
 }

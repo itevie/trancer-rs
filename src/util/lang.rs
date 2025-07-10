@@ -48,10 +48,12 @@ static PROGRESS_BAR_EMPTY: &'static str = "░";
 static PROGRESS_BAR_FILLED: &'static str = "█";
 pub fn make_percentage(percentage: f64, length: u8) -> String {
     let percentage_per = 100f64 / length as f64;
-    let amount = (percentage / percentage_per).round().clamp(0., length as f64);
+    let amount = (percentage / percentage_per)
+        .round()
+        .clamp(0., length as f64);
 
     PROGRESS_BAR_FILLED.repeat(amount as usize)
-    + &PROGRESS_BAR_EMPTY.repeat(length as usize - amount as usize)
+        + &PROGRESS_BAR_EMPTY.repeat(length as usize - amount as usize)
 }
 
 pub fn permission_names(perms: Permissions) -> String {
@@ -73,5 +75,6 @@ pub fn permission_names(perms: Permissions) -> String {
             // Add more as needed...
             _ => "Unknown",
         })
-        .collect::<Vec<&'static str>>().join(", ")
+        .collect::<Vec<&'static str>>()
+        .join(", ")
 }

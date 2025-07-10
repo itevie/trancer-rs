@@ -5,8 +5,11 @@ enum_with_sql!(BlacklistType {
     Command = "command"
 });
 
-impl_from_row!(Blacklisted, BlacklistedField {
-    r#type: String,
-    server_id: String,
-    key: String
-});
+impl_from_row!(
+    Blacklisted,
+    BlacklistedField {
+        r#type: String,
+        server_id: String,
+        key: String
+    }
+);

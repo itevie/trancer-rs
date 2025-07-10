@@ -98,7 +98,7 @@ impl PCACV {
                     if ok < min {
                         return Err(ArgumentError::InvalidInput(
                             format!("Minimum amount is {}", min),
-                            arg.clone()
+                            arg.clone(),
                         ))?;
                     }
                 }
@@ -107,7 +107,7 @@ impl PCACV {
                     if ok > max {
                         return Err(ArgumentError::InvalidInput(
                             format!("Maximum amount is: {}", max),
-                            arg.clone()
+                            arg.clone(),
                         ))?;
                     }
                 }

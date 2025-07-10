@@ -1,9 +1,9 @@
-use rusqlite::Error::QueryReturnedNoRows;
-use serenity::Client;
-use serenity::client::Context;
-use crate::trancer_config::all_items::ALL_ITEMS;
 use crate::database::Database;
 use crate::impl_from_row;
+use crate::trancer_config::all_items::ALL_ITEMS;
+use rusqlite::Error::QueryReturnedNoRows;
+use serenity::client::Context;
+use serenity::Client;
 
 impl_from_row!(Item, ItemField {
     id: u32,
@@ -23,11 +23,9 @@ impl Item {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
 
-        let result = db.get_one(
-            "SELECT * FROM items WHERE id = ?1",
-            &[&id],
-            |r| Item::from_row(r),
-        );
+        let result = db.get_one("SELECT * FROM items WHERE id = ?1", &[&id], |r| {
+            Item::from_row(r)
+        });
 
         match result {
             Ok(ok) => Ok(Some(ok)),
@@ -40,11 +38,7 @@ impl Item {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
 
-        db.get_many(
-            "SELECT * FROM items;",
-            &[],
-            |r| Item::from_row(r),
-        )
+        db.get_many("SELECT * FROM items;", &[], |r| Item::from_row(r))
     }
 
     pub async fn insert_all(ctx: &Context) -> rusqlite::Result<()> {

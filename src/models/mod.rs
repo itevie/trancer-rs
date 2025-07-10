@@ -1,18 +1,18 @@
-pub mod server_settings;
-pub mod user_data;
-pub mod user_imposition;
-pub mod economy;
-pub mod item;
-pub mod aquired_item;
 pub mod aquired_badge;
+pub mod aquired_item;
 pub mod blacklisted;
 pub mod card;
 pub mod command_creation;
 pub mod confession;
 pub mod dawnagotchi;
+pub mod economy;
 pub mod giveaway;
 pub mod giveaway_entry;
+pub mod item;
 pub mod ratelimit;
+pub mod server_settings;
+pub mod user_data;
+pub mod user_imposition;
 
 #[macro_export]
 macro_rules! enum_with_sql {

@@ -39,19 +39,20 @@ const fn fish(name: Cow, price_weight: (u32, f64), emoji: Cow) -> PartialItem {
     }
 }
 
-const fn fishd(
-    name: Cow,
-    price_weight: (u32, f64),
-    emoji: Cow,
-    description: Cow,
-) -> PartialItem {
+const fn fishd(name: Cow, price_weight: (u32, f64), emoji: Cow, description: Cow) -> PartialItem {
     PartialItem {
         description: Some(description),
         ..fish(name, price_weight, emoji)
     }
 }
 
-const fn basic(name: Cow, price: u32, weight: f64, description: Option<Cow>, emoji: Cow ) -> PartialItem {
+const fn basic(
+    name: Cow,
+    price: u32,
+    weight: f64,
+    description: Option<Cow>,
+    emoji: Cow,
+) -> PartialItem {
     PartialItem {
         name,
         price,
@@ -65,14 +66,28 @@ const fn basic(name: Cow, price: u32, weight: f64, description: Option<Cow>, emo
     }
 }
 
-const fn tagged(name: Cow, price: u32, weight: f64, description: Option<Cow>, emoji: Cow, tag: Cow) -> PartialItem {
+const fn tagged(
+    name: Cow,
+    price: u32,
+    weight: f64,
+    description: Option<Cow>,
+    emoji: Cow,
+    tag: Cow,
+) -> PartialItem {
     PartialItem {
         tag: Some(tag),
         ..basic(name, price, weight, description, emoji)
     }
 }
 
-const fn taggednb(name: Cow, price: u32, weight: f64, description: Option<Cow>, emoji: Cow, tag: Cow) -> PartialItem {
+const fn taggednb(
+    name: Cow,
+    price: u32,
+    weight: f64,
+    description: Option<Cow>,
+    emoji: Cow,
+    tag: Cow,
+) -> PartialItem {
     PartialItem {
         buyable: false,
         ..tagged(name, price, weight, description, emoji, tag)
@@ -191,23 +206,82 @@ pub static ALL_ITEMS: &'static [PartialItem] = &[
         "<:we_are_number_one_fish:1322129116006449234>",
         "If you wanna be a villain number one, you have to catch a fishie on the run.",
     ),
-
     // ----- Useful Items -----
-    basic("card-pull", 100, 0.6, Some("Buy this, and pull a card using the `pull` command!"), "<:card_pull:1321761564314964010>"),
-    basic("hair-dye", 150, 0.05, Some("Dye the hair of your Dawn! Use the `dyehair` command to do so!"), "<:hair_dye:1325556895309758576>"),
-    basic("hair", 30, 0.5, Some("Feed your Dawn some hair and it'll be a lot less hungry!"),"<:hair:1325556878494928957>"),
-    basic("juicebox", 15, 0.55, Some("Give your Dawn some juice and it'll be a lot less thirsty!"), "<:juicebox:1322129011899502602>"),
-    basic("pendulum", 75, 0.15, Some("A pendulum! It goes this way and that. (good for playing with Dawn!)"), "<:pendulum:1325556858869645443>"),
-    basic("fishing-rod", 250, 0.1, Some("You can fish more frequently. This has a 10% chance of breaking."), "<:fishing_rod:1321761522699210802>"),
-
+    basic(
+        "card-pull",
+        100,
+        0.6,
+        Some("Buy this, and pull a card using the `pull` command!"),
+        "<:card_pull:1321761564314964010>",
+    ),
+    basic(
+        "hair-dye",
+        150,
+        0.05,
+        Some("Dye the hair of your Dawn! Use the `dyehair` command to do so!"),
+        "<:hair_dye:1325556895309758576>",
+    ),
+    basic(
+        "hair",
+        30,
+        0.5,
+        Some("Feed your Dawn some hair and it'll be a lot less hungry!"),
+        "<:hair:1325556878494928957>",
+    ),
+    basic(
+        "juicebox",
+        15,
+        0.55,
+        Some("Give your Dawn some juice and it'll be a lot less thirsty!"),
+        "<:juicebox:1322129011899502602>",
+    ),
+    basic(
+        "pendulum",
+        75,
+        0.15,
+        Some("A pendulum! It goes this way and that. (good for playing with Dawn!)"),
+        "<:pendulum:1325556858869645443>",
+    ),
+    basic(
+        "fishing-rod",
+        250,
+        0.1,
+        Some("You can fish more frequently. This has a 10% chance of breaking."),
+        "<:fishing_rod:1321761522699210802>",
+    ),
     // ----- Accessories -----
-    tagged("pacifier", 100, 0.2, Some("Good for calming down."), "<:paci:1358918815584620877>", "accessory"),
-    tagged("hair-bow", 2500, 0.005, Some("Make your Dawn all cutesy with a hair bow!"),"<:bow:1368265911139565578>", "accessory"),
-
+    tagged(
+        "pacifier",
+        100,
+        0.2,
+        Some("Good for calming down."),
+        "<:paci:1358918815584620877>",
+        "accessory",
+    ),
+    tagged(
+        "hair-bow",
+        2500,
+        0.005,
+        Some("Make your Dawn all cutesy with a hair bow!"),
+        "<:bow:1368265911139565578>",
+        "accessory",
+    ),
     // ----- Resources -----
-    basic("stick", 5, 0.9, Some("A stick."), "<:stick:1321761484174524498>"),
-    tagged("rock", 1, 0.5, None, "<:rock:1321761504386744391>", "mineral"),
-
+    basic(
+        "stick",
+        5,
+        0.9,
+        Some("A stick."),
+        "<:stick:1321761484174524498>",
+    ),
+    tagged(
+        "rock",
+        1,
+        0.5,
+        None,
+        "<:rock:1321761504386744391>",
+        "mineral",
+    ),
     // ----- Minerals -----
     mineral("dirt", 1, 0.6, "<:dirt:1328997326932676648>"),
     mineral("coal", 5, 0.35, "<:coal:1325546270500196443>"),
@@ -221,16 +295,42 @@ pub static ALL_ITEMS: &'static [PartialItem] = &[
     mineral("ruby", 110, 0.009, "<:ruby:1342883623422132387>"),
     mineral("diamond", 120, 0.003, "<:diamond:1328997377889140817>"),
     mineral("spiral", 150, 0.001, "<:spiral:1328997344343228460>"),
-
     // ----- Pickaxes -----
-    tagged("stone-pickaxe", 10, 0.5, None, "<:stone_pickaxe:1325548046188286053>", "pickaxe"),
-    taggednb("emerald-pickaxe", 200, 0.0001, Some("Gives you 10% extra luck when mining."), "<:emerald_pickaxe:1342888386175963248>", "pickaxe"),
-
+    tagged(
+        "stone-pickaxe",
+        10,
+        0.5,
+        None,
+        "<:stone_pickaxe:1325548046188286053>",
+        "pickaxe",
+    ),
+    taggednb(
+        "emerald-pickaxe",
+        200,
+        0.0001,
+        Some("Gives you 10% extra luck when mining."),
+        "<:emerald_pickaxe:1342888386175963248>",
+        "pickaxe",
+    ),
     // ----- Collectables -----
-    collectable("christmas-cookie", 1000, "A tasty cookie given on 25/12/2024!", "<:chirtmas_cookie:1321761548372279337>"),
-    collectable("easter-2025-egg", 1000, "An ugly egg given on Easter 2025!", "<:egg:1366070379302359050>"),
-    collectable("1st-birthday-cake", 5000, "Twilight's first birthday cake :heart:", ":birthday:"),
-
+    collectable(
+        "christmas-cookie",
+        1000,
+        "A tasty cookie given on 25/12/2024!",
+        "<:chirtmas_cookie:1321761548372279337>",
+    ),
+    collectable(
+        "easter-2025-egg",
+        1000,
+        "An ugly egg given on Easter 2025!",
+        "<:egg:1366070379302359050>",
+    ),
+    collectable(
+        "1st-birthday-cake",
+        5000,
+        "Twilight's first birthday cake :heart:",
+        ":birthday:",
+    ),
     // ----- Misc -----
     PartialItem {
         name: "lottery-ticket",
@@ -242,5 +342,5 @@ pub static ALL_ITEMS: &'static [PartialItem] = &[
         buyable: true,
         droppable: true,
         max: Some(5),
-    }
+    },
 ];

@@ -1,6 +1,7 @@
 use crate::cmd_util::arg_parser::{CommandArgumentStruct, PCACV};
 use crate::cmd_util::args::{ArgType, Argument, TrancerArguments};
 use crate::cmd_util::trancer_handler;
+use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{
     ArgumentError, TrancerCommand, TrancerDetails, TrancerError, TrancerResponseType,
@@ -12,7 +13,6 @@ use crate::{command_argument_struct, command_file};
 use rand::random;
 use serenity::all::User;
 use std::collections::HashMap;
-use crate::cmd_util::types::TrancerCommandType;
 
 command_argument_struct!(SendTriggerArgs {
    user: User, PCACV::User

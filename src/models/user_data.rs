@@ -1,10 +1,10 @@
-use std::fmt::Display;
 use crate::database::Database;
 use crate::{enum_with_sql, impl_from_row};
 use rusqlite::Error::QueryReturnedNoRows;
 use rusqlite::ToSql;
 use serenity::all::{GuildId, UserId};
 use serenity::client::Context;
+use std::fmt::Display;
 
 enum_with_sql!(HypnoStatus {
     Green = "green",
@@ -14,11 +14,16 @@ enum_with_sql!(HypnoStatus {
 
 impl Display for HypnoStatus {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            HypnoStatus::Green => "green 🟢",
-            HypnoStatus::Yellow => "yellow 🟡",
-            HypnoStatus::Red => "red 🔴",
-        }.to_string())
+        write!(
+            f,
+            "{}",
+            match self {
+                HypnoStatus::Green => "green 🟢",
+                HypnoStatus::Yellow => "yellow 🟡",
+                HypnoStatus::Red => "red 🔴",
+            }
+            .to_string()
+        )
     }
 }
 

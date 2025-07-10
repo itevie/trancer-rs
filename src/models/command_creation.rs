@@ -12,7 +12,10 @@ impl_from_row!(
 );
 
 impl CommandCreation {
-    pub async fn insert_commands(ctx: &Context, command_names: Vec<String>) -> rusqlite::Result<()> {
+    pub async fn insert_commands(
+        ctx: &Context,
+        command_names: Vec<String>,
+    ) -> rusqlite::Result<()> {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
 
@@ -32,10 +35,8 @@ impl CommandCreation {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
 
-        db.get_many(
-            "SELECT * FROM command_creations;",
-            &[],
-            |r| CommandCreation::from_row(r),
-        )
+        db.get_many("SELECT * FROM command_creations;", &[], |r| {
+            CommandCreation::from_row(r)
+        })
     }
 }
