@@ -2,9 +2,9 @@
 
 mod cmd_util;
 mod commands;
-mod trancer_config;
 mod database;
 mod models;
+mod trancer_config;
 mod util;
 
 use crate::cmd_util::arg_parser::parse_args;
@@ -16,9 +16,14 @@ use crate::models::server_settings::ServerSettings;
 use crate::models::user_data::UserData;
 use crate::util::embeds::create_embed;
 use crate::util::lang::permission_names;
+use crate::util::level_calc;
+use crate::util::level_calc::{MAX_XP, MIN_XP, TIME_BETWEEN};
 use chrono::format::Item;
 use chrono::{DateTime, Utc};
+use config::Config;
 use dotenvy::dotenv;
+use lazy_static::lazy_static;
+use serde::Deserialize;
 use serenity::all::{Channel, ChannelType, CreateMessage};
 use serenity::builder::EditChannel;
 use serenity::{
@@ -28,10 +33,8 @@ use serenity::{
 };
 use std::any::Any;
 use std::env;
-use config::Config;
 use tokio::io::AsyncWriteExt;
-use tracing::{error, info};
-use serde::Deserialize;
+use tracing::{error, info, instrument};
 
 async fn something_happened(ctx: &TrancerRunnerContext, m: impl Into<String>, e: TrancerError) {
     let dev_error = format!(
@@ -277,6 +280,7 @@ impl EventHandler for Handler {
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
+    load_config().unwrap();
     info!("Starting bot...");
 
     dotenv().ok();
@@ -302,13 +306,35 @@ async fn main() {
 
 #[derive(Debug, Deserialize)]
 pub struct TrancerConfig {
-
+    pub server: TrancerServerConfig,
 }
 
+#[derive(Debug, Deserialize)]
+pub struct TrancerServerConfig {
+    pub id: String,
+    pub invite_link: String,
+}
+
+lazy_static! {
+    pub static ref CONFIG: TrancerConfig = {
+        let config = Config::builder()
+            .add_source(config::File::with_name("config_dev").required(false))
+            .add_source(config::File::with_name("config").required(false))
+            .build()
+            .unwrap()
+            .try_deserialize::<TrancerConfig>()
+            .unwrap();
+
+        config
+    };
+}
+
+#[instrument]
 fn load_config() -> Result<TrancerConfig, config::ConfigError> {
+    info!("Loading config");
     let config = Config::builder()
-        .add_source(config::File::with_name("config_dev"))
-        .add_source(config::File::with_name("config"))
+        .add_source(config::File::with_name("config_dev").required(false))
+        .add_source(config::File::with_name("config").required(false))
         .build()?
         .try_deserialize::<TrancerConfig>()?;
 

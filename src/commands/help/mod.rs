@@ -1,19 +1,11 @@
-use crate::cmd_util::CommandTrait;
+use crate::cmd_import_map;
 
 mod command_info;
 mod profile;
 mod ping;
 mod commands_new;
 mod commands_all;
+mod invite;
+mod avatar;
 
-pub fn init() -> Vec<Box<dyn CommandTrait>> {
-    let mut commands = vec![];
-    commands.extend(profile::init());
-    commands.extend(command_info::init());
-    commands.extend(ping::init());
-    commands.extend(commands_new::init());
-    commands.extend(commands_all::init());
-    commands
-}
-
-
+cmd_import_map!(profile, command_info, ping, commands_new, commands_all, invite, avatar);

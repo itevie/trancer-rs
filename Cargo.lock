@@ -2066,6 +2066,7 @@ dependencies = [
  "chrono",
  "config",
  "dotenvy",
+ "lazy_static",
  "log",
  "once_cell",
  "rand",

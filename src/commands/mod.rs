@@ -2,21 +2,15 @@ use crate::cmd_util::CommandTrait;
 use crate::command_argument_struct;
 use crate::cmd_util::arg_parser::{CommandArgumentStruct, PCACV};
 use std::collections::HashMap;
+use serenity::all::User;
+use crate::cmd_util::args::{ArgType, Argument, ArgumentDetails, TrancerArguments};
 use crate::TrancerError;
 
 mod help;
 mod hypnosis;
 mod economy;
 mod server;
-
-pub fn init() -> Vec<Box<dyn CommandTrait>> {
-    let mut commands = vec![];
-    commands.extend(help::init());
-    commands.extend(hypnosis::init());
-    commands.extend(economy::init());
-    commands.extend(server::init());
-    commands
-}
+mod fun;
 
 #[macro_export]
 macro_rules! cmd_import_map {
@@ -29,6 +23,8 @@ macro_rules! cmd_import_map {
         }
     };
 }
+
+cmd_import_map!(help, hypnosis, economy, server, fun);
 
 #[macro_export]
 macro_rules! command_file {
@@ -66,3 +62,22 @@ macro_rules! reply {
 }
 
 command_argument_struct!(CommandHasNoArgs {});
+command_argument_struct!(OnlyUserArgs {
+    user: User, PCACV::User
+});
+
+pub fn only_user_args(allow_bots: bool, infer: bool,) -> TrancerArguments {
+    TrancerArguments {
+        required: 1,
+        args: vec![
+            Argument {
+                name: "user".to_string(),
+                t: ArgType::User {
+                    allow_bots,
+                    infer,
+                },
+                details: ArgumentDetails::default()
+            }
+        ]
+    }
+}
