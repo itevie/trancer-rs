@@ -4,6 +4,7 @@ mod avatar;
 mod command_info;
 mod commands_all;
 mod commands_new;
+mod define;
 mod invite;
 mod ping;
 mod profile;
@@ -15,5 +16,6 @@ cmd_import_map!(
     commands_new,
     commands_all,
     invite,
-    avatar
+    avatar,
+    define
 );

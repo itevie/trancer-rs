@@ -36,6 +36,7 @@ command_file! {
                     }
                 ]
             }),
+            aliases: Some(vec!["id".to_string(), "me".to_string()]),
             ..Default::default()
         },
 

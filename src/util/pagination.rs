@@ -16,9 +16,9 @@ pub struct PaginationOptions {
 }
 
 pub struct Field {
-    name: String,
-    value: String,
-    inline: bool,
+    pub name: String,
+    pub value: String,
+    pub inline: bool,
 }
 
 pub enum PaginationDataType {
@@ -74,7 +74,11 @@ pub async fn paginate(op: PaginationOptions) -> Result<(), TrancerError> {
                             .join(&"\n")
                             .as_str(),
                 ),
-                PaginationDataType::Field(ref data) => todo!(),
+                PaginationDataType::Field(ref data) => embed.fields(
+                    data[current_index..(current_index + op.page_size).min(data.len())]
+                        .iter()
+                        .map(|x| (x.name.clone(), x.value.clone(), x.inline)),
+                ),
             }
         };
 

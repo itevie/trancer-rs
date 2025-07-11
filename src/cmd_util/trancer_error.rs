@@ -1,5 +1,6 @@
 use crate::cmd_util::args::Argument;
 use chrono::ParseError;
+use std::error::Error;
 use std::fmt;
 
 #[derive(Debug)]
@@ -19,6 +20,7 @@ pub enum ArgumentError {
 pub enum TrancerError {
     Sqlite(rusqlite::Error),
     Serenity(serenity::Error),
+    Reqwest(reqwest::Error),
     Argument(ArgumentError),
     NotImplemented(String),
     ReplyError(serenity::Error),
@@ -32,6 +34,20 @@ impl fmt::Display for TrancerError {
         match self {
             TrancerError::Sqlite(err) => write!(f, "Database error: {}", err),
             TrancerError::Serenity(err) => write!(f, "Serenity error: {}", err),
+            TrancerError::Reqwest(err) => write!(
+                f,
+                "HTTP error ({:?}): {}\n> URL: {}\n> Inner: {}",
+                err.status(),
+                err,
+                match err.url() {
+                    Some(ok) => ok.to_string(),
+                    None => "No URL provided".to_string(),
+                },
+                match err.source() {
+                    Some(err) => err.to_string(),
+                    None => "No sub error".to_string(),
+                }
+            ),
             TrancerError::Argument(err) => match err {
                 ArgumentError::Constructor(err) => {
                     write!(f, "Argument constructor error: {}", err)
@@ -94,5 +110,11 @@ impl From<ParseError> for TrancerError {
             err.to_string(),
             err.kind()
         ))
+    }
+}
+
+impl From<reqwest::Error> for TrancerError {
+    fn from(err: reqwest::Error) -> Self {
+        TrancerError::Reqwest(err)
     }
 }
