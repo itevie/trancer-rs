@@ -20,6 +20,7 @@ use crate::util::level_calc;
 use crate::util::level_calc::{MAX_XP, MIN_XP, TIME_BETWEEN};
 use chrono::format::Item;
 use chrono::{DateTime, Utc};
+use chrono_humanize::HumanTime;
 use config::Config;
 use dotenvy::dotenv;
 use lazy_static::lazy_static;
@@ -227,7 +228,10 @@ impl EventHandler for Handler {
                 // TODO: Add the proper in 14 minutes etc.
                 let _ = reply!(
                     context,
-                    CreateMessage::new().embed(create_embed().title("Hey! You can't do that!"))
+                    CreateMessage::new().embed(create_embed().title(format!(
+                        "Hey! You can't do that! Try again in **{}**",
+                        HumanTime::from(now - prev)
+                    )))
                 );
                 return;
             }
