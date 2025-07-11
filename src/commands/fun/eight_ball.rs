@@ -44,7 +44,7 @@ static EIGHT_BALL_IMAGE: &'static str = "https://cdn.discordapp.com/attachments/
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
         name: "8ball".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Fun,
         description: "This is a test".to_string(),
         details: TrancerDetails {
             aliases: Some(vec!["8b".to_string(), "magic8ball".to_string()]),

@@ -13,7 +13,7 @@ static BITE_LIP: &'static str = "<:bite_lips:1315469148004028537>";
 command_file! {
     TrancerCommand::<OnlyUserArgs> {
         name: "rizz".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Fun,
         description: "Rizz someone up!".to_string(),
         details: TrancerDetails {
             arguments: Some(only_user_args(true, false)),

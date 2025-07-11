@@ -19,7 +19,7 @@ command_argument_struct!(RateArgs {
 command_file! {
     TrancerCommand::<RateArgs> {
         name: "rate".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Fun,
         description: "Give someone a rating for anything!".to_string(),
         details: TrancerDetails {
             arguments: Some(TrancerArguments {

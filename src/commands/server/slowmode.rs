@@ -17,7 +17,7 @@ command_argument_struct!(SlowmodeArgs {
 command_file! {
     TrancerCommand::<SlowmodeArgs> {
         name: "slowmode".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Admin,
         description: "Change the slowmode in a channel".to_string(),
         details: TrancerDetails {
             arguments: Some(TrancerArguments {
