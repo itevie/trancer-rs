@@ -1,5 +1,7 @@
+use crate::cmd_util::TrancerError;
 use crate::database::Database;
 use crate::{enum_with_sql, impl_from_row};
+use chrono::{DateTime, Datelike, NaiveDate, TimeZone, Utc};
 use rusqlite::Error::QueryReturnedNoRows;
 use rusqlite::ToSql;
 use serenity::all::{GuildId, UserId};
@@ -54,6 +56,53 @@ impl_from_row!(UserData, UserDataFields {
 });
 
 impl UserData {
+    pub fn birthday_date(&self) -> Result<Option<DateTime<Utc>>, TrancerError> {
+        // Early return None if birthday is None
+        let Some(birthday) = &self.birthday else {
+            return Ok(None);
+        };
+
+        let current_year = Utc::now().year().to_string();
+        let replaced = birthday.replace("????", &current_year);
+        let date_str = replaced.replace('/', "-");
+
+        let date = NaiveDate::parse_from_str(&date_str, "%Y-%m-%d")?;
+        let datetime = Utc.from_utc_datetime(&date.and_hms_opt(0, 0, 0).unwrap_or_default());
+
+        Ok(Some(datetime))
+    }
+
+    pub fn next_birthday(&self) -> Result<Option<DateTime<Utc>>, TrancerError> {
+        let Some(birthday) = &self.birthday_date()? else {
+            return Ok(None);
+        };
+
+        let today = Utc::now().date_naive();
+        let birth_month = birthday.month();
+        let birth_day = birthday.day();
+
+        let this_year = today.year();
+        let this_year_birthday = Utc.with_ymd_and_hms(this_year, birth_month, birth_day, 0, 0, 0);
+
+        let next = if let Some(date) = this_year_birthday.single() {
+            if date.date_naive() >= today {
+                date
+            } else {
+                // Next year's birthday
+                Utc.with_ymd_and_hms(this_year + 1, birth_month, birth_day, 0, 0, 0)
+                    .single()
+                    .ok_or_else(|| TrancerError::Generic("Invalid birthday in next year".into()))?
+            }
+        } else {
+            // Handle invalid date (like Feb 29 on non-leap year)
+            Utc.with_ymd_and_hms(this_year + 1, birth_month, birth_day, 0, 0, 0)
+                .single()
+                .ok_or_else(|| TrancerError::Generic("Invalid birthday date".into()))?
+        };
+
+        Ok(Some(next))
+    }
+
     /// Fetch a UserData for a specific user
     pub async fn fetch(
         ctx: &Context,
