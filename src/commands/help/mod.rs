@@ -1,6 +1,7 @@
 use crate::cmd_import_map;
 
 mod avatar;
+mod category;
 mod command_info;
 mod commands_all;
 mod commands_new;
@@ -17,5 +18,6 @@ cmd_import_map!(
     commands_all,
     invite,
     avatar,
-    define
+    define,
+    category
 );
