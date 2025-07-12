@@ -3,6 +3,7 @@ use crate::models::item::Item;
 use rand::prelude::SliceRandom;
 use rand::{random, Rng};
 use serenity::client::Context;
+use std::collections::HashMap;
 
 pub struct RandomRewardItemOptions {
     /// Leave Some(None) for completely random items, otherwise Some(Some(Vec<id, weighht>))
@@ -22,17 +23,17 @@ pub struct RandomRewardOptions {
 pub struct RandomRewardResult {
     currency: u32,
     /// Vec<(id, amount)>
-    items: Vec<(u32, u32)>,
+    items: HashMap<u32, u32>,
 }
 
 pub async fn generate_random_rewards(
     ctx: &Context,
     options: RandomRewardOptions,
-) -> Result<(), TrancerError> {
+) -> Result<RandomRewardResult, TrancerError> {
     let all_items = Item::get_all(ctx).await?;
     let mut result = RandomRewardResult {
         currency: 0,
-        items: vec![],
+        items: HashMap::new(),
     };
 
     if let Some(currency) = options.currency {
@@ -61,10 +62,25 @@ pub async fn generate_random_rewards(
 
         let total_weight = actual_items.iter().map(|(_, weight)| *weight).sum::<f64>();
         let amount = biased_random(items.count.0, items.count.1);
-        let given_items: Vec<(u32, u32)> = vec![];
+        let mut selected_items: HashMap<u32, u32> = HashMap::new();
+
+        for _ in 0..amount {
+            let random_value = rng.gen_range(0.0..total_weight);
+
+            let mut cumulative_weight = 0.0;
+            for (item, weight) in &actual_items {
+                cumulative_weight += weight;
+                if random_value <= cumulative_weight {
+                    *selected_items.entry(item.id).or_insert(0) += 1;
+                    break;
+                }
+            }
+        }
+
+        result.items = selected_items;
     }
 
-    Ok(())
+    Ok(result)
 }
 
 fn biased_random(min: u32, max: u32) -> u32 {
