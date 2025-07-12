@@ -1,8 +1,10 @@
 use crate::database::Database;
 use crate::impl_from_row;
-use crate::trancer_config::all_items::ALL_ITEMS;
+use crate::trancer_config::all_items::ALL_ITEMS_DEF;
+use once_cell::sync::OnceCell;
 use rusqlite::Error::QueryReturnedNoRows;
 use serenity::client::Context;
+use std::collections::HashMap;
 
 impl_from_row!(Item, ItemField {
     id: u32,
@@ -16,6 +18,8 @@ impl_from_row!(Item, ItemField {
     emoji: Option<String>,
     max: Option<u32>
 });
+
+pub static ALL_ITEMS: OnceCell<Vec<Item>> = OnceCell::new();
 
 impl Item {
     pub async fn get(ctx: &Context, id: u32) -> rusqlite::Result<Option<Item>> {
@@ -33,7 +37,11 @@ impl Item {
         }
     }
 
-    pub async fn get_all(ctx: &Context) -> rusqlite::Result<Vec<Item>> {
+    pub fn get_all() -> Vec<Item> {
+        ALL_ITEMS.get().unwrap().clone()
+    }
+
+    pub async fn get_all_db(ctx: &Context) -> rusqlite::Result<Vec<Item>> {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
 
@@ -41,12 +49,12 @@ impl Item {
     }
 
     pub async fn insert_all(ctx: &Context) -> rusqlite::Result<()> {
-        let items = Item::get_all(&ctx).await?;
+        let items = Item::get_all_db(&ctx).await?;
 
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
 
-        for item in ALL_ITEMS.iter() {
+        for item in ALL_ITEMS_DEF.iter() {
             let Some(already_item) = items.iter().find(|x| x.name == item.name) else {
                 db.run(
                     "INSERT INTO items (name, price, description, weight, droppable, tag, buyable, emoji, max) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",

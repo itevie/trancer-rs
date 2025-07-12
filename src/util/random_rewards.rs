@@ -30,7 +30,7 @@ pub async fn generate_random_rewards(
     ctx: &Context,
     options: RandomRewardOptions,
 ) -> Result<RandomRewardResult, TrancerError> {
-    let all_items = Item::get_all(ctx).await?;
+    let all_items = Item::get_all();
     let mut result = RandomRewardResult {
         currency: 0,
         items: HashMap::new(),

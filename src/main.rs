@@ -11,6 +11,7 @@ use crate::cmd_util::arg_parser::parse_args;
 use crate::cmd_util::{TrancerError, TrancerResponseType, TrancerRunnerContext};
 use crate::database::Database;
 use crate::models::command_creation::CommandCreation;
+use crate::models::item::ALL_ITEMS;
 use crate::models::ratelimit::Ratelimit;
 use crate::models::server_settings::ServerSettings;
 use crate::models::user_data::UserData;
@@ -270,6 +271,9 @@ impl EventHandler for Handler {
             .await
             .unwrap();
         models::item::Item::insert_all(&ctx).await.unwrap();
+        ALL_ITEMS
+            .set(models::item::Item::get_all_db(&ctx).await.unwrap())
+            .unwrap();
 
         info!("{} has connected and is ready", ready.user.name);
     }
