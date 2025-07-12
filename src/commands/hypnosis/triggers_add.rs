@@ -57,7 +57,7 @@ command_file! {
 
             let mut msg = reply!(ctx, CreateMessage::new().content(format!(
                 "{}\n\n*Use the buttons below to specify when this trigger can be used*", args.what.clone()
-            )).components(vec![make_buttons().clone()]))?;
+            )).components(vec![make_buttons(imposition.clone()).clone()]))?;
 
             let mut collector = msg
                 .await_component_interactions(&ctx.sy)
@@ -81,8 +81,9 @@ command_file! {
                     new.push(i.data.custom_id.as_str());
                 }
 
-                imposition = UserImposition::set_tags(&ctx.sy, ctx.msg.author.id, new.join(";")).await?;
-                msg.edit(&ctx.sy, EditMessage::new().components(vec![make_buttons().clone()])).await?;
+                UserImposition::set_tags(&ctx.sy, ctx.msg.author.id, new.join(";")).await?;
+                imposition.tags = new.join(";");
+                msg.edit(&ctx.sy, EditMessage::new().components(vec![make_buttons(imposition.clone()).clone()])).await?;
             }
 
             Ok(TrancerResponseType::None)
