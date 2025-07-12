@@ -102,4 +102,46 @@ impl UserImposition {
             .cloned()
             .collect::<Vec<UserImposition>>())
     }
+
+    pub async fn has(ctx: &Context, user_id: UserId, what: String) -> rusqlite::Result<bool> {
+        let data_lock = ctx.data.read().await;
+        let db = data_lock.get::<Database>().unwrap();
+
+        let result = db.get_one(
+            "SELECT * FROM user_imposition WHERE user_id = ?1 AND what = $2",
+            &[&user_id.to_string(), &what],
+            |r| UserImposition::from_row(r),
+        );
+
+        match result {
+            Ok(_) => Ok(true),
+            Err(rusqlite::Error::QueryReturnedNoRows) => Ok(false),
+            Err(e) => Err(e),
+        }
+    }
+
+    pub async fn create(
+        ctx: &Context,
+        user_id: UserId,
+        what: String,
+    ) -> rusqlite::Result<UserImposition> {
+        let data_lock = ctx.data.read().await;
+        let db = data_lock.get::<Database>().unwrap();
+
+        db.get_one(
+            "INSERT INTO user_imposition (user_id, what) VALUES (?1, ?2) RETURNING *",
+            &[&user_id.to_string(), &what],
+            |r| UserImposition::from_row(r),
+        )
+    }
+
+    pub async fn set_tags(ctx: &Context, user_id: UserId, tags: String) -> rusqlite::Result<()> {
+        let data_lock = ctx.data.read().await;
+        let db = data_lock.get::<Database>().unwrap();
+
+        db.run(
+            "UPDATE user_imposition SET tags = ?1 WHERE user_id = ?2",
+            &[&tags, &user_id.to_string()],
+        )
+    }
 }
