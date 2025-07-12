@@ -225,7 +225,6 @@ impl EventHandler for Handler {
             let now = Utc::now().timestamp();
 
             if now - prev < r as i64 {
-                // TODO: Add the proper in 14 minutes etc.
                 let _ = reply!(
                     context,
                     CreateMessage::new().embed(create_embed().title(format!(
