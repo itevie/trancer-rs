@@ -78,3 +78,7 @@ pub fn permission_names(perms: Permissions) -> String {
         .collect::<Vec<&'static str>>()
         .join(", ")
 }
+
+pub fn warn<T: Into<String>>(what: T) -> String {
+    format!(":warning: {}", what.into())
+}
