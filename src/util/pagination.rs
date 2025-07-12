@@ -1,7 +1,8 @@
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
 use crate::reply;
 use serenity::all::{
-    ButtonStyle, CreateActionRow, CreateButton, CreateEmbedFooter, CreateMessage, EditMessage,
+    ButtonStyle, CreateActionRow, CreateButton, CreateEmbedFooter, CreateInteractionResponse,
+    CreateInteractionResponseMessage, CreateMessage, EditMessage,
 };
 use serenity::builder::CreateEmbed;
 use serenity::futures::StreamExt;
@@ -139,6 +140,20 @@ pub async fn paginate(op: PaginationOptions) -> Result<(), TrancerError> {
         .stream();
 
     while let Some(ref i) = collector.next().await {
+        if i.user.id != op.ctx.msg.author.id {
+            let _ = i
+                .create_response(
+                    &op.ctx.sy,
+                    CreateInteractionResponse::Message(
+                        CreateInteractionResponseMessage::new()
+                            .content("This is not for you!")
+                            .ephemeral(true),
+                    ),
+                )
+                .await;
+            continue;
+        }
+
         p_err!(i.defer(&op.ctx.sy).await)?;
         match i.data.custom_id.as_str() {
             "first-page" => {
