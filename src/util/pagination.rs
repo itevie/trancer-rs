@@ -1,5 +1,6 @@
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
 use crate::reply;
+use crate::util::lang::warn;
 use serenity::all::{
     ButtonStyle, CreateActionRow, CreateButton, CreateEmbedFooter, CreateInteractionResponse,
     CreateInteractionResponseMessage, CreateMessage, EditMessage,
@@ -146,7 +147,7 @@ pub async fn paginate(op: PaginationOptions) -> Result<(), TrancerError> {
                     &op.ctx.sy,
                     CreateInteractionResponse::Message(
                         CreateInteractionResponseMessage::new()
-                            .content("This is not for you!")
+                            .content(warn("This is not for you!"))
                             .ephemeral(true),
                     ),
                 )

@@ -6,6 +6,7 @@ use crate::cmd_util::{trancer_handler, TrancerDetails};
 use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
 use crate::commands::CommandHasNoArgs;
 use crate::models::user_imposition::UserImposition;
+use crate::util::lang::warn;
 use crate::{command_argument_struct, command_file, reply};
 use serenity::all::{
     ButtonStyle, CreateActionRow, CreateButton, CreateInteractionResponse,
@@ -42,7 +43,7 @@ command_file! {
 
         handler: trancer_handler!(|ctx, args| {
             if UserImposition::has(&ctx.sy, ctx.msg.author.id, args.what.clone()).await? {
-                return Ok(TrancerResponseType::Content("You already have that trigger!".to_string()));
+                return Ok(TrancerResponseType::Content(warn("You already have that trigger!")));
             }
 
             let mut imposition = UserImposition::create(&ctx.sy, ctx.msg.author.id, args.what.clone()).await?;
@@ -67,7 +68,7 @@ command_file! {
             while let Some(ref i) = collector.next().await {
                 if i.user.id != ctx.msg.author.id {
                     let _ = i.create_response(&ctx.sy, CreateInteractionResponse::Message(
-                       CreateInteractionResponseMessage::new().content("This is not for you!").ephemeral(true)
+                       CreateInteractionResponseMessage::new().content(warn("This is not for you!")).ephemeral(true)
                     )).await;
                     continue;
                 }

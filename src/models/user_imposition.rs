@@ -135,6 +135,16 @@ impl UserImposition {
         )
     }
 
+    pub async fn remove(ctx: &Context, user_id: UserId, what: String) -> rusqlite::Result<()> {
+        let data_lock = ctx.data.read().await;
+        let db = data_lock.get::<Database>().unwrap();
+
+        db.run(
+            "DELETE FROM user_imposition WHERE user_id = ?1 AND what = ?2",
+            &[&user_id.to_string(), &what],
+        )
+    }
+
     pub async fn set_tags(ctx: &Context, user_id: UserId, tags: String) -> rusqlite::Result<()> {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
