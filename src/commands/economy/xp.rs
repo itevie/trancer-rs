@@ -4,8 +4,6 @@ use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{trancer_handler, TrancerDetails};
 use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
-use crate::commands::CommandHasNoArgs;
-use crate::models::aquired_item::AquiredItemField::amount;
 use crate::models::user_data::UserData;
 use crate::util::lang::{make_percentage, pronoun};
 use crate::util::level_calc;

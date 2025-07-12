@@ -16,9 +16,6 @@ use crate::models::server_settings::ServerSettings;
 use crate::models::user_data::UserData;
 use crate::util::embeds::create_embed;
 use crate::util::lang::permission_names;
-use crate::util::level_calc;
-use crate::util::level_calc::{MAX_XP, MIN_XP, TIME_BETWEEN};
-use chrono::format::Item;
 use chrono::{DateTime, Utc};
 use chrono_humanize::HumanTime;
 use config::Config;
@@ -26,13 +23,11 @@ use dotenvy::dotenv;
 use lazy_static::lazy_static;
 use serde::Deserialize;
 use serenity::all::{Channel, ChannelType, CreateMessage};
-use serenity::builder::EditChannel;
 use serenity::{
     async_trait,
     model::{channel::Message, gateway::Ready},
     prelude::*,
 };
-use std::any::Any;
 use std::env;
 use tokio::io::AsyncWriteExt;
 use tracing::{error, info, instrument};

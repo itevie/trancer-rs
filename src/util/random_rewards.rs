@@ -61,7 +61,7 @@ pub async fn generate_random_rewards(
 
         let total_weight = actual_items.iter().map(|(_, weight)| *weight).sum::<f64>();
         let amount = biased_random(items.count.0, items.count.1);
-        let mut given_items: Vec<(u32, u32)> = vec![];
+        let given_items: Vec<(u32, u32)> = vec![];
     }
 
     Ok(())

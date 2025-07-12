@@ -1,12 +1,10 @@
-use crate::cmd_util::arg_parser::{CommandArgumentStruct, PCACV};
 use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{trancer_handler, TrancerDetails};
-use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
-use crate::commands::{only_user_args, CommandHasNoArgs, OnlyUserArgs};
-use crate::{command_argument_struct, command_file};
+use crate::cmd_util::{TrancerCommand, TrancerResponseType};
+use crate::command_file;
+use crate::commands::{only_user_args, OnlyUserArgs};
 use rand::Rng;
-use std::collections::HashMap;
 
 static BITE_LIP: &'static str = "<:bite_lips:1315469148004028537>";
 

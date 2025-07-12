@@ -3,7 +3,6 @@ use crate::impl_from_row;
 use crate::trancer_config::all_items::ALL_ITEMS;
 use rusqlite::Error::QueryReturnedNoRows;
 use serenity::client::Context;
-use serenity::Client;
 
 impl_from_row!(Item, ItemField {
     id: u32,
