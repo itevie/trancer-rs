@@ -229,7 +229,7 @@ impl EventHandler for Handler {
                     context,
                     CreateMessage::new().embed(create_embed().title(format!(
                         "Hey! You can't do that! Try again in **{}**",
-                        HumanTime::from(now - prev)
+                        HumanTime::from(DateTime::from_timestamp(now, 0).unwrap())
                     )))
                 );
                 return;

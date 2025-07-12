@@ -1,7 +1,7 @@
 use crate::cmd_util::args::Argument;
 use chrono::ParseError;
 use std::error::Error;
-use std::fmt;
+use std::{fmt, io};
 
 #[derive(Debug)]
 pub enum ArgumentError {
@@ -21,6 +21,7 @@ pub enum TrancerError {
     Sqlite(rusqlite::Error),
     Serenity(serenity::Error),
     Reqwest(reqwest::Error),
+    Spawn(io::Error),
     Argument(ArgumentError),
     NotImplemented(String),
     ReplyError(serenity::Error),
@@ -34,6 +35,7 @@ impl fmt::Display for TrancerError {
         match self {
             TrancerError::Sqlite(err) => write!(f, "Database error: {}", err),
             TrancerError::Serenity(err) => write!(f, "Serenity error: {}", err),
+            TrancerError::Spawn(err) => write!(f, "Spawn error: {}", err),
             TrancerError::Reqwest(err) => write!(
                 f,
                 "HTTP error ({:?}): {}\n> URL: {}\n> Inner: {}",
@@ -116,5 +118,11 @@ impl From<ParseError> for TrancerError {
 impl From<reqwest::Error> for TrancerError {
     fn from(err: reqwest::Error) -> Self {
         TrancerError::Reqwest(err)
+    }
+}
+
+impl From<io::Error> for TrancerError {
+    fn from(err: io::Error) -> Self {
+        TrancerError::Spawn(err)
     }
 }
