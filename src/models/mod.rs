@@ -11,6 +11,7 @@ pub mod giveaway_entry;
 pub mod item;
 pub mod ratelimit;
 pub mod server_settings;
+pub mod spiral;
 pub mod user_data;
 pub mod user_imposition;
 
