@@ -1,6 +1,6 @@
 use rusqlite::{Connection, Row};
 use serenity::prelude::TypeMapKey;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 
 pub struct Database {
@@ -8,13 +8,10 @@ pub struct Database {
 }
 
 impl Database {
-    pub fn new() -> Self {
+    pub fn new<T: Into<String>>(path: T) -> Self {
         Self {
             connection: Arc::new(Mutex::new(
-                Connection::open(Path::new(
-                    "/home/isabella/Documents/projects/rust/trancer-rs/data.db",
-                ))
-                .unwrap(),
+                Connection::open(Path::new(&PathBuf::from(path.into()).join("data.db"))).unwrap(),
             )),
         }
     }

@@ -116,6 +116,7 @@ pub struct TrancerDetails {
     pub ratelimit: Option<u32>,
     pub bot_permissions: Option<Permissions>,
     pub user_permissions: Option<Permissions>,
+    pub slow: bool,
 }
 
 /// Helps create the handler for commands

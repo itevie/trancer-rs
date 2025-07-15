@@ -1,3 +1,4 @@
+pub mod FavouriteSpiral;
 pub mod aquired_badge;
 pub mod aquired_item;
 pub mod blacklisted;

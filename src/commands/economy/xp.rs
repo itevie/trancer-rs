@@ -30,6 +30,7 @@ command_file! {
                     details: Default::default()
                 }]
             }),
+            slow: true,
             ..Default::default()
         },
 

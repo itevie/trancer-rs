@@ -15,6 +15,7 @@ use crate::models::item::ALL_ITEMS;
 use crate::models::ratelimit::Ratelimit;
 use crate::models::server_settings::ServerSettings;
 use crate::models::user_data::UserData;
+use crate::util::config::load_config;
 use crate::util::embeds::create_embed;
 use crate::util::lang::permission_names;
 use chrono::{DateTime, Utc};
@@ -23,7 +24,7 @@ use config::Config;
 use dotenvy::dotenv;
 use lazy_static::lazy_static;
 use serde::Deserialize;
-use serenity::all::{Channel, ChannelType, CreateMessage};
+use serenity::all::{Channel, ChannelType, CreateMessage, ReactionType};
 use serenity::{
     async_trait,
     model::{channel::Message, gateway::Ready},
@@ -244,6 +245,12 @@ impl EventHandler for Handler {
             }
         }
 
+        if cmd.details().slow {
+            let _ = msg
+                .react(&ctx, ReactionType::Unicode("⏳".to_string()))
+                .await;
+        }
+
         let response = match cmd.run(context.clone(), args).await {
             Ok(response) => response,
             Err(err) => {
@@ -282,7 +289,7 @@ impl EventHandler for Handler {
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
-    load_config().unwrap();
+    let config = load_config().unwrap();
     info!("Starting bot...");
 
     dotenv().ok();
@@ -297,48 +304,11 @@ async fn main() {
 
     {
         let mut data = client.data.write().await;
-        let db = Database::new();
+        let db = Database::new(config.general.data_dir);
         data.insert::<Database>(db);
     }
 
     if let Err(why) = client.start().await {
         eprintln!("Client error: {:?}", why);
     }
-}
-
-#[derive(Debug, Deserialize)]
-pub struct TrancerConfig {
-    pub server: TrancerServerConfig,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct TrancerServerConfig {
-    pub id: String,
-    pub invite_link: String,
-}
-
-lazy_static! {
-    pub static ref CONFIG: TrancerConfig = {
-        let config = Config::builder()
-            .add_source(config::File::with_name("config_dev").required(false))
-            .add_source(config::File::with_name("config").required(false))
-            .build()
-            .unwrap()
-            .try_deserialize::<TrancerConfig>()
-            .unwrap();
-
-        config
-    };
-}
-
-#[instrument]
-fn load_config() -> Result<TrancerConfig, config::ConfigError> {
-    info!("Loading config");
-    let config = Config::builder()
-        .add_source(config::File::with_name("config_dev").required(false))
-        .add_source(config::File::with_name("config").required(false))
-        .build()?
-        .try_deserialize::<TrancerConfig>()?;
-
-    Ok(config)
 }

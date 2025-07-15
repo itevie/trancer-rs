@@ -1,5 +1,6 @@
 /target
 .env
-data.db
+data/data.db
 /.idea/rust.xml
 /.idea/dataSources.xml
+data/

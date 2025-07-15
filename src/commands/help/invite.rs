@@ -2,8 +2,9 @@ use crate::cmd_util::trancer_handler;
 use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{TrancerCommand, TrancerResponseType};
+use crate::command_file;
 use crate::commands::CommandHasNoArgs;
-use crate::{command_file, CONFIG};
+use crate::util::config::CONFIG;
 
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
