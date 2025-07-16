@@ -4,6 +4,7 @@ use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{trancer_handler, ArgumentError, TrancerDetails};
 use crate::cmd_util::{TrancerCommand, TrancerError, TrancerResponseType};
+use crate::models::aquired_badge::AquiredBadge;
 use crate::models::economy::Economy;
 use crate::models::user_data::UserData;
 use crate::util::embeds::create_embed;
@@ -43,6 +44,8 @@ command_file! {
         handler: trancer_handler!(|ctx, args| {
             let user_data = UserData::fetch(&ctx.sy, args.user.id, ctx.msg.guild_id.unwrap()).await?;
             let economy = Economy::fetch(&ctx.sy, args.user.id).await?;
+            let binding = AquiredBadge::get_all_for(&ctx.sy, args.user.id).await?;
+            let badges = binding.as_defined();
 
             let mut embed = create_embed().title(
                 format!("{} profile", pronoun(&ctx.msg.author, &args.user, "Your", "$name's"))
@@ -50,7 +53,8 @@ command_file! {
             .description(list(vec![
                 ("Username", args.user.name.clone()),
                 ("ID", args.user.id.to_string()),
-                ("Birthday", user_data.birthday.unwrap_or("Not Set".into())),
+                ("Birthday", user_data.birthday.clone().unwrap_or("Not Set".into())),
+                ("Next Birthday", match user_data.next_birthday()? { Some(some) => some.format("%Y-%m-%d").to_string(), None => String::from("Not Set") }),
                 ("Hypno Status", user_data.hypno_status.to_string()),
                 ("Talking Streak", user_data.talking_streak.to_string() + " days"),
                 ("Highest Talking Streak", user_data.highest_talking_streak.to_string() + " days"),
@@ -62,11 +66,14 @@ command_file! {
                 ("Ruined the count", format!("{} times {}", user_data.count_ruined, if user_data.count_banned {
                     "(count banned)"
                  } else { "" }))
-
             ]));
 
             if let Some(ref avatar) = args.user.avatar_url() {
                 embed = embed.thumbnail(avatar);
+            }
+
+            if !badges.is_empty() {
+                embed = embed.field("Badges", badges.iter().map(|x| x.emoji).collect::<Vec<_>>().join(""), false);
             }
 
             Ok(TrancerResponseType::Big(

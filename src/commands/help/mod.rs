@@ -1,5 +1,6 @@
 use crate::cmd_import_map;
 
+mod about;
 mod avatar;
 mod category;
 mod command_info;
@@ -21,5 +22,6 @@ cmd_import_map!(
     avatar,
     define,
     category,
-    github
+    github,
+    about
 );

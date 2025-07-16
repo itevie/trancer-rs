@@ -134,10 +134,14 @@ impl EventHandler for Handler {
         let command_name = args.args[0].clone();
         args.args.remove(0);
 
-        let Some(cmd) = commands
-            .iter()
-            .find(|cmd| cmd.name().eq(command_name.as_str()))
-        else {
+        let Some(cmd) = commands.iter().find(|cmd| {
+            cmd.name().eq(command_name.as_str())
+                || cmd
+                    .details()
+                    .aliases
+                    .unwrap_or(vec![])
+                    .contains(&command_name)
+        }) else {
             return;
         };
 
