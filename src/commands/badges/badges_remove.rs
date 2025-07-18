@@ -11,16 +11,16 @@ use crate::{command_argument_struct, command_file};
 use serenity::all::User;
 use std::collections::HashMap;
 
-command_argument_struct!(AddBadgeArgs {
+command_argument_struct!(RemoveBadgeArgs {
     user: User, PCACV::User,
     badge: String, PCACV::String
 });
 
 command_file! {
-    TrancerCommand::<AddBadgeArgs> {
-        name: "+badge".to_string(),
+    TrancerCommand::<RemoveBadgeArgs> {
+        name: "-badge".to_string(),
         t: TrancerCommandType::Help,
-        description: "Add a badge for a user".to_string(),
+        description: "Remove a badge for a user".to_string(),
         details: TrancerDetails {
             flags: Some(vec![TrancerFlag::BotOwnerOnly]),
             arguments: Some(TrancerArguments {
@@ -51,13 +51,13 @@ command_file! {
                 return Ok(content_response(warn("Invalid badge name!")))
             };
 
-            if AquiredBadge::has(&ctx.sy, args.user.id, badge.id).await? {
-                return Ok(content_response(warn("That user already has the badge.")))
+            if !AquiredBadge::has(&ctx.sy, args.user.id, badge.id).await? {
+                return Ok(content_response(warn("That user does not have the badge.")))
             }
 
-            AquiredBadge::add_for(&ctx.sy, args.user.id, badge.id).await?;
+            AquiredBadge::remove_for(&ctx.sy, args.user.id, badge.id).await?;
 
-            Ok(content_response(success("Added the badge!")))
+            Ok(content_response(success("Removed the badge!")))
         }),
     }
 }

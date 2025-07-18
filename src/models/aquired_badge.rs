@@ -71,6 +71,23 @@ impl AquiredBadge {
             &[&user_id.to_string(), &s, &chrono::Utc::now().to_rfc3339()],
         )
     }
+
+    pub async fn remove_for<T: Into<String>>(
+        context: &Context,
+        user_id: UserId,
+        badge: T,
+    ) -> rusqlite::Result<()> {
+        let data_lock = context.data.read().await;
+        let database = data_lock.get::<Database>().unwrap();
+
+        let s = badge.into();
+        AquiredBadge::validate_badge_name(s.clone())?;
+
+        database.run(
+            "DELETE FROM aquired_badges WHERE user = ?1 AND badge_name = ?2",
+            &[&user_id.to_string(), &s],
+        )
+    }
 }
 
 impl AquiredBadgeVec {
