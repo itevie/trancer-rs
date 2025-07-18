@@ -190,9 +190,9 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             |ctx| Ok(false)
         ),
         badge!(
-            "eco#2",
-            "Economy #2",
-            "At economy position #2",
+            "eco#3",
+            "Economy #3",
+            "At economy position #3",
             ":third_place:",
             None,
             |ctx| Ok(false)

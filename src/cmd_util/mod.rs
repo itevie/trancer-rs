@@ -29,6 +29,10 @@ pub enum TrancerResponseType {
     Big(CreateMessage),
 }
 
+pub fn content_response<T: Into<String>>(what: T) -> TrancerResponseType {
+    TrancerResponseType::Content(what.into())
+}
+
 /// The future returned from commands
 pub type TrancerFuture<'a> =
     Pin<Box<dyn Future<Output = Result<TrancerResponseType, TrancerError>> + Send + 'a>>;

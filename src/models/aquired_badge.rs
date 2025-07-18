@@ -16,6 +16,16 @@ impl_from_row!(
 pub struct AquiredBadgeVec(pub Vec<AquiredBadge>);
 
 impl AquiredBadge {
+    pub fn validate_badge_name(name: String) -> rusqlite::Result<()> {
+        match ALL_DEFINED_BADGES.iter().find(|x| x.id == name) {
+            Some(_) => Ok(()),
+            _ => Err(rusqlite::Error::InvalidColumnName(format!(
+                "{} is not a valid badge ID",
+                name
+            ))),
+        }
+    }
+
     pub async fn get_all_for(
         context: &Context,
         user_id: UserId,
@@ -28,6 +38,38 @@ impl AquiredBadge {
             &[&user_id.to_string()],
             |r| Self::from_row(r),
         )?))
+    }
+
+    pub async fn has<T: Into<String>>(
+        context: &Context,
+        user_id: UserId,
+        badge: T,
+    ) -> rusqlite::Result<bool> {
+        let s = badge.into();
+        AquiredBadge::validate_badge_name(s.clone())?;
+        Ok(AquiredBadge::get_all_for(context, user_id)
+            .await?
+            .0
+            .iter()
+            .find(|b| b.badge_name == s)
+            .is_some())
+    }
+
+    pub async fn add_for<T: Into<String>>(
+        context: &Context,
+        user_id: UserId,
+        badge: T,
+    ) -> rusqlite::Result<()> {
+        let data_lock = context.data.read().await;
+        let database = data_lock.get::<Database>().unwrap();
+
+        let s = badge.into();
+        AquiredBadge::validate_badge_name(s.clone())?;
+
+        database.run(
+            "INSERT INTO aquired_badges (user, badge_name, date_aquired) VALUES (?1, ?2, ?3)",
+            &[&user_id.to_string(), &s, &chrono::Utc::now().to_rfc3339()],
+        )
     }
 }
 
