@@ -2,7 +2,7 @@ use crate::cmd_util::arg_parser::{CommandArgumentStruct, PCACV};
 use crate::cmd_util::args::{ArgType, Argument, TrancerArguments};
 use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::{content_response, trancer_handler, TrancerDetails};
-use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
+use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError};
 use crate::cmd_util::{CommandTrait, TrancerFlag};
 use crate::models::aquired_badge::AquiredBadge;
 use crate::trancer_config::all_badges::ALL_DEFINED_BADGES;
