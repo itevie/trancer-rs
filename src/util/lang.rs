@@ -13,6 +13,14 @@ pub fn pronoun<S: Into<String>>(user1: &User, user2: &User, same_prn: S, diff_pr
     }
 }
 
+pub fn pron(user1: &User, user2: &User) -> String {
+    if user1 == user2 { "your" } else { "their" }.to_string()
+}
+
+pub fn pronu(user1: &User, user2: &User) -> String {
+    if user1 == user2 { "Your" } else { "Their" }.to_string()
+}
+
 pub fn list<T: Into<String>, T2: Into<String>>(data: Vec<(T, T2)>) -> String {
     data.into_iter()
         .map(|x| format!("**{}**: {}", x.0.into(), x.1.into()))
