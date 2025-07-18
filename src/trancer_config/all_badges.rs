@@ -1,4 +1,5 @@
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
+use crate::util::config::CONFIG;
 use crate::util::level_calc;
 use std::future::Future;
 use std::pin::Pin;
@@ -134,6 +135,94 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             ":right_facing_fist:",
             None,
             |ctx| Ok(ctx.user_data.bumps >= 15)
+        ),
+        badge!(
+            "og",
+            "Founder",
+            "Joined the server before 100 members",
+            ":snowflake:",
+            None,
+            |ctx| Ok(false)
+        ),
+        badge!(
+            "birthday",
+            "Twilight's Birthday",
+            "Be in Trancy Twilight when it hit 1 year old",
+            ":birthday:",
+            Some(DefinedBadgesOptions {
+                give_roles: vec![&*CONFIG.roles.birthday]
+            }),
+            |ctx| Ok(false)
+        ),
+        // TODO: Fix this once cards are added
+        badge!(
+            "mythiccard",
+            "Mythic Card",
+            "Got a mythical card at some point",
+            ":flower_playing_cards:",
+            None,
+            |ctx| Ok(false)
+        ),
+        // TODO: Fix this once (if) relationships are added
+        badge!(
+            "cult",
+            "Cult Leader",
+            "Get 5 people to worship you with the tree feature",
+            ":pray:",
+            None,
+            |ctx| Ok(false)
+        ),
+        // The following are handled magically
+        badge!(
+            "eco#1",
+            "Economy #1",
+            "At economy position #1",
+            ":first_place:",
+            None,
+            |ctx| Ok(false)
+        ),
+        badge!(
+            "eco#2",
+            "Economy #2",
+            "At economy position #2",
+            ":second_place:",
+            None,
+            |ctx| Ok(false)
+        ),
+        badge!(
+            "eco#2",
+            "Economy #2",
+            "At economy position #2",
+            ":third_place:",
+            None,
+            |ctx| Ok(false)
+        ),
+        badge!(
+            "can-request",
+            "Can Request",
+            "Reached level 5 on Trancer",
+            ":fish:",
+            Some(DefinedBadgesOptions {
+                give_roles: vec![&*CONFIG.roles.can_request]
+            }),
+            |ctx| Ok(level_calc::calculate_level(ctx.user_data.xp) >= 5)
+        ),
+        // TODO: Fix once Dawnagotchi is added
+        badge!(
+            "babysitter",
+            "Dawn Babysitter",
+            "Have a Dawnagotchi for more than a month",
+            "<:uppies:1278754282413490259>",
+            None,
+            |ctx| Ok(false)
+        ),
+        badge!(
+            "french",
+            "French",
+            "⚠️ This user is French - be weary ⚠️",
+            "🇨🇵",
+            None,
+            |ctx| Ok(false)
         ),
     ]
 });

@@ -7,6 +7,7 @@ use tracing::{info, instrument};
 pub struct TrancerConfig {
     pub server: TrancerServerConfig,
     pub general: TrancerGeneralConfig,
+    pub roles: TrancerRolesConfig,
 }
 
 #[derive(Debug, Deserialize)]
@@ -18,6 +19,12 @@ pub struct TrancerGeneralConfig {
 pub struct TrancerServerConfig {
     pub id: String,
     pub invite_link: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TrancerRolesConfig {
+    pub birthday: String,
+    pub can_request: String,
 }
 
 lazy_static! {
