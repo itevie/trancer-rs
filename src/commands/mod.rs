@@ -5,6 +5,7 @@ use crate::command_argument_struct;
 use serenity::all::User;
 use std::collections::HashMap;
 
+mod badges;
 mod economy;
 mod fun;
 mod help;
@@ -24,7 +25,7 @@ macro_rules! cmd_import_map {
     };
 }
 
-cmd_import_map!(help, hypnosis, economy, server, fun, spirals);
+cmd_import_map!(help, hypnosis, economy, server, fun, spirals, badges);
 
 #[macro_export]
 macro_rules! command_file {
