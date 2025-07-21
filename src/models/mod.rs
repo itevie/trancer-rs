@@ -1,4 +1,3 @@
-pub mod FavouriteSpiral;
 pub mod aquired_badge;
 pub mod aquired_item;
 pub mod blacklisted;
@@ -7,6 +6,7 @@ pub mod command_creation;
 pub mod confession;
 pub mod dawnagotchi;
 pub mod economy;
+pub mod favourite_spiral;
 pub mod giveaway;
 pub mod giveaway_entry;
 pub mod item;

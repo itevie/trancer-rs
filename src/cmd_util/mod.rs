@@ -1,6 +1,6 @@
 use crate::cmd_util::arg_parser::{map_and_validate, CommandArgumentStruct, ParsedArguments};
 use crate::cmd_util::args::TrancerArguments;
-use serenity::all::{GuildChannel, Message, Permissions};
+use serenity::all::{GuildChannel, GuildId, Message, Permissions};
 use serenity::builder::CreateMessage;
 use serenity::client::Context;
 use std::collections::HashMap;
@@ -105,6 +105,7 @@ impl<T: CommandArgumentStruct + Send + 'static + std::fmt::Debug> CommandTrait
 pub struct TrancerRunnerContext {
     pub sy: Context,
     pub msg: Message,
+    pub guild_id: GuildId,
     pub channel: GuildChannel,
     pub server_settings: ServerSettings,
     pub user_data: UserData,
@@ -118,6 +119,7 @@ pub struct TrancerDetails {
     pub flags: Option<Vec<TrancerFlag>>,
     pub arguments: Option<TrancerArguments>,
     pub ratelimit: Option<u32>,
+    pub requires_message_reference: bool,
     pub bot_permissions: Option<Permissions>,
     pub user_permissions: Option<Permissions>,
     pub slow: bool,

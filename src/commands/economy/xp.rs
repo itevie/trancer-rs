@@ -56,20 +56,19 @@ command_file! {
             let average = amount_progress
                 / ((MAX_XP as f64 / 2.0).floor() * ((TIME_BETWEEN as f64 / 2.0) / 60_000.0));
 
-           Ok(TrancerResponseType::Content(
-            format!(
-                "**{}** have **{xp} XP** (level {level}), you need **{amount_progress}** more xp until **level {next_level}**\n\n\
-                {level} {} {}\n\n\
-                If you sent a message every minute, it would take:\n\
-                > Least: **{least}** minutes\n\
-                > Average: **{average}** minutes\n\
-                > Most: **{most}** minutes",
-                pronoun(&ctx.msg.author, &args.user, "You", "They"),
-                make_percentage(progress as f64, 20),
-                level + 1.0,
-            ),
-        ))
-
+            Ok(TrancerResponseType::Content(
+                format!(
+                    "**{}** have **{xp} XP** (level {level}), you need **{amount_progress}** more xp until **level {next_level}**\n\n\
+                    {level} {} {}\n\n\
+                    If you sent a message every minute, it would take:\n\
+                    > Least: **{least}** minutes\n\
+                    > Average: **{average}** minutes\n\
+                    > Most: **{most}** minutes",
+                    pronoun(&ctx.msg.author, &args.user, "You", "They"),
+                    make_percentage(progress as f64, 20),
+                    level + 1.0,
+                ),
+            ))
         }),
     }
 }

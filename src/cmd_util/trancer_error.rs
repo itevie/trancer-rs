@@ -1,6 +1,7 @@
 use crate::cmd_util::args::Argument;
 use chrono::ParseError;
 use std::error::Error;
+use std::num::ParseIntError;
 use std::{fmt, io};
 
 #[derive(Debug)]
@@ -29,6 +30,10 @@ pub enum TrancerError {
 }
 
 impl std::error::Error for TrancerError {}
+
+pub fn generic<T: Into<String>>(msg: T) -> TrancerError {
+    TrancerError::Generic(msg.into())
+}
 
 impl fmt::Display for TrancerError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -124,5 +129,11 @@ impl From<reqwest::Error> for TrancerError {
 impl From<io::Error> for TrancerError {
     fn from(err: io::Error) -> Self {
         TrancerError::Spawn(err)
+    }
+}
+
+impl From<ParseIntError> for TrancerError {
+    fn from(err: ParseIntError) -> Self {
+        TrancerError::Generic(format!("Failed to parse something: {}", err))
     }
 }

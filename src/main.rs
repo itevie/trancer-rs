@@ -17,7 +17,10 @@ use crate::models::server_settings::ServerSettings;
 use crate::models::user_data::UserData;
 use crate::util::config::load_config;
 use crate::util::embeds::create_embed;
-use crate::util::lang::permission_names;
+use crate::util::lang::{permission_names, warn};
+use crate::util::random_rewards::{
+    generate_random_rewards, RandomRewardItemOptions, RandomRewardOptions,
+};
 use chrono::{DateTime, Utc};
 use chrono_humanize::HumanTime;
 use config::Config;
@@ -86,6 +89,19 @@ impl EventHandler for Handler {
         if msg.author.id == ctx.cache.current_user().id {
             return;
         }
+
+        // for i in 0..20 {
+        //     let result = generate_random_rewards(&ctx, RandomRewardOptions {
+        //         currency: Some((10, 50)),
+        //         items: Some(
+        //             RandomRewardItemOptions {
+        //                 items: None,
+        //                 count: (1, 5)
+        //             }
+        //         )
+        //     }).await.unwrap();
+        //     println!("{:#?}", result)
+        // }
 
         // Check if it's sent in a guild text channel
         let channel = if let Ok(channel) = msg.channel_id.to_channel(&ctx).await {
@@ -162,6 +178,7 @@ impl EventHandler for Handler {
             server_settings,
             channel: channel.clone(),
             user_data,
+            guild_id,
             command_name: cmd.name(),
             original_command: msg.content.to_string(),
         };
@@ -190,7 +207,7 @@ impl EventHandler for Handler {
                 },
             };
 
-            if permissions.contains(user_permission) {
+            if !permissions.contains(user_permission) {
                 let _ = reply!(
                     context,
                     CreateMessage::new().embed(
@@ -247,6 +264,14 @@ impl EventHandler for Handler {
                     .await;
                 }
             }
+        }
+
+        if cmd.details().requires_message_reference && msg.referenced_message.is_none() {
+            let _ = reply!(
+                context,
+                CreateMessage::new()
+                    .content(warn("You need to reply to a message to use this command."))
+            );
         }
 
         if cmd.details().slow {

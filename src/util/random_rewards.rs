@@ -7,19 +7,20 @@ use std::collections::HashMap;
 
 pub struct RandomRewardItemOptions {
     /// Leave Some(None) for completely random items, otherwise Some(Some(Vec<id, weighht>))
-    items: Option<Vec<(u32, f64)>>,
+    pub(crate) items: Option<Vec<(u32, f64)>>,
 
     /// (min, max)
-    count: (u32, u32),
+    pub(crate) count: (u32, u32),
 }
 
 pub struct RandomRewardOptions {
     /// Currency to give (min, max)
-    currency: Option<(u32, u32)>,
+    pub(crate) currency: Option<(u32, u32)>,
 
-    items: Option<RandomRewardItemOptions>,
+    pub(crate) items: Option<RandomRewardItemOptions>,
 }
 
+#[derive(Debug)]
 pub struct RandomRewardResult {
     currency: u32,
     /// Vec<(id, amount)>
