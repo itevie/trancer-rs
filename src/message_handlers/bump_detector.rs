@@ -23,25 +23,35 @@ pub async fn detect_bumps(ctx: &TrancerRunnerContext) -> Result<(), TrancerError
         return Ok(());
     }
 
-    let MessageInteractionMetadata::Command(command) = ctx.msg.interaction_metadata.as_ref() else {
+    let command = if let Some(interaction) = ctx.msg.interaction_metadata.as_ref() {
+        match interaction.as_ref() {
+            MessageInteractionMetadata::Command(command) => command,
+            _ => return Ok(()),
+        }
+    } else {
         return Ok(());
     };
 
     ctx.user_data
         .increment(&ctx.sy, UserDataFields::bumps, 1)
         .await?;
-    ctx.server_settings.update_key(
-        &ctx.sy,
-        ServerSettingsFields::last_bump,
-        Utc::now().to_rfc3339(),
-    )?;
     ctx.server_settings
-        .update_key(&ctx.sy, ServerSettingsFields::bump_reminded, false)?;
-    ctx.server_settings.update_key(
-        &ctx.sy,
-        ServerSettingsFields::last_bump,
-        command.user.id.to_string(),
-    )?;
+        .update_key(
+            &ctx.sy,
+            ServerSettingsFields::last_bump,
+            Utc::now().to_rfc3339(),
+        )
+        .await?;
+    ctx.server_settings
+        .update_key(&ctx.sy, ServerSettingsFields::bump_reminded, false)
+        .await?;
+    ctx.server_settings
+        .update_key(
+            &ctx.sy,
+            ServerSettingsFields::last_bump,
+            command.user.id.to_string(),
+        )
+        .await?;
 
     let reward = if ctx.server_settings.server_id == CONFIG.server.id {
         Some(

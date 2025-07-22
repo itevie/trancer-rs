@@ -97,9 +97,9 @@ pub fn item_text(item: Item, amount: u32) -> String {
     format!(
         "**{}{}{}{}**",
         if amount == 0 {
-            ""
+            String::new()
         } else {
-            &format!("{} ", amount)
+            format!("{} ", amount)
         },
         item.emoji.unwrap_or(String::new()),
         item.name,
@@ -118,7 +118,7 @@ pub fn englishify_list(items: Vec<String>, use_or: bool) -> String {
         return String::new();
     }
 
-    let mut finished = items.get(0).unwrap();
+    let mut finished = items.get(0).unwrap().clone();
 
     for i in 0..items.len() {
         let sep = if i == items.len() - 1 {
@@ -131,7 +131,7 @@ pub fn englishify_list(items: Vec<String>, use_or: bool) -> String {
             ", "
         };
 
-        finished.push_str(&format!("{}{}", sep, list[i]));
+        finished.push_str(&format!("{}{}", sep, items[i]));
     }
 
     finished.clone()
