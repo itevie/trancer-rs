@@ -1,3 +1,5 @@
+use crate::models::item::Item;
+use crate::util::config::CONFIG;
 use chrono::{DateTime, TimeZone};
 use serenity::all::{Permissions, User};
 use std::fmt::Display;
@@ -26,10 +28,6 @@ pub fn list<T: Into<String>, T2: Into<String>>(data: Vec<(T, T2)>) -> String {
         .map(|x| format!("**{}**: {}", x.0.into(), x.1.into()))
         .collect::<Vec<String>>()
         .join("\n")
-}
-
-pub fn currency(val: i32) -> String {
-    format!("**{val} 🌀**")
 }
 
 pub fn success<T: Into<String>>(val: T) -> String {
@@ -89,4 +87,52 @@ pub fn permission_names(perms: Permissions) -> String {
 
 pub fn warn<T: Into<String>>(what: T) -> String {
     format!(":warning: {}", what.into())
+}
+
+pub fn currency<T: Into<i64>>(amount: T) -> String {
+    format!("**{}{}**", amount.into(), CONFIG.economy.symbol)
+}
+
+pub fn item_text(item: Item, amount: u32) -> String {
+    format!(
+        "**{}{}{}{}**",
+        if amount == 0 {
+            ""
+        } else {
+            &format!("{} ", amount)
+        },
+        item.emoji.unwrap_or(String::new()),
+        item.name,
+        if amount == 0 {
+            ""
+        } else if amount != 1 {
+            "s"
+        } else {
+            ""
+        }
+    )
+}
+
+pub fn englishify_list(items: Vec<String>, use_or: bool) -> String {
+    if items.is_empty() {
+        return String::new();
+    }
+
+    let mut finished = items.get(0).unwrap();
+
+    for i in 0..items.len() {
+        let sep = if i == items.len() - 1 {
+            if use_or {
+                " or "
+            } else {
+                " and "
+            }
+        } else {
+            ", "
+        };
+
+        finished.push_str(&format!("{}{}", sep, list[i]));
+    }
+
+    finished.clone()
 }

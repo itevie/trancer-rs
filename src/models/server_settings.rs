@@ -9,7 +9,7 @@ impl_from_row!(ServerSettings, ServerSettingsFields {
     server_id: String,
     prefix: String,
 
-    last_bump: u64,
+    last_bump: Option<String>,
     bump_reminded: bool,
     last_bumper: Option<String>,
 

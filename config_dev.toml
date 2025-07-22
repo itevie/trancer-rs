@@ -11,3 +11,13 @@ verified = "1257423790212907038"
 can_request = "1282301213278474241"
 french = "1366862341437653042"
 birthday = "1387439309669269675"
+
+[analytics]
+enabled = true
+
+[economy]
+symbol = '🌀'
+
+[payouts.bumps]
+currency_min = 50
+currency_max = 200

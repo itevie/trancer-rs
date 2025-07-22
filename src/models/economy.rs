@@ -76,8 +76,8 @@ impl Economy {
     }
 
     pub async fn add_money(
+        &self,
         ctx: &Context,
-        user_id: UserId,
         amount: u32,
         reason: MoneyAddReasion,
     ) -> rusqlite::Result<()> {
@@ -89,12 +89,12 @@ impl Economy {
             reason, reason
         );
 
-        db.run(sql, &[&amount, &user_id.to_string()])
+        db.run(sql, &[&amount, &self.user_id.to_string()])
     }
 
     pub async fn remove_money(
+        &self,
         ctx: &Context,
-        user_id: UserId,
         amount: u32,
         gambling_related: bool,
     ) -> rusqlite::Result<()> {
@@ -107,7 +107,7 @@ impl Economy {
             "UPDATE economy SET balance = balance + ?1 WHERE user_id + ?2".to_string()
         };
 
-        db.run(sql, &[&amount, &user_id.to_string()])
+        db.run(sql, &[&amount, &self.user_id.to_string()])
     }
 
     pub async fn update_key<T>(

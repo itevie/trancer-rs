@@ -8,6 +8,9 @@ pub struct TrancerConfig {
     pub server: TrancerServerConfig,
     pub general: TrancerGeneralConfig,
     pub roles: TrancerRolesConfig,
+    pub analytics: TrancerAnalyticsConfig,
+    pub payouts: TrancerPayoutsConfig,
+    pub economy: TrancerEconomyConfig,
 }
 
 #[derive(Debug, Deserialize)]
@@ -25,6 +28,27 @@ pub struct TrancerServerConfig {
 pub struct TrancerRolesConfig {
     pub birthday: String,
     pub can_request: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TrancerAnalyticsConfig {
+    pub enabled: bool,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TrancerEconomyConfig {
+    pub symbol: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TrancerPayoutsConfig {
+    pub bumps: TrancerBumpPayoutsConfig,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TrancerBumpPayoutsConfig {
+    pub currency_min: u32,
+    pub currency_max: u32,
 }
 
 lazy_static! {

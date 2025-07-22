@@ -1,7 +1,11 @@
-use crate::cmd_util::TrancerError;
-use crate::models::item::Item;
+use crate::cmd_util::{TrancerError, TrancerRunnerContext};
+use crate::models::economy::{Economy, MoneyAddReasion};
+use crate::models::item::{Item, ALL_ITEMS};
+use crate::models::user_data::UserData;
+use crate::util::lang::{currency, englishify_list, item_text};
 use rand::prelude::SliceRandom;
 use rand::{random, Rng};
+use serenity::all::UserId;
 use serenity::client::Context;
 use std::collections::HashMap;
 
@@ -82,6 +86,40 @@ pub async fn generate_random_rewards(
     }
 
     Ok(result)
+}
+
+pub fn englishify_random_reward(reward: RandomRewardResult) -> String {
+    let mut winnings: Vec<String> = vec![];
+
+    if reward.currency != 0 {
+        winnings.push(currency(reward.currency));
+    }
+
+    for (_item, amount) in reward.items {
+        let item = ALL_ITEMS
+            .get()
+            .unwrap()
+            .iter()
+            .find(|x| x.id == _item)
+            .unwrap();
+        winnings.push(item_text(item.clone(), amount))
+    }
+
+    englishify_list(winnings, false)
+}
+
+pub async fn give_random_reward(
+    ctx: &Context,
+    user: UserId,
+    reward: RandomRewardResult,
+    money_reason: MoneyAddReasion,
+) -> Result<(), TrancerError> {
+    let eco = Economy::fetch(ctx, user).await?;
+    eco.add_money(ctx, reward.currency, money_reason).await?;
+
+    // TODO: Give the items
+
+    Ok(())
 }
 
 fn biased_random(min: u32, max: u32) -> u32 {
