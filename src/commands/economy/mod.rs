@@ -1,11 +1,6 @@
-use crate::cmd_util::CommandTrait;
+use crate::cmd_import_map;
 
 mod balance;
 mod xp;
 
-pub fn init() -> Vec<Box<dyn CommandTrait>> {
-    let mut commands = vec![];
-    commands.extend(balance::init());
-    commands.extend(xp::init());
-    commands
-}
+cmd_import_map!(balance, xp);

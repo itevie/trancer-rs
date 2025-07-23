@@ -95,7 +95,7 @@ pub fn currency<T: Into<i64>>(amount: T) -> String {
 
 pub fn item_text(item: Item, amount: u32) -> String {
     format!(
-        "**{}{}{}{}**",
+        "**{} {} {}{}**",
         if amount == 0 {
             String::new()
         } else {

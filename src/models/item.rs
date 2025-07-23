@@ -1,3 +1,4 @@
+use crate::cmd_util::{generic, TrancerError};
 use crate::database::Database;
 use crate::impl_from_row;
 use crate::trancer_config::all_items::ALL_ITEMS_DEF;
@@ -20,6 +21,17 @@ impl_from_row!(Item, ItemField {
 });
 
 pub static ALL_ITEMS: OnceCell<Vec<Item>> = OnceCell::new();
+
+pub fn get_item(item_id: u32) -> Result<Item, TrancerError> {
+    let Some(all) = ALL_ITEMS.get() else {
+        return Err(generic("Couldn't get ALL_ITEMS"));
+    };
+
+    match all.iter().find(|x| x.id == item_id) {
+        Some(some) => Ok(some.clone()),
+        None => Err(generic(format!("Item ID {item_id} does not exist."))),
+    }
+}
 
 impl Item {
     pub async fn get(ctx: &Context, id: u32) -> rusqlite::Result<Option<Item>> {

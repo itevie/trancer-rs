@@ -10,6 +10,7 @@ mod economy;
 mod fun;
 mod help;
 mod hypnosis;
+mod items;
 mod server;
 mod spirals;
 
@@ -25,7 +26,7 @@ macro_rules! cmd_import_map {
     };
 }
 
-cmd_import_map!(help, hypnosis, economy, server, fun, spirals, badges);
+cmd_import_map!(help, hypnosis, economy, server, fun, spirals, badges, items);
 
 #[macro_export]
 macro_rules! command_file {
