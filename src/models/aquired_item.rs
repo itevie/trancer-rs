@@ -25,10 +25,10 @@ impl AquiredItem {
 
         database.run(
             "INSERT INTO aquired_items (item_id, user_id, amount) VALUES (?1, ?2, ?3)\
-                ON CONFLICT(item_id, user_id) DO UPDATE SET\
+                ON CONFLICT(item_id, user_id) DO UPDATE SET \
                     amount = amount + excluded.amount\
             ",
-            &[&user_id.to_string(), &item_id, &amount],
+            &[&item_id, &user_id.to_string(), &amount],
         )
     }
 

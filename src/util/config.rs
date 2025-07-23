@@ -43,10 +43,17 @@ pub struct TrancerEconomyConfig {
 #[derive(Debug, Deserialize)]
 pub struct TrancerPayoutsConfig {
     pub bumps: TrancerBumpPayoutsConfig,
+    pub daily: TrancerDailyPayoutsConfig,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct TrancerBumpPayoutsConfig {
+    pub currency_min: u32,
+    pub currency_max: u32,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TrancerDailyPayoutsConfig {
     pub currency_min: u32,
     pub currency_max: u32,
 }

@@ -118,7 +118,7 @@ pub fn englishify_list(items: Vec<String>, use_or: bool) -> String {
         return String::new();
     }
 
-    let mut finished = items.get(0).unwrap().clone();
+    let mut finished = String::new();
 
     for i in 0..items.len() {
         let sep = if i == items.len() - 1 {

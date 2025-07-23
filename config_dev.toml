@@ -21,3 +21,7 @@ symbol = '🌀'
 [payouts.bumps]
 currency_min = 50
 currency_max = 200
+
+[payouts.daily]
+currency_min = 75
+currency_max = 150

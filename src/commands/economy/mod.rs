@@ -1,6 +1,7 @@
 use crate::cmd_import_map;
 
 mod balance;
+mod daily;
 mod xp;
 
-cmd_import_map!(balance, xp);
+cmd_import_map!(balance, xp, daily);
