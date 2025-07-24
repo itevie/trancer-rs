@@ -6,6 +6,7 @@ mod database;
 mod events;
 mod message_handlers;
 mod models;
+pub mod timers;
 mod trancer_config;
 mod util;
 
