@@ -11,10 +11,11 @@ use crate::util::random_rewards::{
 };
 use chrono::Utc;
 use serenity::all::{CreateMessage, MessageCommandInteractionMetadata, MessageInteractionMetadata};
-use tracing::error;
+use tracing::{error, instrument};
 
 static DISBOARD_ID: &'static str = "302050872383242240";
 
+#[instrument]
 pub async fn detect_bumps(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
     if let Some(embed) = ctx.msg.embeds.get(0) {
         if let Some(description) = embed.description.as_ref() {

@@ -1,6 +1,7 @@
 use crate::cmd_util::arg_parser::parse_args;
 use crate::cmd_util::{TrancerError, TrancerResponseType, TrancerRunnerContext};
 use crate::events::something_happened;
+use crate::message_handlers::handle_message_handlers;
 use crate::models::command_creation::CommandCreation;
 use crate::models::item::ALL_ITEMS;
 use crate::models::ratelimit::Ratelimit;
@@ -18,24 +19,12 @@ use serenity::async_trait;
 use tracing::{error, info};
 
 pub async fn message(ctx: Context, msg: Message) {
+    // ----- Guards -----
     if msg.author.id == ctx.cache.current_user().id {
         return;
     }
 
-    // for i in 0..20 {
-    //     let result = generate_random_rewards(&ctx, RandomRewardOptions {
-    //         currency: Some((10, 50)),
-    //         items: Some(
-    //             RandomRewardItemOptions {
-    //                 items: None,
-    //                 count: (1, 5)
-    //             }
-    //         )
-    //     }).await.unwrap();
-    //     println!("{:#?}", result)
-    // }
-
-    // Check if it's sent in a guild text channel
+    // ----- Unwrap Data -----
     let channel = if let Ok(channel) = msg.channel_id.to_channel(&ctx).await {
         match channel {
             Channel::Guild(channel) => {
@@ -67,11 +56,41 @@ pub async fn message(ctx: Context, msg: Message) {
         }
     };
 
-    if !msg.content.starts_with(server_settings.prefix.as_str()) {
+    let user_data = match UserData::fetch(&ctx, msg.author.id, guild_id).await {
+        Ok(ok) => ok,
+        Err(e) => {
+            error!(
+                "Failed to fetch user_data during message handler: {}",
+                e.to_string()
+            );
+            return;
+        }
+    };
+
+    let mut context = TrancerRunnerContext {
+        sy: ctx.clone(),
+        msg: msg.clone(),
+        server_settings,
+        channel: channel.clone(),
+        user_data,
+        guild_id,
+        command_name: "loading".to_string(),
+        original_command: msg.content.to_string(),
+    };
+
+    if let Err(err) = handle_message_handlers(&context).await {
+        error!("Failed while running message handlers (ignoring): {err}")
+    }
+
+    // ----- Command Checking -----
+    if !msg
+        .content
+        .starts_with(context.server_settings.prefix.as_str())
+    {
         return;
     }
 
-    let contents = msg.content[server_settings.prefix.len()..].trim();
+    let contents = msg.content[context.server_settings.prefix.len()..].trim();
     let commands = commands::init();
     let mut args = parse_args(contents.to_string());
 
@@ -92,28 +111,7 @@ pub async fn message(ctx: Context, msg: Message) {
     }) else {
         return;
     };
-
-    let user_data = match UserData::fetch(&ctx, msg.author.id, guild_id).await {
-        Ok(ok) => ok,
-        Err(e) => {
-            error!(
-                "Failed to fetch user_data during message handler: {}",
-                e.to_string()
-            );
-            return;
-        }
-    };
-
-    let context = TrancerRunnerContext {
-        sy: ctx.clone(),
-        msg: msg.clone(),
-        server_settings,
-        channel: channel.clone(),
-        user_data,
-        guild_id,
-        command_name: cmd.name(),
-        original_command: msg.content.to_string(),
-    };
+    context.command_name = cmd.name();
 
     let member = match guild_id.member(&ctx.http, msg.author.id).await {
         Ok(m) => m,
@@ -126,6 +124,7 @@ pub async fn message(ctx: Context, msg: Message) {
         }
     };
 
+    // ----- Command Guard Checks -----
     if let Some(user_permission) = cmd.details().user_permissions {
         let permissions = match guild_id.to_guild_cached(&ctx.cache).map(|x| x.clone()) {
             Some(some) => some.user_permissions_in(&channel, &member),
@@ -208,6 +207,7 @@ pub async fn message(ctx: Context, msg: Message) {
             .await;
     }
 
+    // ----- Command Running -----
     let response = match cmd.run(context.clone(), args).await {
         Ok(response) => response,
         Err(err) => {
