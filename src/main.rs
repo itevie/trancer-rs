@@ -18,6 +18,7 @@ use crate::models::item::ALL_ITEMS;
 use crate::models::ratelimit::Ratelimit;
 use crate::models::server_settings::ServerSettings;
 use crate::models::user_data::UserData;
+use crate::util::cached_usernames::init_cached_usernames_database;
 use crate::util::config::load_config;
 use crate::util::embeds::create_embed;
 use crate::util::lang::{permission_names, warn};
@@ -45,6 +46,7 @@ struct Handler;
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
+    init_cached_usernames_database();
     let config = load_config().unwrap();
     info!("Starting bot...");
 

@@ -7,6 +7,7 @@ use crate::models::item::ALL_ITEMS;
 use crate::models::ratelimit::Ratelimit;
 use crate::models::server_settings::ServerSettings;
 use crate::models::user_data::UserData;
+use crate::util::cached_usernames::set_cached_username;
 use crate::util::embeds::create_embed;
 use crate::util::lang::{permission_names, warn};
 use crate::{commands, models, reply, something_happened, Handler};
@@ -19,6 +20,8 @@ use serenity::async_trait;
 use tracing::{error, info};
 
 pub async fn message(ctx: Context, msg: Message) {
+    set_cached_username(msg.author.id.to_string(), msg.author.name.clone());
+
     // ----- Guards -----
     if msg.author.id == ctx.cache.current_user().id {
         return;

@@ -101,7 +101,7 @@ impl<T: CommandArgumentStruct + Send + 'static + std::fmt::Debug> CommandTrait
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct TrancerRunnerContext {
     pub sy: Context,
     pub msg: Message,

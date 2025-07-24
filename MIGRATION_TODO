@@ -1,2 +1,6 @@
 - Change server_settings::last_bump to TEXT. Can use Intellij's thing
 - `CREATE UNIQUE INDEX idx_unique_item_user ON aquired_items (item_id, user_id);
+-
+UPDATE economy
+SET balance = floor(balance)
+WHERE balance IS NOT NULL AND balance != floor(balance);

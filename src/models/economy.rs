@@ -64,6 +64,13 @@ impl Economy {
         }
     }
 
+    pub async fn fetch_all(ctx: &Context) -> rusqlite::Result<Vec<Economy>> {
+        let data_lock = ctx.data.read().await;
+        let db = data_lock.get::<Database>().unwrap();
+
+        db.get_many("SELECT * FROM economy", &[], |r| Economy::from_row(r))
+    }
+
     pub async fn create(ctx: &Context, user_id: UserId) -> rusqlite::Result<Economy> {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();

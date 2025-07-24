@@ -3,6 +3,7 @@ pub mod components;
 pub mod config;
 pub mod embeds;
 pub mod lang;
+pub mod leaderboard;
 pub mod level_calc;
 pub mod other;
 pub mod pagination;

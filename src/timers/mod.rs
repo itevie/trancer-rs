@@ -5,14 +5,16 @@ use tokio::time::interval;
 use tracing::{error, instrument};
 
 mod change_status;
+mod reload_cached_usernames;
 
 macro_rules! timer {
     ($amount:expr, $func:expr, $ctx:expr) => {
+        let ctx2 = $ctx.clone();
         tokio::spawn(async move {
             let mut ticker = interval(Duration::from_secs($amount));
 
             loop {
-                match ($func)($ctx).await {
+                match ($func)(ctx2.clone()).await {
                     Ok(_) => (),
                     Err(err) => handle_error(err),
                 }
@@ -25,6 +27,7 @@ macro_rules! timer {
 
 pub fn start_all(ctx: Context) {
     timer!(60 * 10, change_status::run, ctx.clone());
+    timer!(30, reload_cached_usernames::run, ctx.clone());
 }
 
 #[instrument]
