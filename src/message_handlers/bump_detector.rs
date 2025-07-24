@@ -1,12 +1,17 @@
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
+use crate::models::economy::MoneyAddReasion;
 use crate::models::server_settings::ServerSettingsFields;
 use crate::models::user_data::UserDataFields;
+use crate::reply;
 use crate::util::config::CONFIG;
+use crate::util::embeds::create_embed;
 use crate::util::random_rewards::{
-    generate_random_rewards, RandomRewardItemOptions, RandomRewardOptions,
+    englishify_random_reward, generate_random_rewards, give_random_reward, RandomRewardItemOptions,
+    RandomRewardOptions,
 };
 use chrono::Utc;
-use serenity::all::{MessageCommandInteractionMetadata, MessageInteractionMetadata};
+use serenity::all::{CreateMessage, MessageCommandInteractionMetadata, MessageInteractionMetadata};
+use tracing::error;
 
 static DISBOARD_ID: &'static str = "302050872383242240";
 
@@ -54,27 +59,46 @@ pub async fn detect_bumps(ctx: &TrancerRunnerContext) -> Result<(), TrancerError
         .await?;
 
     let reward = if ctx.server_settings.server_id == CONFIG.server.id {
-        Some(
-            generate_random_rewards(
-                &ctx.sy,
-                RandomRewardOptions {
-                    currency: Some((
-                        CONFIG.payouts.bumps.currency_min,
-                        CONFIG.payouts.bumps.currency_max,
-                    )),
-                    items: Some(RandomRewardItemOptions {
-                        items: None,
-                        count: (1, 3),
-                    }),
-                },
-            )
-            .await?,
+        let result = generate_random_rewards(
+            &ctx.sy,
+            RandomRewardOptions {
+                currency: Some((
+                    CONFIG.payouts.bumps.currency_min,
+                    CONFIG.payouts.bumps.currency_max,
+                )),
+                items: Some(RandomRewardItemOptions {
+                    items: None,
+                    count: (1, 3),
+                }),
+            },
         )
+        .await?;
+
+        give_random_reward(&ctx.sy, command.user.id, &result, MoneyAddReasion::Helping).await?;
+        Some(englishify_random_reward(result))
     } else {
         None
     };
 
-    // TODO: Finish this
+    let _ = reply!(
+        ctx,
+        CreateMessage::new()
+            .content(format!("<@{}>", command.user.id))
+            .embed(
+                create_embed()
+                    .title(format!(
+                        "{}, thanks for bumping our server! 💜",
+                        command.user.name
+                    ))
+                    .description(
+                        if let Some(ref reward) = reward {
+                            format!("You have been awarded {reward}!\n\n")
+                        } else {
+                            String::new()
+                        } + "I will remind you again in **2 hours**!"
+                    )
+            )
+    );
 
     Ok(())
 }
