@@ -1,3 +1,5 @@
+use std::ops::Range;
+
 /// The base struct for defining all the arguments
 #[derive(Debug, Clone)]
 pub struct TrancerArguments {
@@ -59,8 +61,7 @@ pub enum ArgType {
         inner: Box<ArgType>,
     },
     Currency {
-        min: Option<i32>,
-        max: Option<i32>,
+        range: Option<Range<i32>>,
         allow_negative: bool,
     },
     User {

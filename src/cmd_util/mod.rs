@@ -109,6 +109,7 @@ pub struct TrancerRunnerContext {
     pub channel: GuildChannel,
     pub server_settings: ServerSettings,
     pub user_data: UserData,
+    pub economy: Economy,
     pub command_name: String,
     pub original_command: String,
 }
@@ -134,6 +135,7 @@ macro_rules! trancer_handler {
     };
 }
 use crate::cmd_util::types::TrancerCommandType;
+use crate::models::economy::Economy;
 use crate::models::server_settings::ServerSettings;
 use crate::models::user_data::UserData;
 pub(crate) use trancer_handler;

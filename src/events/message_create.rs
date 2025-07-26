@@ -3,6 +3,7 @@ use crate::cmd_util::{TrancerError, TrancerResponseType, TrancerRunnerContext};
 use crate::events::something_happened;
 use crate::message_handlers::handle_message_handlers;
 use crate::models::command_creation::CommandCreation;
+use crate::models::economy::Economy;
 use crate::models::item::ALL_ITEMS;
 use crate::models::ratelimit::Ratelimit;
 use crate::models::server_settings::ServerSettings;
@@ -70,12 +71,24 @@ pub async fn message(ctx: Context, msg: Message) {
         }
     };
 
+    let economy = match Economy::fetch(&ctx, msg.author.id).await {
+        Ok(ok) => ok,
+        Err(e) => {
+            error!(
+                "Failed to fetch economy during message handler: {}",
+                e.to_string()
+            );
+            return;
+        }
+    };
+
     let mut context = TrancerRunnerContext {
         sy: ctx.clone(),
         msg: msg.clone(),
         server_settings,
         channel: channel.clone(),
         user_data,
+        economy,
         guild_id,
         command_name: "loading".to_string(),
         original_command: msg.content.to_string(),
