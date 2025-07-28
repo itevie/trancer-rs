@@ -1,5 +1,6 @@
 use crate::cmd_util::args::{ArgType, Argument, TrancerArguments};
 use crate::cmd_util::{ArgumentError, TrancerError, TrancerRunnerContext};
+use crate::util::lang::currency;
 use serenity::all::{User, UserId};
 use std::collections::HashMap;
 
@@ -73,6 +74,10 @@ impl PCACV {
                 match arg.t {
                     ArgType::Number { min: _, max: _ } => Ok(PCACV::OpNumber(None)),
                     ArgType::String { flags: _ } => Ok(PCACV::OpString(None)),
+                    ArgType::Currency {
+                        range: _,
+                        allow_negative: _,
+                    } => Ok(PCACV::OpNumber(None)),
                     ArgType::User {
                         allow_bots: _,
                         infer: _,
@@ -110,6 +115,44 @@ impl PCACV {
                             arg.clone(),
                         ))?;
                     }
+                }
+
+                Ok(if required {
+                    PCACV::Number(ok)
+                } else {
+                    PCACV::OpNumber(Some(ok))
+                })
+            }
+            ArgType::Currency {
+                ref range,
+                allow_negative,
+            } => {
+                let ok = match value.parse::<i32>() {
+                    Ok(ok) => ok,
+                    Err(e) => {
+                        return Err(ArgumentError::Parser(
+                            format!("Failed to parse number: {}", e),
+                            arg.clone(),
+                        ))?
+                    }
+                };
+
+                if !allow_negative && ok < 0 {
+                    Err(ArgumentError::InvalidInput(
+                        "Currency cannot be negative".to_string(),
+                        arg.clone(),
+                    ))?
+                }
+
+                if ok > ctx.economy.balance {
+                    Err(ArgumentError::InvalidInput(
+                        format!(
+                            "You do not have {}, you have {}",
+                            currency(ok),
+                            currency(ctx.economy.balance)
+                        ),
+                        arg.clone(),
+                    ))?
                 }
 
                 Ok(if required {

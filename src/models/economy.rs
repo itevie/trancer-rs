@@ -86,15 +86,19 @@ impl Economy {
         &self,
         ctx: &Context,
         amount: u32,
-        reason: MoneyAddReasion,
+        reason: Option<MoneyAddReasion>,
     ) -> rusqlite::Result<()> {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
 
-        let sql = format!(
-            "UPDATE economy SET balance = balance + ?1, from_{} = from_{} + ?1 WHERE user_id + ?2",
-            reason, reason
-        );
+        let sql = if let Some(reason) = reason {
+            format!(
+                "UPDATE economy SET balance = balance + ?1, from_{} = from_{} + ?1 WHERE user_id + ?2",
+                reason, reason
+            )
+        } else {
+            "UPDATE economy SET balance = balance + ?1 WHERE user_id = ?2".to_string()
+        };
 
         db.run(sql, &[&amount, &self.user_id.to_string()])
     }
@@ -109,9 +113,9 @@ impl Economy {
         let db = data_lock.get::<Database>().unwrap();
 
         let sql = if gambling_related {
-            "UPDATE economy SET balance = balance + ?1, from_gambling_lost = from_gambling_lost + ?1 WHERE user_id + ?2".to_string()
+            "UPDATE economy SET balance = balance - ?1, from_gambling_lost = from_gambling_lost + ?1 WHERE user_id + ?2".to_string()
         } else {
-            "UPDATE economy SET balance = balance + ?1 WHERE user_id + ?2".to_string()
+            "UPDATE economy SET balance = balance - ?1 WHERE user_id + ?2".to_string()
         };
 
         db.run(sql, &[&amount, &self.user_id.to_string()])

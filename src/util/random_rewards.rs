@@ -116,7 +116,8 @@ pub async fn give_random_reward(
     money_reason: MoneyAddReasion,
 ) -> Result<(), TrancerError> {
     let eco = Economy::fetch(ctx, user).await?;
-    eco.add_money(ctx, reward.currency, money_reason).await?;
+    eco.add_money(ctx, reward.currency, Some(money_reason))
+        .await?;
 
     for (item_id, amount) in &reward.items {
         AquiredItem::give_item_to(&ctx, user, *item_id, *amount).await?

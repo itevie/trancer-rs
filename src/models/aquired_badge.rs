@@ -40,6 +40,22 @@ impl AquiredBadge {
         )?))
     }
 
+    pub async fn get_all_by_badge<T: Into<String>>(
+        context: &Context,
+        name: T,
+    ) -> rusqlite::Result<AquiredBadgeVec> {
+        let name = name.into();
+        AquiredBadge::validate_badge_name(name.clone())?;
+        let data_lock = context.data.read().await;
+        let database = data_lock.get::<Database>().unwrap();
+
+        Ok(AquiredBadgeVec(database.get_many(
+            "SELECT * FROM aquired_badges WHERE badge_name = ?1",
+            &[&name],
+            |r| Self::from_row(r),
+        )?))
+    }
+
     pub async fn has<T: Into<String>>(
         context: &Context,
         user_id: UserId,

@@ -5,8 +5,11 @@ use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{trancer_handler, TrancerDetails};
 use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
 use crate::commands::CommandHasNoArgs;
+use crate::models::economy::{Economy, MoneyAddReasion};
+use crate::util::embeds::create_embed;
+use crate::util::lang::currency;
 use crate::{command_argument_struct, command_file};
-use serenity::all::User;
+use serenity::all::{CreateMessage, User};
 use std::collections::HashMap;
 
 command_argument_struct!(PayArgs {
@@ -15,7 +18,7 @@ command_argument_struct!(PayArgs {
 });
 
 command_file! {
-    TrancerCommand::<CommandHasNoArgs> {
+    TrancerCommand::<PayArgs> {
         name: "pay".to_string(),
         t: TrancerCommandType::Help,
         description: "Give someone else your money".to_string(),
@@ -45,7 +48,13 @@ command_file! {
         },
 
         handler: trancer_handler!(|ctx, args| {
-            Ok(TrancerResponseType::Content("pong".to_string()))
+            let user = Economy::fetch(&ctx.sy, args.user.id).await?;
+            user.add_money(&ctx.sy, args.amount as u32, None).await?;
+            ctx.economy.remove_money(&ctx.sy, args.amount as u32, false).await?;
+
+            Ok(TrancerResponseType::Content(
+                format!("You gave **{}** {}", args.user.name, currency(args.amount))
+            ))
         }),
     }
 }
