@@ -167,7 +167,7 @@ impl PCACV {
                 PCACV::OpString(Some(value))
             }),
             ArgType::User {
-                allow_bots: _,
+                allow_bots,
                 infer: _,
             } => {
                 value.retain(|c| c != '<' && c != '>' && c != '@');
@@ -184,6 +184,13 @@ impl PCACV {
                         arg.clone(),
                     ))?;
                 };
+
+                if !allow_bots && user.bot {
+                    return Err(ArgumentError::InvalidInput(
+                        "Bots cannot be used here!".to_string(),
+                        arg.clone(),
+                    ))?;
+                }
 
                 Ok(if required {
                     PCACV::User(user.to_owned())

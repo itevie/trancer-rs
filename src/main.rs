@@ -13,13 +13,14 @@ mod util;
 use crate::cmd_util::arg_parser::parse_args;
 use crate::cmd_util::{TrancerError, TrancerResponseType, TrancerRunnerContext};
 use crate::database::Database;
+use crate::message_handlers::xp::XpLastAwards;
 use crate::models::command_creation::CommandCreation;
 use crate::models::item::ALL_ITEMS;
 use crate::models::ratelimit::Ratelimit;
 use crate::models::server_settings::ServerSettings;
 use crate::models::user_data::UserData;
 use crate::util::cached_usernames::init_cached_usernames_database;
-use crate::util::config::load_config;
+use crate::util::config::{load_config, TrancerXpConfig};
 use crate::util::embeds::create_embed;
 use crate::util::lang::{permission_names, warn};
 use crate::util::random_rewards::{
@@ -38,6 +39,7 @@ use serenity::{
     prelude::*,
 };
 use std::env;
+use std::sync::Arc;
 use tokio::io::AsyncWriteExt;
 use tracing::{error, info, instrument};
 
@@ -64,6 +66,7 @@ async fn main() {
         let mut data = client.data.write().await;
         let db = Database::new(config.general.data_dir);
         data.insert::<Database>(db);
+        data.insert::<XpLastAwards>(Arc::default());
     }
 
     if let Err(why) = client.start().await {

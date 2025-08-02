@@ -1,7 +1,9 @@
 use crate::cmd_util::{generic, TrancerError};
 use crate::util::lang::permission_names;
+use rand::{thread_rng, Rng};
 use serenity::all::{Member, Permissions, Role};
 use serenity::client::Context;
+use std::ops::Range;
 
 pub fn random_number_from_string(input: &str, min: i32, max: i32) -> i32 {
     let mut hash: u32 = 0;
@@ -45,4 +47,9 @@ pub async fn give_role(ctx: &Context, member: &Member, role: &Role) -> Result<()
         .add_role(&ctx, role)
         .await
         .map_err(|x| TrancerError::Serenity(x))
+}
+
+pub fn random_range<T: Into<i64>>(range: Range<T>) -> T {
+    let mut rng = thread_rng();
+    rng.gen_range(range)
 }

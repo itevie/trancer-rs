@@ -5,9 +5,10 @@ use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{trancer_handler, TrancerDetails};
 use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
 use crate::models::user_data::UserData;
+use crate::util::config::CONFIG;
 use crate::util::lang::{make_percentage, pronoun};
 use crate::util::level_calc;
-use crate::util::level_calc::{MAX_XP, MIN_XP, TIME_BETWEEN};
+use crate::util::level_calc::TIME_BETWEEN;
 use crate::{command_argument_struct, command_file};
 use serenity::all::User;
 use std::collections::HashMap;
@@ -51,10 +52,10 @@ command_file! {
             };
             let amount_progress = next_level_xp - xp;
 
-            let most = amount_progress / (TIME_BETWEEN as f64 * MIN_XP as f64);
-            let least = amount_progress / (MAX_XP as f64 * (TIME_BETWEEN as f64 / 60_000.0));
+            let most = amount_progress / (TIME_BETWEEN as f64 * CONFIG.xp.min as f64);
+            let least = amount_progress / (CONFIG.xp.max as f64 * (TIME_BETWEEN as f64 / 60_000.0));
             let average = amount_progress
-                / ((MAX_XP as f64 / 2.0).floor() * ((TIME_BETWEEN as f64 / 2.0) / 60_000.0));
+                / ((CONFIG.xp.max as f64 / 2.0).floor() * ((TIME_BETWEEN as f64 / 2.0) / 60_000.0));
 
             Ok(TrancerResponseType::Content(
                 format!(

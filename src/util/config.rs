@@ -11,6 +11,7 @@ pub struct TrancerConfig {
     pub analytics: TrancerAnalyticsConfig,
     pub payouts: TrancerPayoutsConfig,
     pub economy: TrancerEconomyConfig,
+    pub xp: TrancerXpConfig,
 }
 
 #[derive(Debug, Deserialize)]
@@ -28,6 +29,15 @@ pub struct TrancerServerConfig {
 pub struct TrancerRolesConfig {
     pub birthday: String,
     pub can_request: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TrancerXpConfig {
+    pub min: u32,
+    pub max: u32,
+    pub levels: Vec<u32>,
+    pub after: u32,
+    pub exclude: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
