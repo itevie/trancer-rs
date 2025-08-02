@@ -49,7 +49,11 @@ pub async fn give_role(ctx: &Context, member: &Member, role: &Role) -> Result<()
         .map_err(|x| TrancerError::Serenity(x))
 }
 
-pub fn random_range<T: Into<i64>>(range: Range<T>) -> T {
+pub fn random_range<
+    T: Into<i64> + rand::distributions::uniform::SampleUniform + std::cmp::PartialOrd,
+>(
+    range: Range<T>,
+) -> T {
     let mut rng = thread_rng();
     rng.gen_range(range)
 }

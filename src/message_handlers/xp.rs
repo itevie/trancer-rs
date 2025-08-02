@@ -12,7 +12,9 @@ use serenity::builder::CreateMessage;
 use serenity::prelude::TypeMapKey;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
+use tracing::error;
 
+#[derive(Clone)]
 pub struct XpLastAwards(pub Arc<Mutex<HashMap<String, DateTime<Utc>>>>);
 
 impl TypeMapKey for XpLastAwards {
@@ -35,9 +37,8 @@ pub async fn handle_xp(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
         return Ok(());
     }
 
-    let mut xp_lock = xp.lock().unwrap();
     let now = Utc::now();
-    let last = xp_lock.get(&ctx.user_data.user_id);
+    let last = xp.lock().unwrap().get(&ctx.user_data.user_id).cloned();
 
     if let Some(last) = last {
         if now.timestamp() - last.timestamp() < TIME_BETWEEN as i64 {
@@ -45,8 +46,10 @@ pub async fn handle_xp(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
         }
     }
 
-    xp_lock.remove(&ctx.user_data.user_id);
-    xp_lock.insert(ctx.user_data.user_id.clone(), now);
+    xp.lock().unwrap().remove(&ctx.user_data.user_id);
+    xp.lock()
+        .unwrap()
+        .insert(ctx.user_data.user_id.clone(), now);
 
     let pre_level = calculate_level(ctx.user_data.xp);
     let award = random_range(CONFIG.xp.min..CONFIG.xp.max);
