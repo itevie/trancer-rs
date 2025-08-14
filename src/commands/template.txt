@@ -12,7 +12,9 @@ command_file! {
         name: "ping".to_string(),
         t: TrancerCommandType::Help,
         description: "This is a test".to_string(),
-        details: Default::default(),
+        details: TrancerDetails {
+            ..Default::default()
+        },
 
         handler: trancer_handler!(|ctx, args| {
             Ok(TrancerResponseType::Content("pong".to_string()))

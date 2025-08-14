@@ -32,6 +32,24 @@ impl AquiredItem {
         )
     }
 
+    pub async fn remove_item_from(
+        ctx: &Context,
+        user_id: UserId,
+        item_id: u32,
+        amount: u32,
+    ) -> rusqlite::Result<()> {
+        let data_lock = ctx.data.read().await;
+        let database = data_lock.get::<Database>().unwrap();
+
+        database.run(
+            "INSERT INTO aquired_items (item_id, user_id, amount) VALUES (?1, ?2, 0)\
+                ON CONFLICT(item_id, user_id) DO UPDATE SET \
+                    amount = MIN(amount - ?3, 0)\
+            ",
+            &[&item_id, &user_id.to_string(), &amount],
+        )
+    }
+
     pub async fn fetch_all_for(
         ctx: &Context,
         user_id: UserId,

@@ -33,6 +33,18 @@ pub fn get_item(item_id: u32) -> Result<Item, TrancerError> {
     }
 }
 
+pub fn get_item_name<T: Into<String>>(name: T) -> Result<Item, TrancerError> {
+    let name = name.into();
+    let Some(all) = ALL_ITEMS.get() else {
+        return Err(generic("Couldn't get ALL_ITEMS"));
+    };
+
+    match all.iter().find(|x| x.name == name) {
+        Some(some) => Ok(some.clone()),
+        None => Err(generic(format!("Item with name {name} does not exist."))),
+    }
+}
+
 impl Item {
     pub async fn get(ctx: &Context, id: u32) -> rusqlite::Result<Option<Item>> {
         let data_lock = ctx.data.read().await;
