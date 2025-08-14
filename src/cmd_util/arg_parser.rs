@@ -226,7 +226,8 @@ where
 
     for i in 0..arg_schema.args.len() {
         let arg = &arg_schema.args[i];
-        let required = arg_schema.required >= i;
+        let required = arg_schema.required > i;
+
         let value = {
             let val_opt = if arg.details.wick_style.is_none() {
                 args.args.get(i)
@@ -268,7 +269,7 @@ where
         }
 
         if let Some(ref one_of) = arg.details.one_of {
-            if one_of.contains(&value) {
+            if !one_of.contains(&value) {
                 return Err(ArgumentError::OneOfFailed(one_of.clone(), arg.clone()))?;
             }
         }
