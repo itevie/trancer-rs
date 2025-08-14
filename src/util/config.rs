@@ -12,11 +12,24 @@ pub struct TrancerConfig {
     pub payouts: TrancerPayoutsConfig,
     pub economy: TrancerEconomyConfig,
     pub xp: TrancerXpConfig,
+    pub dev_bot: TrancerDevBotConfig,
+    pub channels: TrancerChannelsConfig,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct TrancerGeneralConfig {
     pub data_dir: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TrancerChannelsConfig {
+    pub welcomes: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TrancerDevBotConfig {
+    pub developer_bot_id: String,
+    pub ignore_most_events: bool,
 }
 
 #[derive(Debug, Deserialize)]

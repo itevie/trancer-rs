@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
 macro_rules! trancer_command_type {
-    ($i:ident, {$($field:ident),*}) => {
+    ($i:ident, {$($field:ident, $emoji:expr),*}) => {
         #[derive(Debug, Clone, Copy)]
         pub enum $i {
             $($field),*
@@ -10,6 +10,12 @@ macro_rules! trancer_command_type {
         impl $i {
             pub fn all() -> &'static [&'static str] {
                 &[$(stringify!($field)),*]
+            }
+
+            pub fn emoji(&self) -> &'static str {
+                match self {
+                    $(Self::$field => $emoji),*
+                }
             }
         }
 
@@ -33,32 +39,32 @@ macro_rules! trancer_command_type {
 }
 
 trancer_command_type!(TrancerCommandType, {
-    Analytics,
-    Dawnagotchi,
-    Ranks,
-    Economy,
-    Cards,
-    Badges,
-    Booster,
-    Counting,
-    Spirals,
-    Quotes,
-    Help,
-    Minecraft,
-    Hypnosis,
-    Uncategorized,
-    Fun,
-    Admin,
-    Messages,
-    Leaderboards,
-    Games,
-    Actions,
-    Ai,
-    Marriage,
-    Reporting,
-    Qotd,
-    Voice,
-    Confessions,
-    FileDirectory,
-    Unknown
+    Analytics, "📈",
+    Dawnagotchi, "🏳‍🌈",
+    Ranks, "🌭",
+    Economy, "🌀",
+    Cards, "🎴",
+    Badges, "🥇",
+    Booster, ":pink_heart:",
+    Counting, "🔢",
+    Spirals, "😵‍💫",
+    Quotes, "🗨️",
+    Help, "📖",
+    Minecraft, ":green_heart:",
+    Hypnosis, "😵‍💫",
+    Uncategorized, "❓",
+    Fun, "🎮",
+    Admin, "🛠️",
+    Messages, "💬",
+    Leaderboards, "🏆",
+    Games, "🎮️",
+    Actions, "👊",
+    Ai, "🤖",
+    Marriage, "💍",
+    Reporting, "⚔️",
+    Qotd, "❓",
+    Voice, "📞",
+    Confessions, "🤫",
+    FileDirectory, "📁",
+    Unknown, "❓"
 });

@@ -20,7 +20,7 @@ pub fn calculate_level(xp: u32) -> u32 {
         level += (rem as f64 / CONFIG.xp.after as f64).trunc() as u32;
     }
 
-    level - 1
+    level.checked_sub(1).unwrap_or(0)
 }
 
 pub fn xp_for_next_level(xp: u32) -> u32 {

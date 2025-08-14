@@ -8,6 +8,7 @@ mod commands_all;
 mod commands_new;
 mod define;
 mod github;
+mod help;
 mod invite;
 mod ping;
 mod profile;

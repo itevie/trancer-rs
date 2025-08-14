@@ -1,9 +1,10 @@
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
 use crate::Handler;
-use serenity::all::{Context, CreateMessage, EventHandler, Message, Ready};
+use serenity::all::{Context, CreateMessage, EventHandler, Member, Message, Ready};
 use serenity::async_trait;
 use tracing::error;
 
+mod guild_member_addition;
 mod message_create;
 mod ready;
 
@@ -15,6 +16,10 @@ impl EventHandler for Handler {
 
     async fn ready(&self, ctx: Context, data_about_bot: Ready) {
         ready::ready(ctx, data_about_bot).await;
+    }
+
+    async fn guild_member_addition(&self, ctx: Context, new_member: Member) {
+        guild_member_addition::guild_member_addition(ctx, new_member).await;
     }
 }
 

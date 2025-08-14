@@ -1,9 +1,16 @@
 [general]
 data_dir = './data'
 
+[dev_bot]
+developer_bot_id = "1391147956081529056"
+ignore_most_events = false
+
 [server]
 id = '1257416273520758814'
 invite_link = 'https://discord.gg/xrjcHcAsj2'
+
+[channels]
+welcomes = "1257417250395263036"
 
 [roles]
 member = "1257423790212907038"
