@@ -1,5 +1,6 @@
 mod analytics;
 mod bump_detector;
+mod react_bot;
 pub mod xp;
 
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
@@ -10,5 +11,6 @@ pub async fn handle_message_handlers(ctx: &TrancerRunnerContext) -> Result<(), T
     analytics::handle_analytics(ctx).await?;
     bump_detector::detect_bumps(ctx).await?;
     xp::handle_xp(ctx).await?;
+    react_bot::handle_react_bot(ctx).await?;
     Ok(())
 }
