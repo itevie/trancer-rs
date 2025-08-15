@@ -334,6 +334,7 @@ static PHRASES: &'static[&'static str] = &[
 "https://cdn.discordapp.com/attachments/1186165471712645180/1362048934893322341/8zp6ph.jpg?ex=6800fa6b&is=67ffa8eb&hm=248ae11c68c6c205fe52759d9df12ce520f219e4fd74487129dbc77a128f3520&",
 "https://tenor.com/view/mf-dog-ate-my-book-on-stoicism-and-he-aint-been-the-same-since-gif-2100496274040615580",
 "https://cdn.discordapp.com/attachments/1186165471712645180/1373349947264729250/GnnnYQpa8AEH88Q.jpg?ex=682a174f&is=6828c5cf&hm=22240bba9b011e73a5a39049496184e08314ef5c1f14bdeae08da706f28e5582&",
+    "anime"
 ];
 
 struct ReactBotSettings {
