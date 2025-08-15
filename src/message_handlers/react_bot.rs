@@ -2,7 +2,10 @@ use crate::cmd_util::{TrancerError, TrancerRunnerContext};
 use crate::models::user_data::UserDataFields;
 use crate::reply;
 use crate::util::other::random_range;
-use serenity::all::CreateMessage;
+use once_cell::sync::Lazy;
+use serenity::all::{CreateMessage, GuildId};
+use std::collections::HashMap;
+use std::sync::{Arc, LazyLock, Mutex, RwLock};
 use tracing::error;
 use tracing::instrument;
 
@@ -333,6 +336,14 @@ static PHRASES: &'static[&'static str] = &[
 "https://cdn.discordapp.com/attachments/1186165471712645180/1373349947264729250/GnnnYQpa8AEH88Q.jpg?ex=682a174f&is=6828c5cf&hm=22240bba9b011e73a5a39049496184e08314ef5c1f14bdeae08da706f28e5582&",
 ];
 
+struct ReactBotSettings {
+    required: u32,
+    since: u32,
+}
+
+static REACT_BOT_SETTINGS: LazyLock<Arc<Mutex<HashMap<GuildId, ReactBotSettings>>>> =
+    LazyLock::new(|| Arc::from(Mutex::from(HashMap::new())));
+
 #[instrument]
 pub async fn handle_react_bot(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
     if !ctx.server_settings.react_bot {
@@ -341,6 +352,30 @@ pub async fn handle_react_bot(ctx: &TrancerRunnerContext) -> Result<(), TrancerE
 
     if ctx.msg.author.bot {
         return Ok(());
+    }
+
+    {
+        let mut lock = REACT_BOT_SETTINGS.lock().unwrap();
+
+        if !lock.contains_key(&ctx.guild_id) {
+            lock.insert(
+                ctx.guild_id.clone(),
+                ReactBotSettings {
+                    since: 0,
+                    required: 20,
+                },
+            );
+        }
+
+        let mut o = lock.get_mut(&ctx.guild_id).unwrap();
+        o.since += 1;
+
+        if o.since < o.required {
+            return Ok(());
+        }
+
+        o.since = 0;
+        o.required = random_range(70..140);
     }
 
     let phrase_idx = random_range(0i64..PHRASES.len() as i64) as usize;
