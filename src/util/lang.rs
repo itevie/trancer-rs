@@ -1,4 +1,6 @@
 use crate::models::item::Item;
+use crate::models::user_data::PRONOUN_SET_CACHE;
+use crate::trancer_config::all_pronouns::ALL_PRONOUNS;
 use crate::util::config::CONFIG;
 use chrono::{DateTime, TimeZone};
 use serenity::all::{Permissions, User};
@@ -15,12 +17,70 @@ pub fn pronoun<S: Into<String>>(user1: &User, user2: &User, same_prn: S, diff_pr
     }
 }
 
+pub enum PronounType {
+    Subject,
+    Object,
+    PossessiveAdjective,
+    PossessivePronoun,
+    Reflexive,
+}
+
+pub fn pronoun_for(user: &User, t: PronounType) -> &str {
+    let binding = PRONOUN_SET_CACHE.read().unwrap();
+    let prn = binding
+        .get(&user.id.to_string())
+        .cloned()
+        .unwrap_or("they".to_string());
+    let set = ALL_PRONOUNS
+        .get(prn.as_str())
+        .unwrap_or_else(|| ALL_PRONOUNS.get(&"they").unwrap());
+    match t {
+        PronounType::Subject => set.sub,
+        PronounType::Object => set.obj,
+        PronounType::PossessiveAdjective => set.poss_adj,
+        PronounType::PossessivePronoun => set.poss_prn,
+        PronounType::Reflexive => set.reflex,
+    }
+}
+
 pub fn pron(user1: &User, user2: &User) -> String {
-    if user1 == user2 { "your" } else { "their" }.to_string()
+    if user1 == user2 {
+        "your"
+    } else {
+        pronoun_for(user2, PronounType::Object)
+    }
+    .to_string()
 }
 
 pub fn pronu(user1: &User, user2: &User) -> String {
-    if user1 == user2 { "Your" } else { "Their" }.to_string()
+    if user1 == user2 {
+        "Your".to_string()
+    } else {
+        proper(pronoun_for(user2, PronounType::Object).to_string())
+    }
+}
+
+pub fn proper<T: Into<String>>(value: T) -> String {
+    let value = value.into();
+    value
+        .split(" ")
+        .map(|s| {
+            return if s.is_empty() {
+                "".to_string()
+            } else if s.len() == 1 {
+                s.to_uppercase()
+            } else {
+                s.to_string()
+                    .chars()
+                    .nth(0)
+                    .unwrap()
+                    .to_string()
+                    .to_uppercase()
+                    + &*s[1..].to_string()
+            };
+        })
+        .collect::<Vec<String>>()
+        .join(" ")
 }
 
 pub fn list<T: Into<String>, T2: Into<String>>(data: Vec<(T, T2)>) -> String {

@@ -72,7 +72,7 @@ pub async fn handle_xp(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
         // TODO: Add level roles
 
         reply!(ctx, CreateMessage::new().content(
-            format!("Welldone! You levelled up from level **{pre_level}** to **{post_level}**! :cyclone:{}",
+            format!("Well-done! You levelled up from level **{pre_level}** to **{post_level}**! :cyclone:{}",
                 if !reward.is_empty() {
                     format!("\n\nYou got: {}", reward.join(", "))
                 } else {

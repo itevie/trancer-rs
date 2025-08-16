@@ -4,3 +4,5 @@
 UPDATE economy
 SET balance = floor(balance)
 WHERE balance IS NOT NULL AND balance != floor(balance);
+
+- ALTER TABLE user_data ADD pronoun_set TEXT DEFAULT 'they' NOT NULL;

@@ -12,6 +12,7 @@ mod help;
 mod invite;
 mod ping;
 mod profile;
+mod set_pronoun;
 
 cmd_import_map!(
     profile,
@@ -24,5 +25,6 @@ cmd_import_map!(
     define,
     category,
     github,
-    about
+    about,
+    set_pronoun
 );

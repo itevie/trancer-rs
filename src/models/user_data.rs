@@ -6,7 +6,9 @@ use rusqlite::Error::QueryReturnedNoRows;
 use rusqlite::ToSql;
 use serenity::all::{GuildId, UserId};
 use serenity::client::Context;
+use std::collections::HashMap;
 use std::fmt::Display;
+use std::sync::{Arc, LazyLock, Mutex, RwLock};
 
 enum_with_sql!(HypnoStatus {
     Green = "green",
@@ -53,7 +55,11 @@ impl_from_row!(UserData, UserDataFields {
     talking_streak: u32,
     last_talking_streak: Option<String>,
     highest_talking_streak: u32,
+    pronoun_set: String,
 });
+
+pub static PRONOUN_SET_CACHE: LazyLock<Arc<RwLock<HashMap<String, String>>>> =
+    LazyLock::new(|| Default::default());
 
 impl UserData {
     pub fn birthday_date(&self) -> Result<Option<DateTime<Utc>>, TrancerError> {
@@ -119,7 +125,14 @@ impl UserData {
         );
 
         match result {
-            Ok(ok) => Ok(ok),
+            Ok(ok) => {
+                {
+                    let mut lock = PRONOUN_SET_CACHE.write().unwrap();
+                    lock.remove(&ok.user_id.clone());
+                    lock.insert(ok.user_id.clone(), ok.pronoun_set.clone());
+                }
+                Ok(ok)
+            }
             Err(QueryReturnedNoRows) => UserData::create(ctx, user_id, server_id).await,
             Err(e) => Err(e),
         }

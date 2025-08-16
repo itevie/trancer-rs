@@ -5,7 +5,7 @@ use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{trancer_handler, TrancerDetails};
 use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
 use crate::models::economy::Economy;
-use crate::util::lang::{currency, pronoun};
+use crate::util::lang::{currency, pronoun, pronu};
 use crate::{command_argument_struct, command_file};
 use serenity::all::User;
 use std::collections::HashMap;
@@ -40,7 +40,7 @@ command_file! {
 
             Ok(TrancerResponseType::Content(format!(
                 "{} balance is {}",
-                pronoun(&ctx.msg.author, &args.user, "Your", "Their"),
+                pronu(&ctx.msg.author, &args.user),
                 currency(eco.balance)
             )))
         }),
