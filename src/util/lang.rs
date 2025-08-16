@@ -43,21 +43,27 @@ pub fn pronoun_for(user: &User, t: PronounType) -> &str {
     }
 }
 
-pub fn pron(user1: &User, user2: &User) -> String {
-    if user1 == user2 {
+pub fn pronoun_base(user1: &User, user2: &User, t: PronounType, p: bool) -> String {
+    let val = if user1 == user2 {
         "your"
     } else {
-        pronoun_for(user2, PronounType::Object)
+        pronoun_for(user2, t)
     }
-    .to_string()
+    .to_string();
+
+    if p {
+        proper(val)
+    } else {
+        val
+    }
+}
+
+pub fn pron(user1: &User, user2: &User) -> String {
+    pronoun_base(user1, user2, PronounType::PossessiveAdjective, false)
 }
 
 pub fn pronu(user1: &User, user2: &User) -> String {
-    if user1 == user2 {
-        "Your".to_string()
-    } else {
-        proper(pronoun_for(user2, PronounType::Object).to_string())
-    }
+    pronoun_base(user1, user2, PronounType::PossessiveAdjective, true)
 }
 
 pub fn proper<T: Into<String>>(value: T) -> String {
