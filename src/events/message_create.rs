@@ -2,23 +2,20 @@ use crate::cmd_util::arg_parser::parse_args;
 use crate::cmd_util::{TrancerError, TrancerResponseType, TrancerRunnerContext};
 use crate::events::something_happened;
 use crate::message_handlers::handle_message_handlers;
-use crate::models::command_creation::CommandCreation;
 use crate::models::economy::Economy;
-use crate::models::item::ALL_ITEMS;
 use crate::models::ratelimit::Ratelimit;
 use crate::models::server_settings::ServerSettings;
 use crate::models::user_data::UserData;
 use crate::util::cached_usernames::set_cached_username;
 use crate::util::embeds::create_embed;
 use crate::util::lang::{permission_names, warn};
-use crate::{commands, models, reply, something_happened, Handler};
+use crate::{commands, reply, something_happened};
 use chrono::{DateTime, Utc};
 use chrono_humanize::HumanTime;
 use serenity::all::{
-    Channel, ChannelType, Context, CreateMessage, EventHandler, Message, ReactionType, Ready,
+    Channel, ChannelType, Context, CreateMessage, EventHandler, Message, ReactionType,
 };
-use serenity::async_trait;
-use tracing::{error, info};
+use tracing::error;
 
 pub async fn message(ctx: Context, msg: Message) {
     set_cached_username(msg.author.id.to_string(), msg.author.name.clone());
@@ -122,7 +119,7 @@ pub async fn message(ctx: Context, msg: Message) {
             || cmd
                 .details()
                 .aliases
-                .unwrap_or(vec![])
+                .unwrap_or_default()
                 .contains(&command_name)
     }) else {
         return;
@@ -180,9 +177,8 @@ pub async fn message(ctx: Context, msg: Message) {
             }
         };
 
-        let prev =
-            something_happened!(context, DateTime::parse_from_rfc3339(&*ratelimit.last_used))
-                .timestamp();
+        let prev = something_happened!(context, DateTime::parse_from_rfc3339(&ratelimit.last_used))
+            .timestamp();
         let now = Utc::now().timestamp();
 
         if now - prev < r as i64 {

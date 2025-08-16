@@ -4,7 +4,6 @@ use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{trancer_handler, TrancerDetails};
 use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
-use crate::commands::CommandHasNoArgs;
 use crate::models::aquired_badge::AquiredBadge;
 use crate::util::cached_usernames::get_cached_username;
 use crate::util::embeds::create_embed;

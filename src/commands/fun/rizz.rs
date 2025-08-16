@@ -6,7 +6,7 @@ use crate::command_file;
 use crate::commands::{only_user_args, OnlyUserArgs};
 use rand::Rng;
 
-static BITE_LIP: &'static str = "<:bite_lips:1315469148004028537>";
+static BITE_LIP: &str = "<:bite_lips:1315469148004028537>";
 
 command_file! {
     TrancerCommand::<OnlyUserArgs> {

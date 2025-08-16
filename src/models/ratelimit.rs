@@ -26,7 +26,7 @@ impl Ratelimit {
         let result = db.get_one(
             "SELECT * FROM ratelimits WHERE user_id = ?1 AND command_name = ?2 LIMIT 1",
             &[&user_id.to_string(), &command_name],
-            |r| Ratelimit::from_row(r),
+            Ratelimit::from_row,
         );
 
         match result {
@@ -34,7 +34,7 @@ impl Ratelimit {
             Err(QueryReturnedNoRows) => db.get_one(
                 "INSERT INTO ratelimits (user_id, command_name, last_used) VALUES (?1, ?2, ?3) RETURNING *",
                 &[&user_id.to_string(), &command_name.to_string(), &Utc.timestamp_opt(0, 0).unwrap().to_rfc3339()],
-                |r| Ratelimit::from_row(r)
+                Ratelimit::from_row
             ),
             Err(e) => Err(e),
         }

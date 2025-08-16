@@ -5,5 +5,6 @@ use tracing::instrument;
 
 #[instrument]
 pub async fn run(ctx: Context) -> Result<(), TrancerError> {
-    Ok(load_from_sy_cache(&ctx).await)
+    load_from_sy_cache(&ctx).await;
+    Ok(())
 }

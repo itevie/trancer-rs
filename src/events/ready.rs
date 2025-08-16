@@ -1,9 +1,8 @@
 use crate::models::command_creation::CommandCreation;
 use crate::models::item::ALL_ITEMS;
 use crate::timers::start_all;
-use crate::{commands, models, Handler};
-use serenity::all::{Context, EventHandler, Ready};
-use serenity::async_trait;
+use crate::{commands, models};
+use serenity::all::{Context, Ready};
 use tracing::info;
 
 pub async fn ready(ctx: Context, ready: Ready) {

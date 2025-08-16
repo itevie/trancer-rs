@@ -63,7 +63,7 @@ impl ServerSettings {
         let result = db.get_one(
             "SELECT * FROM server_settings WHERE server_id = ?1 LIMIT 1",
             &[&server_id.to_string()],
-            |r| ServerSettings::from_row(r),
+            ServerSettings::from_row,
         );
 
         match result {
@@ -80,7 +80,7 @@ impl ServerSettings {
         db.get_one(
             "INSERT INTO server_settings (guild_id) VALUES (?1) RETURNING *",
             &[&server_id.to_string()],
-            |r| ServerSettings::from_row(r),
+            ServerSettings::from_row,
         )
     }
 

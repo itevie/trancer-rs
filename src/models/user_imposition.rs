@@ -86,7 +86,7 @@ impl UserImposition {
         db.get_many(
             "SELECT * FROM user_imposition WHERE user_id = ?1",
             &[&user_id.to_string()],
-            |r| UserImposition::from_row(r),
+            UserImposition::from_row,
         )
     }
 
@@ -110,7 +110,7 @@ impl UserImposition {
         let result = db.get_one(
             "SELECT * FROM user_imposition WHERE user_id = ?1 AND what = $2",
             &[&user_id.to_string(), &what],
-            |r| UserImposition::from_row(r),
+            UserImposition::from_row,
         );
 
         match result {
@@ -131,7 +131,7 @@ impl UserImposition {
         db.get_one(
             "INSERT INTO user_imposition (user_id, what) VALUES (?1, ?2) RETURNING *",
             &[&user_id.to_string(), &what],
-            |r| UserImposition::from_row(r),
+            UserImposition::from_row,
         )
     }
 

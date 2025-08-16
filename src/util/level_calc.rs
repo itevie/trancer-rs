@@ -1,5 +1,4 @@
 use crate::util::config::CONFIG;
-use tracing::Instrument;
 
 pub static TIME_BETWEEN: u32 = 120000;
 pub static XP_ECO_REWARD: u32 = 100;
@@ -20,7 +19,7 @@ pub fn calculate_level(xp: u32) -> u32 {
         level += (rem as f64 / CONFIG.xp.after as f64).trunc() as u32;
     }
 
-    level.checked_sub(1).unwrap_or(0)
+    level.saturating_sub(1)
 }
 
 pub fn xp_for_next_level(xp: u32) -> u32 {

@@ -5,7 +5,7 @@ use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{trancer_handler, TrancerDetails};
 use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
 use crate::models::economy::Economy;
-use crate::util::lang::{currency, pronoun, pronu};
+use crate::util::lang::{currency, pronu};
 use crate::{command_argument_struct, command_file};
 use serenity::all::User;
 use std::collections::HashMap;

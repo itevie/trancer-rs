@@ -46,7 +46,7 @@ pub async fn give_role(ctx: &Context, member: &Member, role: &Role) -> Result<()
     member
         .add_role(&ctx, role)
         .await
-        .map_err(|x| TrancerError::Serenity(x))
+        .map_err(TrancerError::Serenity)
 }
 
 pub fn random_range<

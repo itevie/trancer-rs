@@ -1,14 +1,12 @@
-use crate::cmd_util::arg_parser::{CommandArgumentStruct, PCACV};
 use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{trancer_handler, TrancerDetails};
-use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
+use crate::cmd_util::{TrancerCommand, TrancerResponseType};
+use crate::command_file;
 use crate::commands::CommandHasNoArgs;
-use crate::{command_argument_struct, command_file};
 use rand::Rng;
-use std::collections::HashMap;
 
-static PHRASES: &'static [&'static str] = &["Up up up! All the way up!", "*up up up!*"];
+static PHRASES: &[&str] = &["Up up up! All the way up!", "*up up up!*"];
 
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {

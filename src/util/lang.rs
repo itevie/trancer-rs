@@ -65,19 +65,19 @@ pub fn proper<T: Into<String>>(value: T) -> String {
     value
         .split(" ")
         .map(|s| {
-            return if s.is_empty() {
+            if s.is_empty() {
                 "".to_string()
             } else if s.len() == 1 {
                 s.to_uppercase()
             } else {
                 s.to_string()
                     .chars()
-                    .nth(0)
+                    .next()
                     .unwrap()
                     .to_string()
                     .to_uppercase()
                     + &*s[1..].to_string()
-            };
+            }
         })
         .collect::<Vec<String>>()
         .join(" ")
@@ -110,8 +110,8 @@ where
     dt.format("%Y/%m/%d %H:%M:%S").to_string()
 }
 
-static PROGRESS_BAR_EMPTY: &'static str = "░";
-static PROGRESS_BAR_FILLED: &'static str = "█";
+static PROGRESS_BAR_EMPTY: &str = "░";
+static PROGRESS_BAR_FILLED: &str = "█";
 pub fn make_percentage(percentage: f64, length: u8) -> String {
     let percentage_per = 100f64 / length as f64;
     let amount = (percentage / percentage_per)
@@ -161,7 +161,7 @@ pub fn item_text(item: Item, amount: u32) -> String {
         } else {
             format!("{} ", amount)
         },
-        item.emoji.unwrap_or(String::new()),
+        item.emoji.unwrap_or_default(),
         item.name,
         if amount == 0 {
             ""

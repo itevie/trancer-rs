@@ -25,7 +25,7 @@ impl FavouriteSpiral {
                 ON s.id = f.id
                 WHERE f.user_id = ?1",
             &[&user_id.to_string()],
-            |r| Spiral::from_row(r),
+            Spiral::from_row,
         )
     }
 

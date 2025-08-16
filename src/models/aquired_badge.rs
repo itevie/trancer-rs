@@ -36,7 +36,7 @@ impl AquiredBadge {
         Ok(AquiredBadgeVec(database.get_many(
             "SELECT * FROM aquired_badges WHERE user = ?1",
             &[&user_id.to_string()],
-            |r| Self::from_row(r),
+            Self::from_row,
         )?))
     }
 
@@ -52,7 +52,7 @@ impl AquiredBadge {
         Ok(AquiredBadgeVec(database.get_many(
             "SELECT * FROM aquired_badges WHERE badge_name = ?1",
             &[&name],
-            |r| Self::from_row(r),
+            Self::from_row,
         )?))
     }
 
@@ -67,8 +67,7 @@ impl AquiredBadge {
             .await?
             .0
             .iter()
-            .find(|b| b.badge_name == s)
-            .is_some())
+            .any(|b| b.badge_name == s))
     }
 
     pub async fn add_for<T: Into<String>>(
@@ -111,8 +110,7 @@ impl AquiredBadgeVec {
         self.0
             .clone()
             .iter()
-            .map(|x| ALL_DEFINED_BADGES.iter().find(|y| y.id == x.badge_name))
-            .filter_map(|x| x)
+            .filter_map(|x| ALL_DEFINED_BADGES.iter().find(|y| y.id == x.badge_name))
             .collect::<Vec<_>>()
     }
 }

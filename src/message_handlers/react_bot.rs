@@ -1,15 +1,13 @@
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
-use crate::models::user_data::UserDataFields;
 use crate::reply;
 use crate::util::other::random_range;
-use once_cell::sync::Lazy;
 use serenity::all::{CreateMessage, GuildId};
 use std::collections::HashMap;
-use std::sync::{Arc, LazyLock, Mutex, RwLock};
+use std::sync::{Arc, LazyLock, Mutex};
 use tracing::error;
 use tracing::instrument;
 
-static PHRASES: &'static[&'static str] = &[
+static PHRASES: &[&str] = &[
     "skibii sigma",
     "boop",
     "RISE AND GRIND :fire:",
@@ -355,17 +353,12 @@ pub async fn handle_react_bot(ctx: &TrancerRunnerContext) -> Result<(), TrancerE
     {
         let mut lock = REACT_BOT_SETTINGS.lock().unwrap();
 
-        if !lock.contains_key(&ctx.guild_id) {
-            lock.insert(
-                ctx.guild_id.clone(),
-                ReactBotSettings {
-                    since: 0,
-                    required: 20,
-                },
-            );
-        }
+        lock.entry(ctx.guild_id).or_insert(ReactBotSettings {
+            since: 0,
+            required: 20,
+        });
 
-        let mut o = lock.get_mut(&ctx.guild_id).unwrap();
+        let o = lock.get_mut(&ctx.guild_id).unwrap();
         o.since += 1;
 
         if o.since < o.required {

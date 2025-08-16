@@ -100,7 +100,7 @@ impl From<rusqlite::Error> for TrancerError {
 
 impl From<serenity::Error> for TrancerError {
     fn from(err: serenity::Error) -> Self {
-        TrancerError::Serenity(err.into())
+        TrancerError::Serenity(err)
     }
 }
 
@@ -114,7 +114,7 @@ impl From<ParseError> for TrancerError {
     fn from(err: ParseError) -> Self {
         TrancerError::Generic(format!(
             "Failed to parse date/time: {} ({:?})",
-            err.to_string(),
+            err,
             err.kind()
         ))
     }

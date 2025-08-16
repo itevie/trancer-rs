@@ -17,7 +17,7 @@ mod spirals;
 #[macro_export]
 macro_rules! cmd_import_map {
     ($($idents:tt),*) => {
-        use crate::cmd_util::CommandTrait;
+        use $crate::cmd_util::CommandTrait;
         pub fn init() -> Vec<Box<dyn CommandTrait>> {
             let mut commands = vec![];
             $(commands.extend($idents::init());)*

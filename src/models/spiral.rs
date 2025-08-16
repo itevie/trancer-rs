@@ -16,7 +16,7 @@ impl Spiral {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
 
-        db.get_many("SELECT * FROM spirals", &[], |r| Spiral::from_row(r))
+        db.get_many("SELECT * FROM spirals", &[], Spiral::from_row)
     }
 
     pub async fn get_random(ctx: &Context) -> rusqlite::Result<Spiral> {

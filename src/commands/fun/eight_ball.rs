@@ -8,7 +8,7 @@ use crate::util::embeds::create_embed;
 use rand::Rng;
 use serenity::all::CreateMessage;
 
-static POSITIVE: &'static [&'static str] = &[
+static POSITIVE: &[&str] = &[
     "It is certain",
     "It is decidedly so",
     "Without a doubt",
@@ -21,7 +21,7 @@ static POSITIVE: &'static [&'static str] = &[
     "Signs point to yes",
 ];
 
-static NEUTRAL: &'static [&'static str] = &[
+static NEUTRAL: &[&str] = &[
     "Reply hazy, try again",
     "Ask again later",
     "Better not tell you now",
@@ -29,7 +29,7 @@ static NEUTRAL: &'static [&'static str] = &[
     "Concentrate and ask again",
 ];
 
-static NEGATIVE: &'static [&'static str] = &[
+static NEGATIVE: &[&str] = &[
     "Don't count on it",
     "My reply is no",
     "My sources say no",
@@ -37,7 +37,7 @@ static NEGATIVE: &'static [&'static str] = &[
     "Very doubtful",
 ];
 
-static EIGHT_BALL_IMAGE: &'static str = "https://cdn.discordapp.com/attachments/1257417475621130351/1353034264257761433/8ball.png?ex=67e02eda&is=67dedd5a&hm=c52e79c925edde50c2c2b14f642931c4305e98c014e6d348f3a6718ca368e580&";
+static EIGHT_BALL_IMAGE: &str = "https://cdn.discordapp.com/attachments/1257417475621130351/1353034264257761433/8ball.png?ex=67e02eda&is=67dedd5a&hm=c52e79c925edde50c2c2b14f642931c4305e98c014e6d348f3a6718ca368e580&";
 
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {

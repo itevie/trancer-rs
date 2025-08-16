@@ -4,10 +4,8 @@ use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{trancer_handler, TrancerDetails};
 use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
-use crate::commands::CommandHasNoArgs;
 use crate::models::aquired_item::AquiredItem;
-use crate::models::item::{get_item, get_item_name};
-use crate::trancer_config::all_items::ALL_ITEMS_DEF;
+use crate::models::item::get_item_name;
 use crate::trancer_config::all_recipes::CRAFTING_RECIPES;
 use crate::util::lang::{englishify_list, item_text};
 use crate::{command_argument_struct, command_file};
@@ -53,9 +51,9 @@ command_file! {
 
             for (name, amount) in recipe {
                 let item = get_item_name(*name)?;
-                if aquired.iter().find(|x| x.item_id == item.id).is_none() ||
+                if !aquired.iter().any(|x| x.item_id == item.id) ||
                 aquired.iter().find(|x| x.item_id == item.id).unwrap().amount < (*amount * wanted_amount) {
-                    return Ok(TrancerResponseType::Content(format!("You do not have {}", item_text(item, (*amount * wanted_amount)))))
+                    return Ok(TrancerResponseType::Content(format!("You do not have {}", item_text(item, *amount * wanted_amount))))
                 }
             }
 

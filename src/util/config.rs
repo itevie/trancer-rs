@@ -83,15 +83,13 @@ pub struct TrancerDailyPayoutsConfig {
 
 lazy_static! {
     pub static ref CONFIG: TrancerConfig = {
-        let config = Config::builder()
+        Config::builder()
             .add_source(config::File::with_name("config_dev").required(false))
             .add_source(config::File::with_name("config").required(false))
             .build()
             .unwrap()
             .try_deserialize::<TrancerConfig>()
-            .unwrap();
-
-        config
+            .unwrap()
     };
 }
 

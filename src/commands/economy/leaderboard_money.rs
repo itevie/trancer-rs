@@ -19,7 +19,7 @@ command_file! {
         },
 
         handler: trancer_handler!(|ctx, args| {
-            let data = Economy::fetch_all(&ctx.sy).await?.iter().map(|x| (x.balance.clone(), x.user_id.clone())).collect::<Vec<(i32, String)>>();
+            let data = Economy::fetch_all(&ctx.sy).await?.iter().map(|x| (x.balance, x.user_id.clone())).collect::<Vec<(i32, String)>>();
             leaderboard(ctx, create_embed(), data).await?;
 
             Ok(TrancerResponseType::None)

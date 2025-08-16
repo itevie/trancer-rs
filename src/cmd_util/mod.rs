@@ -97,7 +97,7 @@ impl<T: CommandArgumentStruct + Send + 'static + std::fmt::Debug> CommandTrait
     }
 
     fn t(&self) -> TrancerCommandType {
-        self.t.clone()
+        self.t
     }
 }
 

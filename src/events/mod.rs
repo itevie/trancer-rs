@@ -27,7 +27,7 @@ pub async fn something_happened(ctx: &TrancerRunnerContext, m: impl Into<String>
     let dev_error = format!(
         "{}: {}\n> Command: {} ({})",
         m.into(),
-        e.to_string(),
+        e,
         ctx.original_command,
         ctx.command_name
     );

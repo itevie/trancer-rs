@@ -54,7 +54,7 @@ impl Economy {
         let result = db.get_one(
             "SELECT * FROM economy WHERE user_id = ?1 LIMIT 1;",
             &[&user_id.to_string()],
-            |r| Economy::from_row(r),
+            Economy::from_row,
         );
 
         match result {
@@ -68,7 +68,7 @@ impl Economy {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
 
-        db.get_many("SELECT * FROM economy", &[], |r| Economy::from_row(r))
+        db.get_many("SELECT * FROM economy", &[], Economy::from_row)
     }
 
     pub async fn create(ctx: &Context, user_id: UserId) -> rusqlite::Result<Economy> {
@@ -78,7 +78,7 @@ impl Economy {
         db.get_one(
             "INSERT INTO economy (user_id) VALUES (?1) RETURNING *",
             &[&user_id.to_string()],
-            |r| Economy::from_row(r),
+            Economy::from_row,
         )
     }
 

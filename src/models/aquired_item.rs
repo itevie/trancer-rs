@@ -60,7 +60,7 @@ impl AquiredItem {
         database.get_many(
             "SELECT * FROM aquired_items WHERE user_id = ?1",
             &[&user_id.to_string()],
-            |x| AquiredItem::from_row(x),
+            AquiredItem::from_row,
         )
     }
 }

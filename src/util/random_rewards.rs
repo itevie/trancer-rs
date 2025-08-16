@@ -1,8 +1,7 @@
-use crate::cmd_util::{TrancerError, TrancerRunnerContext};
+use crate::cmd_util::TrancerError;
 use crate::models::aquired_item::AquiredItem;
 use crate::models::economy::{Economy, MoneyAddReasion};
 use crate::models::item::{Item, ALL_ITEMS};
-use crate::models::user_data::UserData;
 use crate::util::lang::{currency, englishify_list, item_text};
 use rand::prelude::SliceRandom;
 use rand::{random, Rng};
@@ -120,7 +119,7 @@ pub async fn give_random_reward(
         .await?;
 
     for (item_id, amount) in &reward.items {
-        AquiredItem::give_item_to(&ctx, user, *item_id, *amount).await?
+        AquiredItem::give_item_to(ctx, user, *item_id, *amount).await?
     }
 
     Ok(())

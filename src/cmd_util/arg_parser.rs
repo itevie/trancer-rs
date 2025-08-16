@@ -44,7 +44,7 @@ pub struct ParsedArguments {
     pub original_content: String,
 }
 
-static WICK_CHAR: &'static str = "?";
+static WICK_CHAR: &str = "?";
 
 /// PreCommandArgumentConstructionValue
 #[derive(Debug)]
@@ -243,7 +243,7 @@ where
                         infer: true,
                     } = arg.t
                     {
-                        infer_user(&ctx).id.to_string()
+                        infer_user(ctx).id.to_string()
                     } else if required {
                         let err = if arg.details.wick_style.is_none() {
                             ArgumentError::MissingPositional(arg.name.to_string(), arg.clone())
@@ -254,7 +254,7 @@ where
                     } else {
                         arg_map.insert(
                             arg.name.clone(),
-                            PCACV::from_arg(&arg, required, None, &ctx).await?,
+                            PCACV::from_arg(arg, required, None, ctx).await?,
                         );
                         continue;
                     }
@@ -276,7 +276,7 @@ where
 
         arg_map.insert(
             arg.name.clone(),
-            PCACV::from_arg(&arg, required, Some(value), &ctx).await?,
+            PCACV::from_arg(arg, required, Some(value), ctx).await?,
         );
     }
 

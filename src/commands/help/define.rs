@@ -11,7 +11,7 @@ use reqwest::StatusCode;
 use serde::Deserialize;
 use std::collections::HashMap;
 
-static BASE: &'static str = "https://api.dictionaryapi.dev/api/v2/entries/en";
+static BASE: &str = "https://api.dictionaryapi.dev/api/v2/entries/en";
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct DictionaryEntry {
@@ -72,7 +72,7 @@ command_file! {
             }
 
             let binding = response.json::<Vec<DictionaryEntry>>().await?;
-            let json = match binding.get(0) {
+            let json = match binding.first() {
                 Some(ok) => ok.clone(),
                 None => {
                     return Ok(TrancerResponseType::Content("Sorry! I couldn't find a definition for that word.".to_string()));

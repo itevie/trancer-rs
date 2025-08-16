@@ -73,7 +73,7 @@ pub async fn paginate(op: PaginationOptions) -> Result<(), TrancerError> {
                         .map(|x| x + "\n\n")
                         .unwrap_or("".to_string())
                         + data[current_index..(current_index + op.page_size).min(data.len())]
-                            .join(&"\n")
+                            .join("\n")
                             .as_str(),
                 ),
                 PaginationDataType::Field(ref data) => embed.fields(

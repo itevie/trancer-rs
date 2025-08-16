@@ -4,7 +4,6 @@ use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{trancer_handler, TrancerDetails};
 use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
-use crate::commands::CommandHasNoArgs;
 use crate::models::user_imposition::UserImposition;
 use crate::util::lang::warn;
 use crate::{command_argument_struct, command_file, reply};
@@ -48,7 +47,7 @@ command_file! {
 
             let mut imposition = UserImposition::create(&ctx.sy, ctx.msg.author.id, args.what.clone()).await?;
 
-            let mut tags: Vec<&str> = vec!["green", "yellow", "red", "by others", "bombard"];
+            let tags: Vec<&str> = vec!["green", "yellow", "red", "by others", "bombard"];
 
             let make_buttons = |imposition: UserImposition| {
                 CreateActionRow::Buttons(

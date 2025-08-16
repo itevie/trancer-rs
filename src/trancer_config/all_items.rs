@@ -112,7 +112,7 @@ const fn collectable(name: Cow, price: u32, description: Cow, emoji: Cow) -> Par
     }
 }
 
-pub static ALL_ITEMS_DEF: &'static [PartialItem] = &[
+pub static ALL_ITEMS_DEF: &[PartialItem] = &[
     // ---- Fish -----
     fish("cod", VERY_COMMON, "<:cod:1322128982027534367>"),
     fish("common-fish", COMMON, "<:common_fish:1321758129872048189>"),

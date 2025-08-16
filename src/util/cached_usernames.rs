@@ -1,5 +1,4 @@
 use crate::util::config::CONFIG;
-use log::info;
 use serenity::client::Context;
 use sled::IVec;
 use std::path::PathBuf;

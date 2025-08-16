@@ -7,7 +7,6 @@ use crate::util::lang::currency;
 use crate::util::level_calc::{calculate_level, TIME_BETWEEN, XP_ECO_REWARD};
 use crate::util::other::random_range;
 use chrono::{DateTime, Utc};
-use rand::random;
 use serenity::builder::CreateMessage;
 use serenity::prelude::TypeMapKey;
 use std::collections::HashMap;

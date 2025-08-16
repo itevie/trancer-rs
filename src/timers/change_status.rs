@@ -4,7 +4,7 @@ use serenity::all::{ActivityData, ActivityType};
 use serenity::client::Context;
 use tracing::instrument;
 
-static STATUSES: &'static [(ActivityType, &'static str)] = &[
+static STATUSES: &[(ActivityType, &str)] = &[
     (ActivityType::Playing, "type .help for help!"),
     (ActivityType::Playing, "with your mind"),
     (ActivityType::Playing, "join my server with .invite"),

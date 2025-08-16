@@ -8,7 +8,7 @@ use serenity::all::{GuildId, UserId};
 use serenity::client::Context;
 use std::collections::HashMap;
 use std::fmt::Display;
-use std::sync::{Arc, LazyLock, Mutex, RwLock};
+use std::sync::{Arc, LazyLock, RwLock};
 
 enum_with_sql!(HypnoStatus {
     Green = "green",
@@ -26,7 +26,6 @@ impl Display for HypnoStatus {
                 HypnoStatus::Yellow => "yellow 🟡",
                 HypnoStatus::Red => "red 🔴",
             }
-            .to_string()
         )
     }
 }
@@ -59,7 +58,7 @@ impl_from_row!(UserData, UserDataFields {
 });
 
 pub static PRONOUN_SET_CACHE: LazyLock<Arc<RwLock<HashMap<String, String>>>> =
-    LazyLock::new(|| Default::default());
+    LazyLock::new(Default::default);
 
 impl UserData {
     pub fn birthday_date(&self) -> Result<Option<DateTime<Utc>>, TrancerError> {
@@ -121,7 +120,7 @@ impl UserData {
         let result = db.get_one(
             "SELECT * FROM user_data WHERE user_id = ?1 AND guild_id = ?2 LIMIT 1",
             &[&user_id.to_string(), &server_id.to_string()],
-            |r| UserData::from_row(r),
+            UserData::from_row,
         );
 
         match result {
@@ -149,7 +148,7 @@ impl UserData {
         db.get_one(
             "INSERT INTO user_data (user_id, guild_id) VALUES (?1, ?2) RETURNING *",
             &[&user_id.to_string(), &server_id.to_string()],
-            |r| UserData::from_row(r),
+            UserData::from_row,
         )
     }
 
@@ -164,7 +163,7 @@ impl UserData {
         db.get_many(
             "SELECT * FROM user_data WHERE guild_id = ?1",
             &[&server_id.to_string()],
-            |r| UserData::from_row(r),
+            UserData::from_row,
         )
     }
 

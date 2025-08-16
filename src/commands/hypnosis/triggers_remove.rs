@@ -4,19 +4,10 @@ use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{trancer_handler, TrancerDetails};
 use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
-use crate::commands::CommandHasNoArgs;
 use crate::models::user_imposition::UserImposition;
 use crate::util::lang::warn;
-use crate::{command_argument_struct, command_file, reply};
-use serenity::all::{
-    ButtonStyle, CreateActionRow, CreateButton, CreateInteractionResponse,
-    CreateInteractionResponseMessage, EditMessage,
-};
-use serenity::builder::CreateMessage;
-use serenity::futures::StreamExt;
+use crate::{command_argument_struct, command_file};
 use std::collections::HashMap;
-use std::time::Duration;
-use tracing::error;
 
 command_argument_struct!(AddTriggerArgs {
     what: String, PCACV::String

@@ -5,7 +5,6 @@ use crate::trancer_config::all_items::ALL_ITEMS_DEF;
 use once_cell::sync::OnceCell;
 use rusqlite::Error::QueryReturnedNoRows;
 use serenity::client::Context;
-use std::collections::HashMap;
 
 impl_from_row!(Item, ItemField {
     id: u32,
@@ -69,11 +68,11 @@ impl Item {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
 
-        db.get_many("SELECT * FROM items;", &[], |r| Item::from_row(r))
+        db.get_many("SELECT * FROM items;", &[], Item::from_row)
     }
 
     pub async fn insert_all(ctx: &Context) -> rusqlite::Result<()> {
-        let items = Item::get_all_db(&ctx).await?;
+        let items = Item::get_all_db(ctx).await?;
 
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
