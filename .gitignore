@@ -4,3 +4,5 @@ data/data.db
 /.idea/rust.xml
 /.idea/dataSources.xml
 data/
+.idea/
+data.db
