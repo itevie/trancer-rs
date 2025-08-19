@@ -6,3 +6,8 @@ SET balance = floor(balance)
 WHERE balance IS NOT NULL AND balance != floor(balance);
 
 - ALTER TABLE user_data ADD pronoun_set TEXT DEFAULT 'they' NOT NULL;
+
+-
+
+ALTER TABLE economy ADD from_mc INT NOT NULL DEFAULT 0;
+ALTER TABLE economy ADD from_mc_lost INT NOT NULL DEFAULT 0;
