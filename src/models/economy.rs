@@ -19,6 +19,8 @@ impl_from_row!(Economy, EconomyFields {
     from_gambling: i32,
     from_gambling_lost: i32,
     from_helping: i32,
+    from_mc: i32,
+    from_mc_lost: i32,
     work_xp: i32,
     mine_xp: i32,
     fish_xp: i32,
