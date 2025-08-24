@@ -1,5 +1,5 @@
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
-use crate::models::economy::MoneyAddReasion;
+use crate::models::economy::MoneyAddReason;
 use crate::models::user_data::UserDataFields;
 use crate::reply;
 use crate::util::config::CONFIG;
@@ -20,7 +20,7 @@ impl TypeMapKey for XpLastAwards {
     type Value = Arc<Mutex<HashMap<String, DateTime<Utc>>>>;
 }
 
-pub async fn handle_xp(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
+pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
     let xp = {
         let data_lock = ctx.sy.data.read().await;
         let xp = data_lock.get::<XpLastAwards>().unwrap();
@@ -64,7 +64,7 @@ pub async fn handle_xp(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
             let amount = XP_ECO_REWARD * (post_level / 2);
             reward.push(currency(amount));
             ctx.economy
-                .add_money(&ctx.sy, amount, Some(MoneyAddReasion::Messaging))
+                .add_money(&ctx.sy, amount, Some(MoneyAddReason::Messaging))
                 .await?;
         }
 

@@ -1,6 +1,6 @@
 use crate::cmd_util::TrancerError;
 use crate::models::aquired_item::AquiredItem;
-use crate::models::economy::{Economy, MoneyAddReasion};
+use crate::models::economy::{Economy, MoneyAddReason};
 use crate::models::item::{Item, ALL_ITEMS};
 use crate::util::lang::{currency, englishify_list, item_text};
 use rand::prelude::SliceRandom;
@@ -112,7 +112,7 @@ pub async fn give_random_reward(
     ctx: &Context,
     user: UserId,
     reward: &RandomRewardResult,
-    money_reason: MoneyAddReasion,
+    money_reason: MoneyAddReason,
 ) -> Result<(), TrancerError> {
     let eco = Economy::fetch(ctx, user).await?;
     eco.add_money(ctx, reward.currency, Some(money_reason))

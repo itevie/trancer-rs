@@ -4,7 +4,7 @@ use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{TrancerCommand, TrancerResponseType};
 use crate::command_file;
 use crate::commands::CommandHasNoArgs;
-use crate::models::economy::MoneyAddReasion;
+use crate::models::economy::MoneyAddReason;
 use crate::util::config::CONFIG;
 use crate::util::embeds::create_embed;
 use crate::util::random_rewards::{
@@ -28,7 +28,7 @@ command_file! {
                     count: (1, 7)
                 })
             }).await?;
-            give_random_reward(&ctx.sy, ctx.msg.author.id, &rewards, MoneyAddReasion::Commands).await?;
+            give_random_reward(&ctx.sy, ctx.msg.author.id, &rewards, MoneyAddReason::Commands).await?;
 
             Ok(TrancerResponseType::Big(CreateMessage::new().embed(
                 create_embed().title("You opened your daily reward...")

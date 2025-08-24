@@ -28,7 +28,7 @@ impl_from_row!(Economy, EconomyFields {
     mission_tokens: i32,
 });
 
-pub enum MoneyAddReasion {
+pub enum MoneyAddReason {
     Gambling,
     Commands,
     Messaging,
@@ -36,14 +36,14 @@ pub enum MoneyAddReasion {
     Helping,
 }
 
-impl Display for MoneyAddReasion {
+impl Display for MoneyAddReason {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            MoneyAddReasion::Gambling => write!(f, "gambling"),
-            MoneyAddReasion::Commands => write!(f, "commands"),
-            MoneyAddReasion::Messaging => write!(f, "messaging"),
-            MoneyAddReasion::Vc => write!(f, "vc"),
-            MoneyAddReasion::Helping => write!(f, "helping"),
+            MoneyAddReason::Gambling => write!(f, "gambling"),
+            MoneyAddReason::Commands => write!(f, "commands"),
+            MoneyAddReason::Messaging => write!(f, "messaging"),
+            MoneyAddReason::Vc => write!(f, "vc"),
+            MoneyAddReason::Helping => write!(f, "helping"),
         }
     }
 }
@@ -88,7 +88,7 @@ impl Economy {
         &self,
         ctx: &Context,
         amount: u32,
-        reason: Option<MoneyAddReasion>,
+        reason: Option<MoneyAddReason>,
     ) -> rusqlite::Result<()> {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();

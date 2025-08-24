@@ -4,8 +4,5 @@ use tracing::instrument;
 
 #[instrument]
 pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
-    ctx.user_data
-        .increment(&ctx.sy, UserDataFields::messages_sent, 1)
-        .await?;
     Ok(())
 }

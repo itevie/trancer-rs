@@ -1,6 +1,7 @@
 pub mod cached_usernames;
 pub mod components;
 pub mod config;
+pub mod define;
 pub mod embeds;
 pub mod lang;
 pub mod leaderboard;

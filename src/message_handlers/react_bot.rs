@@ -341,7 +341,7 @@ static REACT_BOT_SETTINGS: LazyLock<Arc<Mutex<HashMap<GuildId, ReactBotSettings>
     LazyLock::new(|| Arc::from(Mutex::from(HashMap::new())));
 
 #[instrument]
-pub async fn handle_react_bot(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
+pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
     if !ctx.server_settings.react_bot {
         return Ok(());
     };

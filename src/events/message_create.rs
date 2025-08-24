@@ -1,5 +1,6 @@
 use crate::cmd_util::arg_parser::parse_args;
 use crate::cmd_util::{TrancerError, TrancerResponseType, TrancerRunnerContext};
+use crate::commands::reply_response_type;
 use crate::events::something_happened;
 use crate::message_handlers::handle_message_handlers;
 use crate::models::economy::Economy;
@@ -228,15 +229,5 @@ pub async fn message(ctx: Context, msg: Message) {
         }
     };
 
-    match response {
-        TrancerResponseType::Content(string) => {
-            // Ignore the error, because if it errors then it doesn't matter
-            // probably likely a timeout issue.
-            let _ = reply!(context, CreateMessage::new().content(string.as_str()));
-        }
-        TrancerResponseType::Big(big) => {
-            let _ = reply!(context, big.clone());
-        }
-        TrancerResponseType::None => (),
-    };
+    reply_response_type(&context, response).await
 }

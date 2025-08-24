@@ -1,5 +1,5 @@
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
-use crate::models::economy::MoneyAddReasion;
+use crate::models::economy::MoneyAddReason;
 use crate::models::server_settings::ServerSettingsFields;
 use crate::models::user_data::UserDataFields;
 use crate::reply;
@@ -16,7 +16,7 @@ use tracing::{error, instrument};
 static DISBOARD_ID: &str = "302050872383242240";
 
 #[instrument]
-pub async fn detect_bumps(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
+pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
     if let Some(embed) = ctx.msg.embeds.first() {
         if let Some(description) = embed.description.as_ref() {
             if !description.contains("Bump done!") {
@@ -75,7 +75,7 @@ pub async fn detect_bumps(ctx: &TrancerRunnerContext) -> Result<(), TrancerError
         )
         .await?;
 
-        give_random_reward(&ctx.sy, command.user.id, &result, MoneyAddReasion::Helping).await?;
+        give_random_reward(&ctx.sy, command.user.id, &result, MoneyAddReason::Helping).await?;
         Some(englishify_random_reward(result))
     } else {
         None

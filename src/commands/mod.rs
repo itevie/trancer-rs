@@ -1,9 +1,10 @@
 use crate::cmd_util::arg_parser::{CommandArgumentStruct, PCACV};
 use crate::cmd_util::args::{ArgType, Argument, ArgumentDetails, TrancerArguments};
-use crate::cmd_util::{ArgumentError, TrancerError};
+use crate::cmd_util::{ArgumentError, TrancerError, TrancerResponseType, TrancerRunnerContext};
 use crate::command_argument_struct;
-use serenity::all::User;
+use serenity::all::{CreateMessage, User};
 use std::collections::HashMap;
+use tracing::error;
 
 mod badges;
 mod economy;
@@ -77,5 +78,19 @@ pub fn only_user_args(allow_bots: bool, infer: bool) -> TrancerArguments {
             t: ArgType::User { allow_bots, infer },
             details: ArgumentDetails::default(),
         }],
+    }
+}
+
+pub async fn reply_response_type(ctx: &TrancerRunnerContext, response: TrancerResponseType) {
+    match response {
+        TrancerResponseType::Content(string) => {
+            // Ignore the error, because if it errors then it doesn't matter
+            // probably likely a timeout issue.
+            let _ = reply!(ctx, CreateMessage::new().content(string.as_str()));
+        }
+        TrancerResponseType::Big(big) => {
+            let _ = reply!(ctx, big.clone());
+        }
+        TrancerResponseType::None => (),
     }
 }

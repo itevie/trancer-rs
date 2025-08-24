@@ -57,3 +57,8 @@ pub fn random_range<
     let mut rng = thread_rng();
     rng.gen_range(range)
 }
+
+pub fn random_bool() -> bool {
+    let mut rng = thread_rng();
+    rng.gen_bool(0.5)
+}
