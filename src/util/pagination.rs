@@ -55,6 +55,8 @@ macro_rules! p_err {
 }
 
 pub async fn paginate(op: PaginationOptions) -> Result<(), TrancerError> {
+    assert!(op.page_size > 0);
+
     let old_embed = op.embed.clone();
     let mut current_index: usize = 0;
 
