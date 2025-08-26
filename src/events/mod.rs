@@ -61,7 +61,8 @@ macro_rules! something_happened {
                     &$ctx,
                     "Failed to run something via something_happened macro",
                     TrancerError::from(e),
-                );
+                )
+                .await;
                 return;
             }
         }
