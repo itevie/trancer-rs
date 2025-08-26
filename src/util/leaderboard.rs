@@ -3,15 +3,13 @@ use crate::util::cached_usernames::get_cached_username;
 use crate::util::pagination::{paginate, PaginationDataType, PaginationOptions};
 use serenity::all::CreateEmbed;
 use std::collections::HashMap;
-use std::ops::Add;
-use std::ptr::hash;
 
 pub fn lb_accumulate(data: Vec<String>) -> Vec<(i32, String)> {
     let mut hashmap = HashMap::new();
 
     for i in data {
-        if !hashmap.contains_key(&i) {
-            hashmap.insert(i, 1);
+        if let std::collections::hash_map::Entry::Vacant(e) = hashmap.entry(i.clone()) {
+            e.insert(1);
             continue;
         } else {
             let mut binding = hashmap.get_mut(&i).unwrap();
@@ -19,7 +17,7 @@ pub fn lb_accumulate(data: Vec<String>) -> Vec<(i32, String)> {
         }
     }
 
-    hashmap.iter().map(|x| (x.1.clone(), x.0.clone())).collect()
+    hashmap.iter().map(|x| (*x.1, x.0.clone())).collect()
 }
 
 pub async fn leaderboard(

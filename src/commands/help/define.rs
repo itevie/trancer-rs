@@ -3,13 +3,9 @@ use crate::cmd_util::args::{ArgType, Argument, TrancerArguments};
 use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{trancer_handler, TrancerDetails};
-use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
+use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError};
 use crate::util::define::handle_define_message;
-use crate::util::embeds::create_embed;
-use crate::util::pagination::{paginate, Field, PaginationDataType, PaginationOptions};
 use crate::{command_argument_struct, command_file};
-use reqwest::StatusCode;
-use serde::Deserialize;
 use std::collections::HashMap;
 
 command_argument_struct!(DefineArgs {

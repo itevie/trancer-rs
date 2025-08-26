@@ -32,7 +32,7 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
         reply_response_type(ctx, handle_define_message(ctx, what).await?).await
     }
 
-    if let Some(_) = matches(&ctx.msg.content, "is this true") {
+    if matches(&ctx.msg.content, "is this true").is_some() {
         reply_response_type(
             ctx,
             TrancerResponseType::Content(if random_bool() { "Yes" } else { "No" }.to_string()),

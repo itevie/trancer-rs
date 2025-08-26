@@ -31,7 +31,7 @@ pub async fn guild_member_addition(ctx: Context, new_member: Member) {
             // TODO: Add error to some kind of database for the server owner
             return;
         };
-        if let Err(_) = give_role(&ctx, &new_member, &result).await {
+        if let Err(_err) = give_role(&ctx, &new_member, &result).await {
             // TODO: Add error to some kind of database for the server owner
         }
     }

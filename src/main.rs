@@ -18,7 +18,6 @@ use dotenvy::dotenv;
 use serenity::prelude::*;
 use std::env;
 use std::sync::Arc;
-use tokio::io::AsyncWriteExt;
 use tracing::info;
 
 struct Handler;

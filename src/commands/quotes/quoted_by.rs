@@ -3,8 +3,7 @@ use crate::cmd_util::args::{ArgType, Argument, TrancerArguments};
 use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{trancer_handler, TrancerDetails};
-use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
-use crate::commands::CommandHasNoArgs;
+use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError};
 use crate::models::quote::{Quote, QuoteListPaginationType};
 use crate::{command_argument_struct, command_file};
 use serenity::all::User;
@@ -38,7 +37,7 @@ command_file! {
                 .await?
                 .paginate(
                     ctx.clone(),
-                    QuoteListPaginationType::by(args.user.clone()
+                    QuoteListPaginationType::By(args.user.clone()
                 )
             ).await
         }),

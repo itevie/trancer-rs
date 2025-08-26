@@ -1,15 +1,12 @@
-use crate::cmd_util::arg_parser::{CommandArgumentStruct, PCACV};
 use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{trancer_handler, TrancerDetails};
-use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
+use crate::cmd_util::{TrancerCommand, TrancerResponseType};
+use crate::command_file;
 use crate::commands::CommandHasNoArgs;
 use crate::models::quote::Quote;
 use crate::util::embeds::create_embed;
 use crate::util::leaderboard::{lb_accumulate, leaderboard};
-use crate::util::pagination::{paginate, PaginationDataType, PaginationOptions};
-use crate::{command_argument_struct, command_file};
-use std::collections::HashMap;
 
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
@@ -21,7 +18,7 @@ command_file! {
             ..Default::default()
         },
 
-        handler: trancer_handler!(|ctx, args| {
+        handler: trancer_handler!(|ctx, _args| {
             let quotes = Quote::all(&ctx.sy).await?;
 
             leaderboard(ctx, create_embed().title("Who has been quoted the most"),

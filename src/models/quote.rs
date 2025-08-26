@@ -6,7 +6,7 @@ use crate::util::db_date::DbDate;
 use crate::util::embeds::create_embed;
 use crate::util::pagination::{paginate, Field, PaginationDataType, PaginationOptions};
 use rusqlite::Error::QueryReturnedNoRows;
-use serenity::all::{Channel, ChannelId, Context, CreateEmbed, Message, MessageId, User, UserId};
+use serenity::all::{Channel, ChannelId, Context, CreateEmbed, Message, User, UserId};
 
 impl_from_row!(Quote, QuoteField {
    id: u32,
@@ -144,7 +144,7 @@ impl Quote {
         //TODO: Check for embeds/files too
         //TODO: Create footer
 
-        let description = format!("{content}");
+        let description = String::from(content);
 
         let mut embed = create_embed()
             .title(format!("Quote #{}", self.id))
@@ -155,8 +155,8 @@ impl Quote {
 }
 
 pub enum QuoteListPaginationType {
-    from(User),
-    by(User),
+    From(User),
+    By(User),
 }
 
 impl QuoteList {
@@ -168,8 +168,8 @@ impl QuoteList {
         paginate(PaginationOptions {
             ctx,
             embed: create_embed().title(match t {
-                QuoteListPaginationType::from(user) => format!("Quotes from {}", user.name),
-                QuoteListPaginationType::by(user) => format!("Quotes by {}", user.name),
+                QuoteListPaginationType::From(user) => format!("Quotes from {}", user.name),
+                QuoteListPaginationType::By(user) => format!("Quotes by {}", user.name),
             }),
             page_size: 20,
             data: PaginationDataType::Field(
