@@ -17,6 +17,7 @@ command_file! {
         t: TrancerCommandType::Help,
         description: "See who has been quoted the most".to_string(),
         details: TrancerDetails {
+            aliases: Some(vec!["qlb".to_string(), "quoteslb".to_string()]),
             ..Default::default()
         },
 

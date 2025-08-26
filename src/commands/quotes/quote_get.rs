@@ -20,6 +20,7 @@ command_file! {
         t: TrancerCommandType::Help,
         description: "Get a quote by ID".to_string(),
         details: TrancerDetails {
+            aliases: Some(vec!["gq".to_string()])
             arguments: Some(TrancerArguments {
                required: 1,
                 args: vec![Argument {

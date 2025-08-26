@@ -20,6 +20,7 @@ command_file! {
         t: TrancerCommandType::Help,
         description: "Get a list of quotes from a user".to_string(),
         details: TrancerDetails {
+            aliases: Some(vec!["quotesfor".to_string(), "qs".to_string()]),
             arguments: Some(TrancerArguments {
               required: 1,
                 args: vec![
