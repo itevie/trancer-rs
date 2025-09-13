@@ -66,6 +66,10 @@ pub fn pronu(user1: &User, user2: &User) -> String {
     pronoun_base(user1, user2, PronounType::PossessiveAdjective, true)
 }
 
+pub fn username<T: Into<String>>(u: T) -> String {
+    u.into().replace("_", "\\_")
+}
+
 pub fn proper<T: Into<String>>(value: T) -> String {
     let value = value.into();
     value
