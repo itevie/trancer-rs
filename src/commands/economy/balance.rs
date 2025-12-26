@@ -17,7 +17,7 @@ command_argument_struct!(EcoBalanceArgs {
 command_file! {
     TrancerCommand::<EcoBalanceArgs> {
         name: "balance".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Economy,
         description: "Get yours or another person's economy balance".to_string(),
         details: TrancerDetails {
             aliases: Some(vec!["bal".to_string()]),

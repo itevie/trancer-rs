@@ -16,7 +16,7 @@ command_argument_struct!(GetQuoteArgs {
 command_file! {
     TrancerCommand::<GetQuoteArgs> {
         name: "getquote".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Quotes,
         description: "Get a quote by ID".to_string(),
         details: TrancerDetails {
             aliases: Some(vec!["gq".to_string()]),

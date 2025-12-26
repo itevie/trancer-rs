@@ -19,7 +19,7 @@ command_argument_struct!(RemoveBadgeArgs {
 command_file! {
     TrancerCommand::<RemoveBadgeArgs> {
         name: "-badge".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Badges,
         description: "Remove a badge for a user".to_string(),
         details: TrancerDetails {
             flags: Some(vec![TrancerFlag::BotOwnerOnly]),

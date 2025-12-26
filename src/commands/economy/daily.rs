@@ -16,7 +16,7 @@ use serenity::all::CreateMessage;
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
         name: "daily".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Economy,
         description: "Get your daily reward of goodies!".to_string(),
         details: Default::default(),
 

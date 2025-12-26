@@ -19,7 +19,7 @@ command_argument_struct!(AddBadgeArgs {
 command_file! {
     TrancerCommand::<AddBadgeArgs> {
         name: "+badge".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Badges,
         description: "Add a badge for a user".to_string(),
         details: TrancerDetails {
             flags: Some(vec![TrancerFlag::BotOwnerOnly]),

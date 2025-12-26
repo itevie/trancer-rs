@@ -11,7 +11,7 @@ use serenity::all::{ChannelId, CreateMessage, Permissions, ReactionType, RoleId}
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
         name: "verify".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Admin,
         description: "Verify someone into the server.".to_string(),
         details: TrancerDetails {
             aliases: Some(vec!["v".to_string()]),

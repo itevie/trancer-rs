@@ -9,7 +9,6 @@ use crate::util::embeds::create_embed;
 use crate::util::leaderboard::{
     lb_accumulate, leaderboard, LeaderboardFormatter, LeaderboardOptions,
 };
-use rusqlite::ToSql;
 
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {

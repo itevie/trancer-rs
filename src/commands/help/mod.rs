@@ -26,5 +26,6 @@ cmd_import_map!(
     category,
     github,
     about,
-    set_pronoun
+    set_pronoun,
+    help
 );

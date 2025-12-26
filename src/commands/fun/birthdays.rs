@@ -12,7 +12,7 @@ use chrono_humanize::HumanTime;
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
         name: "birthdays".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Fun,
         description: "List the upcoming birthdays!".to_string(),
         details: Default::default(),
 

@@ -20,7 +20,7 @@ command_argument_struct!(XpArgs {
 command_file! {
     TrancerCommand::<XpArgs> {
         name: "xp".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Economy,
         description: "Get yours or another person's XP".to_string(),
         details: TrancerDetails {
             arguments: Some(TrancerArguments {

@@ -14,7 +14,7 @@ command_argument_struct!(CowsayArgs {
 command_file! {
     TrancerCommand::<CowsayArgs> {
         name: "cowsay".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Fun,
         description: "Make a cow or something else say something".to_string(),
         details: TrancerDetails {
             arguments: Some(TrancerArguments {

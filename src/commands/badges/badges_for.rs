@@ -12,7 +12,7 @@ use crate::util::pagination::{paginate, PaginationDataType, PaginationOptions};
 command_file! {
     TrancerCommand::<OnlyUserArgs> {
         name: "badges".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Badges,
         description: "Get a list of yours or someone else's badges".to_string(),
         details: TrancerDetails {
             arguments: Some(only_user_args(true, true)),

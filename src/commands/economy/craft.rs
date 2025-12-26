@@ -19,7 +19,7 @@ command_argument_struct!(CraftArgs {
 command_file! {
     TrancerCommand::<CraftArgs> {
         name: "craft".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Economy,
         description: "Craft an item".to_string(),
         details: TrancerDetails {
             arguments: Some(TrancerArguments {

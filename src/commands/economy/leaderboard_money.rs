@@ -11,7 +11,7 @@ use crate::util::leaderboard::{leaderboard, LeaderboardFormatter, LeaderboardOpt
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
         name: "moneyleaderboard".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Economy,
         description: "See the economy leaderboard".to_string(),
         details: TrancerDetails {
             aliases: Some(vec!["baltop".to_string(), "elb".to_string()]),

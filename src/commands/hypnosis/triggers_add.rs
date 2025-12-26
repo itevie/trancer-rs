@@ -24,7 +24,7 @@ command_argument_struct!(AddTriggerArgs {
 command_file! {
     TrancerCommand::<AddTriggerArgs> {
         name: "addtrigger".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Hypnosis,
         description: "Add a trigger!".to_string(),
         details: TrancerDetails {
             arguments: Some(TrancerArguments {

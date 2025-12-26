@@ -18,7 +18,7 @@ command_argument_struct!(PayArgs {
 command_file! {
     TrancerCommand::<PayArgs> {
         name: "pay".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Economy,
         description: "Give someone else your money".to_string(),
         details: TrancerDetails {
             arguments: Some(TrancerArguments {

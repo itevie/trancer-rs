@@ -16,7 +16,7 @@ command_argument_struct!(QuotedByArgs {
 command_file! {
     TrancerCommand::<QuotedByArgs> {
         name: "quotedby".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Quotes,
         description: "Get a list of .q's by a person".to_string(),
         details: TrancerDetails {
             arguments: Some(TrancerArguments {

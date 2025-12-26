@@ -11,7 +11,7 @@ static PHRASES: &[&str] = &["Up up up! All the way up!", "*up up up!*"];
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
         name: "uppies".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Hypnosis,
         description: "Up up up! All the way up!".to_string(),
         details: TrancerDetails {
             aliases: Some(vec!["up".to_string()]),

@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 macro_rules! trancer_command_type {
     ($i:ident, {$($field:ident, $emoji:expr),*}) => {
-        #[derive(Debug, Clone, Copy)]
+        #[derive(Debug, Clone, Copy, Hash, Eq, PartialEq)]
         pub enum $i {
             $($field),*
         }

@@ -16,7 +16,7 @@ command_argument_struct!(QuotesFromArgs {
 command_file! {
     TrancerCommand::<QuotesFromArgs> {
         name: "quotesfrom".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Quotes,
         description: "Get a list of quotes from a user".to_string(),
         details: TrancerDetails {
             aliases: Some(vec!["quotesfor".to_string(), "qs".to_string()]),

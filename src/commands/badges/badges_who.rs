@@ -18,7 +18,7 @@ command_argument_struct!(WhoHasBadgeArgs {
 command_file! {
     TrancerCommand::<WhoHasBadgeArgs> {
         name: "whohasbadge".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Badges,
         description: "See who has a badge".to_string(),
         details: TrancerDetails {
             arguments: Some(TrancerArguments {

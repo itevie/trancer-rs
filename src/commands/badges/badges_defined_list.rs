@@ -11,7 +11,7 @@ use crate::util::pagination::{paginate, Field, PaginationDataType, PaginationOpt
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
         name: "badgelist".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Badges,
         description: "This is a test".to_string(),
         details: TrancerDetails {
             aliases: Some(vec!["bl".to_string()]),
