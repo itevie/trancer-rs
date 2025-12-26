@@ -6,7 +6,10 @@ use crate::command_file;
 use crate::commands::CommandHasNoArgs;
 use crate::models::quote::Quote;
 use crate::util::embeds::create_embed;
-use crate::util::leaderboard::{lb_accumulate, leaderboard};
+use crate::util::leaderboard::{
+    lb_accumulate, leaderboard, LeaderboardFormatter, LeaderboardOptions,
+};
+use rusqlite::ToSql;
 
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
@@ -21,8 +24,12 @@ command_file! {
         handler: trancer_handler!(|ctx, _args| {
             let quotes = Quote::all(&ctx.sy).await?;
 
-            leaderboard(ctx, create_embed().title("Who has been quoted the most"),
-            lb_accumulate(quotes.0.iter().map(|x| x.author_id.clone()).collect())).await?;
+            leaderboard(LeaderboardOptions {
+                ctx,
+                embed: create_embed(),
+                data: lb_accumulate(quotes.0.iter().map(|x| x.author_id.clone()).collect()),
+                formatter: LeaderboardFormatter::Suffix("quotes".to_string())
+            }).await?;
 
             Ok(TrancerResponseType::None)
         }),

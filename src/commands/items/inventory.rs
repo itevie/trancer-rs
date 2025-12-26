@@ -32,7 +32,7 @@ command_file! {
                 data: PaginationDataType::Description {
                     data: items.iter().map(|x| Ok::<String, TrancerError>(format!("{}: {}", item_text(get_item(x.item_id)?, 0), x.amount))).collect::<Result<_, _>>()?,
                     base_description: None,
-                }
+                },
             }).await?;
 
             Ok(TrancerResponseType::None)

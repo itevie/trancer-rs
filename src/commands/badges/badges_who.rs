@@ -48,7 +48,8 @@ command_file! {
                     data: badges.0.iter().map(|x|
                         format!("**{}** has it!", get_cached_username(x.user.clone()))
                     ).collect()
-                }
+                },
+
             }).await?;
 
             Ok(TrancerResponseType::None)

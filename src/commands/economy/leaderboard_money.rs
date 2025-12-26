@@ -6,7 +6,7 @@ use crate::command_file;
 use crate::commands::CommandHasNoArgs;
 use crate::models::economy::Economy;
 use crate::util::embeds::create_embed;
-use crate::util::leaderboard::leaderboard;
+use crate::util::leaderboard::{leaderboard, LeaderboardFormatter, LeaderboardOptions};
 
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
@@ -20,7 +20,12 @@ command_file! {
 
         handler: trancer_handler!(|ctx, args| {
             let data = Economy::fetch_all(&ctx.sy).await?.iter().map(|x| (x.balance, x.user_id.clone())).collect::<Vec<(i32, String)>>();
-            leaderboard(ctx, create_embed(), data).await?;
+            leaderboard(LeaderboardOptions {
+                ctx,
+                embed: create_embed(),
+                data,
+                formatter: LeaderboardFormatter::Eco
+            }).await?;
 
             Ok(TrancerResponseType::None)
         }),

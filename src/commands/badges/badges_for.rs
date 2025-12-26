@@ -32,7 +32,8 @@ command_file! {
                 data: PaginationDataType::Description {
                     data: badges.iter().map(|x| format!("{}: {}", x.emoji, x.description)).collect(),
                     base_description: None
-                }
+                },
+
             }).await?;
 
             Ok(TrancerResponseType::None)

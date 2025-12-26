@@ -163,6 +163,10 @@ pub fn currency<T: Into<i64>>(amount: T) -> String {
     format!("**{}{}**", amount.into(), CONFIG.economy.symbol)
 }
 
+pub fn currency_str(amount: &str) -> String {
+    format!("**{}{}**", amount, CONFIG.economy.symbol)
+}
+
 pub fn item_text(item: Item, amount: u32) -> String {
     format!(
         "**{} {} {}{}**",

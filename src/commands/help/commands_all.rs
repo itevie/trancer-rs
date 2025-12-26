@@ -24,7 +24,8 @@ command_file! {
                 data: PaginationDataType::Description {
                     data: commands.iter().map(|x| format!("**{}** [*{:?}*]: {}", x.name(), x.t(), x.description())).collect(),
                     base_description: None,
-                }
+                },
+
             }).await?;
 
             Ok(TrancerResponseType::None)

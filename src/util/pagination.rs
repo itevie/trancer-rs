@@ -1,6 +1,6 @@
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
 use crate::reply;
-use crate::util::lang::warn;
+use crate::util::lang::{currency, currency_str, warn};
 use serenity::all::{
     ButtonStyle, CreateActionRow, CreateButton, CreateEmbedFooter, CreateInteractionResponse,
     CreateInteractionResponseMessage, CreateMessage, EditMessage,
@@ -69,15 +69,18 @@ pub async fn paginate(op: PaginationOptions) -> Result<(), TrancerError> {
                 PaginationDataType::Description {
                     ref data,
                     ref base_description,
-                } => embed.description(
-                    base_description
-                        .clone()
-                        .map(|x| x + "\n\n")
-                        .unwrap_or("".to_string())
-                        + data[current_index..(current_index + op.page_size).min(data.len())]
-                            .join("\n")
-                            .as_str(),
-                ),
+                } => {
+                    let text = data[current_index..(current_index + op.page_size).min(data.len())]
+                        .join("\n");
+
+                    embed.description(
+                        base_description
+                            .clone()
+                            .map(|x| x + "\n\n")
+                            .unwrap_or("".to_string())
+                            + &*text,
+                    )
+                }
                 PaginationDataType::Field(ref data) => embed.fields(
                     data[current_index..(current_index + op.page_size).min(data.len())]
                         .iter()
@@ -130,7 +133,7 @@ pub async fn paginate(op: PaginationOptions) -> Result<(), TrancerError> {
             .send_message(
                 &op.ctx.sy,
                 CreateMessage::new()
-                    .embed(modify_embed(current_index))
+                    .embed(modify_embed(current_index).clone())
                     .reference_message(&op.ctx.msg)
                     .components(vec![buttons]),
             )
