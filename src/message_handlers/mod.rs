@@ -1,6 +1,7 @@
 mod analytics;
 mod bump_detector;
 mod react_bot;
+mod swear_jar;
 mod template;
 mod trancer_english_commands;
 pub mod xp;
@@ -15,5 +16,6 @@ pub async fn handle_message_handlers(ctx: &TrancerRunnerContext) -> Result<(), T
     xp::handle(ctx).await?;
     react_bot::handle(ctx).await?;
     trancer_english_commands::handle(ctx).await?;
+    swear_jar::handle(ctx).await?;
     Ok(())
 }

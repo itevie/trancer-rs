@@ -15,17 +15,17 @@ mod profile;
 mod set_pronoun;
 
 cmd_import_map!(
-    profile,
-    command_info,
-    ping,
-    commands_new,
-    commands_all,
-    invite,
-    avatar,
-    define,
-    category,
-    github,
     about,
-    set_pronoun,
-    help
+    avatar,
+    category,
+    command_info,
+    commands_all,
+    commands_new,
+    define,
+    github,
+    help,
+    invite,
+    ping,
+    profile,
+    set_pronoun
 );

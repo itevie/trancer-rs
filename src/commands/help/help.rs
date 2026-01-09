@@ -20,20 +20,36 @@ command_file! {
             let commands = commands::init();
 
             let mut map: HashMap<TrancerCommandType, Vec<String>> = HashMap::new();
-            for cmd in commands {
+            for cmd in &commands {
                 map.entry(cmd.t().clone())
                     .or_default()
                     .push(cmd.name());
             }
 
-            let mut fields: Vec<Field> = map.iter().map(|entry|
-                Field { name: format!("{} {}", entry.0.emoji(), entry.0), value: entry.1.join(", "), inline: true, }
-            ).collect();
+            let mut fields: Vec<Field> = map
+                .iter()
+                .map(|entry| {
+                    let mut names = entry.1.clone();
+                    names.sort();
+
+                    Field {
+                        name: format!(
+                            "{} {} ({} commands)",
+                            entry.0.emoji(),
+                            entry.0,
+                            entry.1.len()
+                        ),
+                        value: names.join(", "),
+                        inline: true,
+                    }
+                })
+                .collect();
+
             fields.sort_by(|a, b| a.name.cmp(&b.name));
 
             paginate(PaginationOptions {
                 ctx,
-                embed: create_embed().title("All of the commands"),
+                embed: create_embed().title("All of the commands").description(format!("There are {} commands!", commands.len())),
                 page_size: 10,
                 data: PaginationDataType::Field(fields)
             }).await?;

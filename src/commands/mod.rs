@@ -15,6 +15,7 @@ mod items;
 mod quotes;
 mod server;
 mod spirals;
+mod swear_jar;
 
 #[macro_export]
 macro_rules! cmd_import_map {
@@ -28,7 +29,7 @@ macro_rules! cmd_import_map {
     };
 }
 
-cmd_import_map!(help, hypnosis, economy, server, fun, spirals, badges, items, quotes);
+cmd_import_map!(help, hypnosis, economy, server, fun, spirals, badges, items, quotes, swear_jar);
 
 #[macro_export]
 macro_rules! command_file {

@@ -13,7 +13,7 @@ use crate::util::leaderboard::{
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
         name: "quotesleaderboard".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Quotes,
         description: "See who has been quoted the most".to_string(),
         details: TrancerDetails {
             aliases: Some(vec!["qlb".to_string(), "quoteslb".to_string()]),

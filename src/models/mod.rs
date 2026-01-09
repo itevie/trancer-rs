@@ -14,6 +14,7 @@ pub mod quote;
 pub mod ratelimit;
 pub mod server_settings;
 pub mod spiral;
+pub mod swear_jar;
 pub mod user_data;
 pub mod user_imposition;
 

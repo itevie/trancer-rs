@@ -11,3 +11,11 @@ WHERE balance IS NOT NULL AND balance != floor(balance);
 
 ALTER TABLE economy ADD from_mc INT NOT NULL DEFAULT 0;
 ALTER TABLE economy ADD from_mc_lost INT NOT NULL DEFAULT 0;
+
+CREATE TABLE swear_jar (
+    user_id TEXT NOT NULL,
+    server_id TEXT NOT NULL,
+    word TEXT NOT NULL,
+    uses INT NOT NULL DEFAULT 0,
+    UNIQUE(user_id, server_id, word)
+);
