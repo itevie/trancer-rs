@@ -43,6 +43,7 @@ trancer_command_type!(TrancerCommandType, {
     Dawnagotchi, "🏳‍🌈",
     Ranks, "🌭",
     Economy, "🌀",
+    SwearJar, ":face_with_symbols_over_mouth:",
     Cards, "🎴",
     Badges, "🥇",
     Booster, ":pink_heart:",

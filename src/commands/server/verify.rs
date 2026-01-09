@@ -20,7 +20,7 @@ command_file! {
             ..Default::default()
         },
 
-        handler: trancer_handler!(|ctx, args| {
+        handler: trancer_handler!(|ctx, _args| {
             if ctx.server_settings.verification_role_id.is_none() && ctx.server_settings.unverified_role_id.is_none() {
                 return Ok(content_response(warn("This server does not have a verify or a unverified role!")));
             }

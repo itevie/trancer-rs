@@ -19,10 +19,10 @@ command_argument_struct!( UserSwearsWordArgs {
 command_file! {
     TrancerCommand::<UserSwearsWordArgs> {
         name: "swearsfrom".to_string(),
-        t: TrancerCommandType::Economy,
+        t: TrancerCommandType::SwearJar,
         description: "See all the swears someone has used".to_string(),
         details: TrancerDetails {
-            aliases: Some(vec!["myswears".to_string()]),
+            aliases: Some(vec!["myswears".to_string(), "swearsfor".to_string()]),
             arguments: Some(TrancerArguments {
                 required: 1,
                 args: vec![Argument {

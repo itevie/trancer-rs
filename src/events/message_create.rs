@@ -212,6 +212,7 @@ pub async fn message(ctx: Context, msg: Message) {
             CreateMessage::new()
                 .content(warn("You need to reply to a message to use this command."))
         );
+        return;
     }
 
     if cmd.details().slow {

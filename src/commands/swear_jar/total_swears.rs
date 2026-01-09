@@ -15,7 +15,7 @@ use std::collections::HashMap;
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
         name: "totalswears".to_string(),
-        t: TrancerCommandType::Economy,
+        t: TrancerCommandType::SwearJar,
         description: "See who has said which swear the most".to_string(),
         details: TrancerDetails {
             aliases: Some(vec!["totalswearlb".to_string(), "tslb".to_string()]),

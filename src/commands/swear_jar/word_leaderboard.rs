@@ -18,7 +18,7 @@ command_argument_struct!( UserSwearsWordArgs {
 command_file! {
     TrancerCommand::<UserSwearsWordArgs> {
         name: "swearleaderboard".to_string(),
-        t: TrancerCommandType::Economy,
+        t: TrancerCommandType::SwearJar,
         description: "See who has said which swear the most".to_string(),
         details: TrancerDetails {
             aliases: Some(vec!["swearlb".to_string()]),
