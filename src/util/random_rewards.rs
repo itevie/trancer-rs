@@ -2,12 +2,14 @@ use crate::cmd_util::TrancerError;
 use crate::models::aquired_item::AquiredItem;
 use crate::models::economy::{Economy, MoneyAddReason};
 use crate::models::item::{Item, ALL_ITEMS};
+use crate::util::config::CONFIG;
 use crate::util::lang::{currency, englishify_list, item_text};
 use rand::prelude::SliceRandom;
 use rand::{random, Rng};
 use serenity::all::UserId;
 use serenity::client::Context;
 use std::collections::HashMap;
+use std::fmt::{Display, Formatter};
 
 pub struct RandomRewardItemOptions {
     /// Leave Some(None) for completely random items, otherwise Some(Some(Vec<id, weighht>))
@@ -22,6 +24,52 @@ pub struct RandomRewardOptions {
     pub(crate) currency: Option<(u32, u32)>,
 
     pub(crate) items: Option<RandomRewardItemOptions>,
+}
+
+impl Display for RandomRewardOptions {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Currency: {}\nItems (itemId:weight,): {}",
+            if let Some(currency) = self.currency {
+                format!("{}-{}", currency.0, currency.1)
+            } else {
+                "No currency given".to_string()
+            },
+            if let Some(ref items) = self.items {
+                format!(
+                    "{} ({}-{} items)",
+                    if let Some(ref i) = items.items {
+                        i.iter()
+                            .map(|x| format!("{}:{}", x.clone().0, x.clone().1))
+                            .collect::<String>()
+                    } else {
+                        "Any item can be given".to_string()
+                    },
+                    items.count.0,
+                    items.count.1
+                )
+            } else {
+                "No items given".to_string()
+            }
+        )
+    }
+}
+
+pub struct RandomRewardPresets;
+impl RandomRewardPresets {
+    pub(crate) fn daily() -> RandomRewardOptions {
+        RandomRewardOptions {
+            currency: Some((
+                CONFIG.payouts.daily.currency_min,
+                CONFIG.payouts.daily.currency_max,
+            )),
+            items: Some(RandomRewardItemOptions {
+                items: None,
+                count: (1, 7),
+            }),
+        }
+    }
 }
 
 #[derive(Debug)]

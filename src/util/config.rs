@@ -51,6 +51,8 @@ pub struct TrancerXpConfig {
     pub levels: Vec<u32>,
     pub after: u32,
     pub exclude: Vec<String>,
+    pub time_between: u32,
+    pub eco_reward: u32,
 }
 
 #[derive(Debug, Deserialize)]

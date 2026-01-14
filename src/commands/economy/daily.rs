@@ -5,11 +5,10 @@ use crate::cmd_util::{TrancerCommand, TrancerResponseType};
 use crate::command_file;
 use crate::commands::CommandHasNoArgs;
 use crate::models::economy::MoneyAddReason;
-use crate::util::config::CONFIG;
 use crate::util::embeds::create_embed;
 use crate::util::random_rewards::{
     englishify_random_reward, generate_random_rewards, give_random_reward, RandomRewardItemOptions,
-    RandomRewardOptions,
+    RandomRewardOptions, RandomRewardPresets,
 };
 use serenity::all::CreateMessage;
 
@@ -20,14 +19,8 @@ command_file! {
         description: "Get your daily reward of goodies!".to_string(),
         details: Default::default(),
 
-        handler: trancer_handler!(|ctx, args| {
-            let rewards = generate_random_rewards(&ctx.sy, RandomRewardOptions {
-                currency: Some((CONFIG.payouts.daily.currency_min, CONFIG.payouts.daily.currency_max)),
-                items: Some(RandomRewardItemOptions {
-                    items: None,
-                    count: (1, 7)
-                })
-            }).await?;
+        handler: trancer_handler!(|ctx, _args| {
+            let rewards = generate_random_rewards(&ctx.sy, RandomRewardPresets::daily()).await?;
             give_random_reward(&ctx.sy, ctx.msg.author.id, &rewards, MoneyAddReason::Commands).await?;
 
             Ok(TrancerResponseType::Big(CreateMessage::new().embed(

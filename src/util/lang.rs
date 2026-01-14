@@ -202,7 +202,11 @@ pub fn englishify_list(items: Vec<String>, use_or: bool) -> String {
                 " and "
             }
         } else {
-            ", "
+            if i != 0 {
+                ", "
+            } else {
+                ""
+            }
         };
 
         finished.push_str(&format!("{}{}", sep, items[i]));

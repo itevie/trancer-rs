@@ -4,7 +4,7 @@ use crate::models::user_data::UserDataFields;
 use crate::reply;
 use crate::util::config::CONFIG;
 use crate::util::lang::currency;
-use crate::util::level_calc::{calculate_level, TIME_BETWEEN, XP_ECO_REWARD};
+use crate::util::level_calc::calculate_level;
 use crate::util::other::random_range;
 use chrono::{DateTime, Utc};
 use serenity::builder::CreateMessage;
@@ -40,7 +40,7 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
     let last = xp.lock().unwrap().get(&ctx.user_data.user_id).cloned();
 
     if let Some(last) = last {
-        if now.timestamp() - last.timestamp() < TIME_BETWEEN as i64 {
+        if now.timestamp() - last.timestamp() < CONFIG.xp.time_between as i64 {
             return Ok(());
         }
     }
@@ -61,7 +61,7 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
         let mut reward: Vec<String> = vec![];
 
         if ctx.guild_id.to_string() == CONFIG.server.id {
-            let amount = XP_ECO_REWARD * (post_level / 2);
+            let amount = CONFIG.xp.eco_reward * (post_level / 2);
             reward.push(currency(amount));
             ctx.economy
                 .add_money(&ctx.sy, amount, Some(MoneyAddReason::Messaging))

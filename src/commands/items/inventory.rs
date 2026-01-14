@@ -26,7 +26,7 @@ command_file! {
                 .into_iter().filter(|x| x.amount > 0).collect::<Vec<AquiredItem>>();
 
             paginate(PaginationOptions {
-                embed: create_embed().title(pronu(&ctx.msg.author, &args.user)),
+                embed: create_embed().title(format!("{} Items", pronu(&ctx.msg.author, &args.user))),
                 ctx,
                 page_size: 20,
                 data: PaginationDataType::Description {

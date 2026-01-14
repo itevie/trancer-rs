@@ -36,6 +36,8 @@ exclude = [
     "1257417475621130351",
     "1257426818479161394",
 ]
+time_between = 120000
+eco_reward = 100
 
 [economy]
 symbol = '🌀'
