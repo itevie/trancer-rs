@@ -53,7 +53,7 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             "Sent 10,000 messages",
             ":loud_sound:",
             None,
-            |ctx| Ok(ctx.user_data.messages_sent > 1000)
+            |ctx| Ok(ctx.user_data.messages_sent > 10000)
         ),
         badge!(
             "7talkstreak",
@@ -61,7 +61,7 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             "Talk in Trancy Twilight 7 days in a row",
             ":fire:",
             None,
-            |ctx| Ok(ctx.user_data.talking_streak > 7)
+            |ctx| Ok(ctx.user_data.talking_streak >= 7)
         ),
         badge!(
             "14talkstreak",
@@ -69,7 +69,7 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             "Talk in Trancy Twilight 14 days in a row",
             ":fire:",
             None,
-            |ctx| Ok(ctx.user_data.talking_streak > 14)
+            |ctx| Ok(ctx.user_data.talking_streak >= 14)
         ),
         badge!(
             "21talkstreak",
@@ -77,7 +77,23 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             "Talk in Trancy Twilight 21 days in a row",
             ":fire:",
             None,
-            |ctx| Ok(ctx.user_data.talking_streak > 21)
+            |ctx| Ok(ctx.user_data.talking_streak >= 21)
+        ),
+        badge!(
+            "178talkstreak",
+            "Half A Year Talking Streak",
+            "Talk in Trancy Twilight 178 days in a row",
+            ":fire:",
+            None,
+            |ctx| Ok(ctx.user_data.talking_streak >= 178)
+        ),
+        badge!(
+            "1yeartalkstreak",
+            "1 Year Talking Streak",
+            "Talk in Trancy Twilight for 356 days in a row",
+            ":fire:",
+            None,
+            |ctx| Ok(ctx.user_data.talking_streak >= 356)
         ),
         badge!(
             "booster",
@@ -85,7 +101,7 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             "Boost Trancy Twilight at least once",
             ":pink_heart:",
             None,
-            |ctx| Ok(false)
+            |_ctx| Ok(false)
         ),
         badge!(
             "level15",
@@ -109,7 +125,7 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             "Broke the bot (like found a glitch)",
             ":sob:",
             None,
-            |ctx| Ok(false)
+            |_ctx| Ok(false)
         ),
         badge!(
             "500vcminutes",
@@ -119,14 +135,13 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             None,
             |ctx| Ok(ctx.user_data.vc_time > 500)
         ),
-        // TODO: This requires that ctx has the users eco
         badge!(
             "5kmoney",
             "Money Maker",
             "Reached 500 currency at some point",
             ":cyclone:",
             None,
-            |ctx| Ok(false)
+            |ctx| Ok(ctx.economy.balance >= 500)
         ),
         badge!(
             "bumper",
@@ -142,7 +157,7 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             "Joined the server before 100 members",
             ":snowflake:",
             None,
-            |ctx| Ok(false)
+            |_ctx| Ok(false)
         ),
         badge!(
             "birthday",
@@ -152,7 +167,7 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             Some(DefinedBadgesOptions {
                 give_roles: vec![&*CONFIG.roles.birthday]
             }),
-            |ctx| Ok(false)
+            |_ctx| Ok(false)
         ),
         // TODO: Fix this once cards are added
         badge!(
@@ -161,7 +176,7 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             "Got a mythical card at some point",
             ":flower_playing_cards:",
             None,
-            |ctx| Ok(false)
+            |_ctx| Ok(false)
         ),
         // TODO: Fix this once (if) relationships are added
         badge!(
@@ -170,7 +185,7 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             "Get 5 people to worship you with the tree feature",
             ":pray:",
             None,
-            |ctx| Ok(false)
+            |_ctx| Ok(false)
         ),
         // The following are handled magically
         badge!(
@@ -179,7 +194,7 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             "At economy position #1",
             ":first_place:",
             None,
-            |ctx| Ok(false)
+            |_ctx| Ok(false)
         ),
         badge!(
             "eco#2",
@@ -187,7 +202,7 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             "At economy position #2",
             ":second_place:",
             None,
-            |ctx| Ok(false)
+            |_ctx| Ok(false)
         ),
         badge!(
             "eco#3",
@@ -195,7 +210,7 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             "At economy position #3",
             ":third_place:",
             None,
-            |ctx| Ok(false)
+            |_ctx| Ok(false)
         ),
         badge!(
             "can-request",
@@ -214,7 +229,7 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             "Have a Dawnagotchi for more than a month",
             "<:uppies:1278754282413490259>",
             None,
-            |ctx| Ok(false)
+            |_ctx| Ok(false)
         ),
         badge!(
             "french",
@@ -222,7 +237,7 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             "⚠️ This user is French - be weary ⚠️",
             "🇨🇵",
             None,
-            |ctx| Ok(false)
+            |_ctx| Ok(false)
         ),
     ]
 });
