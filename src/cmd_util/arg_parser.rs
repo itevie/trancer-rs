@@ -124,7 +124,7 @@ impl PCACV {
                 })
             }
             ArgType::Currency {
-                ref range,
+                range: _,
                 allow_negative,
             } => {
                 let ok = match value.parse::<i32>() {

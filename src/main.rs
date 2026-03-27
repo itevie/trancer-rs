@@ -12,7 +12,6 @@ mod util;
 
 use crate::database::Database;
 use crate::message_handlers::xp::XpLastAwards;
-use crate::models::item::ALL_ITEMS;
 use crate::trancer_config::all_items::ALL_ITEMS_DEF;
 use crate::trancer_config::all_recipes::CRAFTING_RECIPES;
 use crate::util::cached_usernames::init_cached_usernames_database;

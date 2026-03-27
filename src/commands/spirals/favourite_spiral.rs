@@ -5,7 +5,6 @@ use crate::cmd_util::{TrancerCommand, TrancerResponseType};
 use crate::command_file;
 use crate::commands::CommandHasNoArgs;
 use crate::models::favourite_spiral::FavouriteSpiral;
-use crate::models::spiral::Spiral;
 use crate::util::lang::warn;
 
 command_file! {

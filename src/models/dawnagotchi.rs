@@ -2,10 +2,10 @@ use crate::cmd_util::TrancerError;
 use crate::database::Database;
 use crate::impl_from_row;
 use crate::util::config::CONFIG;
-use chrono::{DateTime, Utc};
+use chrono::Utc;
 use image::ImageFormat;
 use rusqlite::ToSql;
-use serenity::all::{Context, GuildId, UserId};
+use serenity::all::{Context, UserId};
 use std::io::Cursor;
 
 impl_from_row!(Dawnagotchi, DawnagotchiField {

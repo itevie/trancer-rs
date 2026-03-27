@@ -4,8 +4,7 @@ use crate::cmd_util::{content_response, trancer_handler, TrancerDetails};
 use crate::cmd_util::{TrancerCommand, TrancerResponseType};
 use crate::command_file;
 use crate::commands::CommandHasNoArgs;
-use crate::models::dawnagotchi::{Dawnagotchi, DawnagotchiField};
-use crate::util::config::CONFIG;
+use crate::models::dawnagotchi::Dawnagotchi;
 
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {

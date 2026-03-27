@@ -19,7 +19,7 @@ impl Database {
     pub fn get_one<S: Into<String>, T, F>(
         &self,
         sql: S,
-        params: &[&(dyn rusqlite::ToSql)],
+        params: &[&dyn rusqlite::ToSql],
         map_row: F,
     ) -> rusqlite::Result<T>
     where

@@ -1,5 +1,5 @@
 use crate::cmd_util::arg_parser::parse_args;
-use crate::cmd_util::{TrancerError, TrancerResponseType, TrancerRunnerContext};
+use crate::cmd_util::{TrancerError, TrancerRunnerContext};
 use crate::commands::reply_response_type;
 use crate::events::something_happened;
 use crate::message_handlers::handle_message_handlers;

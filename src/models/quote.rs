@@ -129,8 +129,8 @@ impl Quote {
     pub async fn to_embed(&self, context: &Context) -> Result<CreateEmbed, TrancerError> {
         let FetchedQuoteData {
             message,
-            author,
-            channel,
+            author: _,
+            channel: _,
         } = self.get_fetched_data(context, true).await?;
 
         let content = if let Some(ref message) = message {
@@ -138,7 +138,7 @@ impl Quote {
         } else {
             self.content.clone()
         };
-        let created_at = self.created_at.0.to_rfc3339();
+        let _created_at = self.created_at.0.to_rfc3339();
 
         //TODO: Get message references
         //TODO: Check for embeds/files too
@@ -146,7 +146,7 @@ impl Quote {
 
         let description = String::from(content);
 
-        let mut embed = create_embed()
+        let embed = create_embed()
             .title(format!("Quote #{}", self.id))
             .description(description);
 

@@ -7,8 +7,7 @@ use crate::commands::CommandHasNoArgs;
 use crate::models::economy::MoneyAddReason;
 use crate::util::embeds::create_embed;
 use crate::util::random_rewards::{
-    englishify_random_reward, generate_random_rewards, give_random_reward, RandomRewardItemOptions,
-    RandomRewardOptions, RandomRewardPresets,
+    englishify_random_reward, generate_random_rewards, give_random_reward, RandomRewardPresets,
 };
 use serenity::all::CreateMessage;
 

@@ -1,6 +1,6 @@
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
 use crate::reply;
-use crate::util::lang::{currency, currency_str, warn};
+use crate::util::lang::warn;
 use serenity::all::{
     ButtonStyle, CreateActionRow, CreateButton, CreateEmbedFooter, CreateInteractionResponse,
     CreateInteractionResponseMessage, CreateMessage, EditMessage,

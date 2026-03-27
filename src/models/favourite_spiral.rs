@@ -4,7 +4,6 @@ use crate::models::spiral::Spiral;
 use rand::Rng;
 use serenity::all::UserId;
 use serenity::client::Context;
-use tracing::Instrument;
 
 impl_from_row!(
     FavouriteSpiral,

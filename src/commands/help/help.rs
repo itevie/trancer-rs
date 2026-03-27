@@ -6,7 +6,6 @@ use crate::commands::CommandHasNoArgs;
 use crate::util::embeds::create_embed;
 use crate::util::pagination::{paginate, Field, PaginationDataType, PaginationOptions};
 use crate::{command_file, commands};
-use serenity::all::CreateMessage;
 use std::collections::HashMap;
 
 command_file! {

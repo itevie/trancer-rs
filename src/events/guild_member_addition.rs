@@ -59,7 +59,7 @@ pub async fn guild_member_addition(ctx: Context, new_member: Member) {
             }
 
             // TODO: Replace variables in the string
-            if let Err(error) = channel
+            if let Err(_error) = channel
                 .send_message(
                     &ctx,
                     CreateMessage::new().content(server_settings.welcome_message),

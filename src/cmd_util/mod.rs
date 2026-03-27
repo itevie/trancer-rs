@@ -44,7 +44,7 @@ pub type TrancerHandler<T> =
 /// This is just some magic to allow typing to work
 pub trait CommandTrait: Send + Sync {
     /// The function to run the command
-    fn run(&self, ctx: TrancerRunnerContext, args: ParsedArguments) -> TrancerFuture;
+    fn run(&self, ctx: TrancerRunnerContext, args: ParsedArguments) -> TrancerFuture<'_>;
 
     /// Get the name of the command
     fn name(&self) -> String;
@@ -70,7 +70,7 @@ pub struct TrancerCommand<T: CommandArgumentStruct> {
 impl<T: CommandArgumentStruct + Send + 'static + std::fmt::Debug> CommandTrait
     for TrancerCommand<T>
 {
-    fn run(&self, ctx: TrancerRunnerContext, args: ParsedArguments) -> TrancerFuture {
+    fn run(&self, ctx: TrancerRunnerContext, args: ParsedArguments) -> TrancerFuture<'_> {
         Box::pin(async move {
             let arg_schema = self.details().arguments;
 

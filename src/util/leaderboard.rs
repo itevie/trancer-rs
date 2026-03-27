@@ -1,6 +1,5 @@
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
 use crate::util::cached_usernames::get_cached_username;
-use crate::util::embeds::create_embed;
 use crate::util::lang::currency_str;
 use crate::util::pagination::{paginate, PaginationDataType, PaginationOptions};
 use serenity::all::CreateEmbed;
@@ -14,7 +13,7 @@ pub fn lb_accumulate(data: Vec<String>) -> Vec<(i32, String)> {
             e.insert(1);
             continue;
         } else {
-            let mut binding = hashmap.get_mut(&i).unwrap();
+            let binding = hashmap.get_mut(&i).unwrap();
             *binding += 1;
         }
     }

@@ -80,7 +80,7 @@ pub struct RandomRewardResult {
 }
 
 pub async fn generate_random_rewards(
-    ctx: &Context,
+    _ctx: &Context,
     options: RandomRewardOptions,
 ) -> Result<RandomRewardResult, TrancerError> {
     let all_items = Item::get_all();
