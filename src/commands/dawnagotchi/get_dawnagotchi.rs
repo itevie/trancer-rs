@@ -48,7 +48,7 @@ command_file! {
                     continue;
                 }
 
-                let dawn = Dawnagotchi::fetch(&ctx.sy, msg.author.id).await?;
+                let dawn = Dawnagotchi::fetch(&ctx.sy, ctx.msg.author.id).await?;
 
                 let result: Result<(), TrancerError>;
 
@@ -69,6 +69,8 @@ command_file! {
                     )
                      .await?;
                 }
+
+                i.defer(&ctx.sy.http).await?;
 
                 edit_dawn_message(&ctx, &mut msg).await?;
             }
@@ -115,7 +117,9 @@ async fn make_dawn_message_components(
     let image_bytes = dawn.make_dawn_image();
     let attachment = CreateAttachment::bytes(image_bytes, "dawn.png");
 
-    Ok((embed, buttons, attachment))
+    let imageEmbed = embed.image("attachment://dawn.png");
+
+    Ok((imageEmbed, buttons, attachment))
 }
 
 async fn edit_dawn_message(
@@ -127,7 +131,9 @@ async fn edit_dawn_message(
     to_edit
         .edit(
             &ctx.sy.http,
-            EditMessage::new().embed(parts.0.clone().image("attachment://dawn.png")),
+            EditMessage::new()
+                .embed(parts.0.clone().image("attachment://dawn.png"))
+                .new_attachment(parts.2),
         )
         .await?;
 
