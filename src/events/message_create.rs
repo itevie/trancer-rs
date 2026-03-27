@@ -225,6 +225,10 @@ pub async fn message(ctx: Context, msg: Message) {
     let response = match cmd.run(context.clone(), args).await {
         Ok(response) => response,
         Err(err) => {
+            if let TrancerError::NonScary(s) = err {
+                let _ = reply!(context, CreateMessage::new().content(s.clone()));
+                return;
+            }
             something_happened(&context, "Error while executing command handler", err).await;
             return;
         }

@@ -14,6 +14,14 @@ pub struct TrancerConfig {
     pub xp: TrancerXpConfig,
     pub dev_bot: TrancerDevBotConfig,
     pub channels: TrancerChannelsConfig,
+    pub dawnagotchi: TrancerDawnagotchiConfig,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TrancerDawnagotchiConfig {
+    pub feed_time_add: i64,
+    pub drink_time_add: i64,
+    pub play_time_add: i64,
 }
 
 #[derive(Debug, Deserialize)]

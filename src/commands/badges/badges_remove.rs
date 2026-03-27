@@ -1,9 +1,10 @@
-use crate::cmd_util::arg_parser::{CommandArgumentStruct, PCACV};
+use crate::cmd_util::arg_parser::PCACV;
 use crate::cmd_util::args::{ArgType, Argument, TrancerArguments};
 use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::{content_response, trancer_handler, TrancerDetails};
 use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError};
 use crate::cmd_util::{CommandTrait, TrancerFlag};
+use crate::commands::CommandArgumentStruct;
 use crate::models::aquired_badge::AquiredBadge;
 use crate::trancer_config::all_badges::ALL_DEFINED_BADGES;
 use crate::util::lang::{success, warn};
@@ -18,7 +19,7 @@ command_argument_struct!(RemoveBadgeArgs {
 
 command_file! {
     TrancerCommand::<RemoveBadgeArgs> {
-        name: "-badge".to_string(),
+        name: "removebadge".to_string(),
         t: TrancerCommandType::Badges,
         description: "Remove a badge for a user".to_string(),
         details: TrancerDetails {

@@ -18,7 +18,7 @@ command_argument_struct!(AddBadgeArgs {
 
 command_file! {
     TrancerCommand::<AddBadgeArgs> {
-        name: "+badge".to_string(),
+        name: "addbadge".to_string(),
         t: TrancerCommandType::Badges,
         description: "Add a badge for a user".to_string(),
         details: TrancerDetails {

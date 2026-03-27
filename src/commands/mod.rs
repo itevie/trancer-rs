@@ -7,6 +7,7 @@ use std::collections::HashMap;
 use tracing::error;
 
 mod badges;
+mod dawnagotchi;
 mod economy;
 mod fun;
 mod help;
@@ -29,7 +30,19 @@ macro_rules! cmd_import_map {
     };
 }
 
-cmd_import_map!(help, hypnosis, economy, server, fun, spirals, badges, items, quotes, swear_jar);
+cmd_import_map!(
+    help,
+    hypnosis,
+    economy,
+    server,
+    fun,
+    spirals,
+    badges,
+    items,
+    quotes,
+    swear_jar,
+    dawnagotchi
+);
 
 #[macro_export]
 macro_rules! command_file {

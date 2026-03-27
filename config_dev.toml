@@ -19,6 +19,11 @@ can_request = "1282301213278474241"
 french = "1366862341437653042"
 birthday = "1387439309669269675"
 
+[dawnagotchi]
+feed_time_add = 28800000
+drink_time_add = 21600000
+play_time_add = 14400000
+
 [analytics]
 enabled = true
 

@@ -18,7 +18,7 @@ command_file! {
             ..Default::default()
         },
 
-        handler: trancer_handler!(|ctx, args| {
+        handler: trancer_handler!(|ctx, _args| {
             // TODO: Make it show how many people have it
             paginate(PaginationOptions {
                 embed: create_embed().title("List of badges".to_string()),

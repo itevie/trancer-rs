@@ -27,6 +27,7 @@ pub enum TrancerError {
     NotImplemented(String),
     ReplyError(serenity::Error),
     Generic(String),
+    NonScary(String),
 }
 
 impl std::error::Error for TrancerError {}
@@ -88,6 +89,7 @@ impl fmt::Display for TrancerError {
             }
             TrancerError::ReplyError(err) => write!(f, "Reply error: {}", err),
             TrancerError::Generic(err) => write!(f, "{}", err),
+            TrancerError::NonScary(err) => write!(f, "{}", err),
         }
     }
 }
