@@ -2,32 +2,32 @@
 Format: name[tag]: price, weight, buyable
 Sell price is always price/2
 
-cod[None]: 5, 0.9, false
-common-fish[None]: 10, 0.8, false
-salmon[None]: 15, 0.75, false
-uncommon-fish[None]: 15, 0.6, false
-wide-salmon[None]: 15, 0.6, false
-pufferfish[None]: 25, 0.5, false
-rare-fish[None]: 40, 0.2, false
-spiral-fish[None]: 40, 0.2, false
-scottish-fish[None]: 40, 0.2, false
-cute-fishy[None]: 55, 0.1, false
-cookie-fish[None]: 55, 0.1, false
-transparent-fish[None]: 55, 0.1, false
-epic-fish[None]: 80, 0.05, false
-basking-shark[None]: 80, 0.05, false
-angle-fish[None]: 125, 0.04, false
-devil-fish[None]: 125, 0.04, false
-mythic-fish[None]: 400, 0.01, false
-dawn-fish[None]: 400, 0.01, false
-weed-fish[None]: 400, 0.01, false
-fish[None]: 400, 0.01, false
-gay-fish[None]: 400, 0.01, false
-trans-fish[None]: 1250, 0.005, false
-british-fish[None]: 1250, 0.005, false
-catfish[None]: 2, 0.3, false
-you-are-never-getting-this-fish[None]: 5000, 0.0005, false
-we-are-number-one-fish[None]: 20000, 0.00001, false
+cod[Some("fish")]: 5, 0.9, false
+common-fish[Some("fish")]: 10, 0.8, false
+salmon[Some("fish")]: 15, 0.75, false
+uncommon-fish[Some("fish")]: 15, 0.6, false
+wide-salmon[Some("fish")]: 15, 0.6, false
+pufferfish[Some("fish")]: 25, 0.5, false
+rare-fish[Some("fish")]: 40, 0.2, false
+spiral-fish[Some("fish")]: 40, 0.2, false
+scottish-fish[Some("fish")]: 40, 0.2, false
+cute-fishy[Some("fish")]: 55, 0.1, false
+cookie-fish[Some("fish")]: 55, 0.1, false
+transparent-fish[Some("fish")]: 55, 0.1, false
+epic-fish[Some("fish")]: 80, 0.05, false
+basking-shark[Some("fish")]: 80, 0.05, false
+angle-fish[Some("fish")]: 125, 0.04, false
+devil-fish[Some("fish")]: 125, 0.04, false
+mythic-fish[Some("fish")]: 400, 0.01, false
+dawn-fish[Some("fish")]: 400, 0.01, false
+weed-fish[Some("fish")]: 400, 0.01, false
+fish[Some("fish")]: 400, 0.01, false
+gay-fish[Some("fish")]: 400, 0.01, false
+trans-fish[Some("fish")]: 1250, 0.005, false
+british-fish[Some("fish")]: 1250, 0.005, false
+catfish[Some("fish")]: 2, 0.3, false
+you-are-never-getting-this-fish[Some("fish")]: 5000, 0.0005, false
+we-are-number-one-fish[Some("fish")]: 20000, 0.00001, false
 card-pull[None]: 100, 0.6, true
 hair-dye[None]: 150, 0.05, true
 hair[None]: 30, 0.5, true
@@ -61,7 +61,7 @@ lottery-ticket[None]: 250, 0, true
 
 pendulum: stick: 1, emerald: 1, 
 stone-pickaxe: rock: 3, stick: 1, 
-emerald-pickaxe: stick: 1, emerald: 3, 
+emerald-pickaxe: emerald: 3, stick: 1, 
 
 ===== Rewards from commands =====
 

@@ -1,3 +1,4 @@
+mod add_quote;
 mod quote_get;
 mod quoted_by;
 mod quotes_from;

@@ -48,6 +48,8 @@ pub static SWEARS: &[&str] = &[
     "bottom",
     "dawn",
     "jud",
+    "69",
+    "67",
 ];
 
 #[instrument]

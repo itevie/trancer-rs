@@ -37,7 +37,7 @@ command_file! {
             };
 
             Ok(TrancerResponseType::Big(
-                CreateMessage::new().embed(quote.to_embed(&ctx.sy).await?))
+                CreateMessage::new().embed(quote.gen_embed(&ctx.sy).await?))
             )
         }),
     }

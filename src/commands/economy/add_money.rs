@@ -34,10 +34,7 @@ command_file! {
                     },
                     Argument {
                         name: "amount".to_string(),
-                        t: ArgType::Currency {
-                            allow_negative: false,
-                            range: None,
-                        },
+                        t: ArgType::Number { min: None, max: None },
                         details: Default::default()
                     }
                 ]

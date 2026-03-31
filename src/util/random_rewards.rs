@@ -70,6 +70,30 @@ impl RandomRewardPresets {
             }),
         }
     }
+
+    pub(crate) fn fish() -> RandomRewardOptions {
+        let fishes = ALL_ITEMS
+            .get()
+            .unwrap()
+            .iter()
+            .filter(|x| {
+                if let Some(tag) = &x.tag {
+                    tag == "fish"
+                } else {
+                    false
+                }
+            })
+            .map(|x| (x.id, x.weight))
+            .collect::<Vec<(u32, f64)>>();
+
+        RandomRewardOptions {
+            currency: None,
+            items: Some(RandomRewardItemOptions {
+                items: Some(fishes),
+                count: (1, 7),
+            }),
+        }
+    }
 }
 
 #[derive(Debug)]

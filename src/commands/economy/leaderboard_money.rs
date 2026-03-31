@@ -18,7 +18,7 @@ command_file! {
             ..Default::default()
         },
 
-        handler: trancer_handler!(|ctx, args| {
+        handler: trancer_handler!(|ctx, _args| {
             let data = Economy::fetch_all(&ctx.sy).await?.iter().map(|x| (x.balance, x.user_id.clone())).collect::<Vec<(i32, String)>>();
             leaderboard(LeaderboardOptions {
                 ctx,

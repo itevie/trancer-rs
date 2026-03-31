@@ -32,7 +32,7 @@ const fn fish(name: Cow, price_weight: (u32, f64), emoji: Cow) -> PartialItem {
         description: None,
         weight: price_weight.1,
         emoji: Some(emoji),
-        tag: None,
+        tag: Some("fish"),
         buyable: false,
         droppable: true,
         max: None,
