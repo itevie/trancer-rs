@@ -13,6 +13,7 @@ mod invite;
 mod ping;
 mod profile;
 mod set_pronoun;
+mod streaks;
 
 cmd_import_map!(
     about,
@@ -27,5 +28,6 @@ cmd_import_map!(
     invite,
     ping,
     profile,
-    set_pronoun
+    set_pronoun,
+    streaks
 );

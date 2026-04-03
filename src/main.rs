@@ -79,7 +79,9 @@ async fn main() {
     );
 
     let token = env::var("BOT_TOKEN").expect("Expected a token in the environment");
-    let intents = GatewayIntents::GUILD_MESSAGES | GatewayIntents::MESSAGE_CONTENT;
+    let intents = GatewayIntents::GUILD_MESSAGES
+        | GatewayIntents::MESSAGE_CONTENT
+        | GatewayIntents::GUILD_MEMBERS;
 
     let mut client = Client::builder(&token, intents)
         .event_handler(Handler)

@@ -42,25 +42,23 @@ pub async fn message(ctx: Context, msg: Message) {
         return;
     }
 
-    // ----- Unwrap Data -----
-    let channel = if let Ok(channel) = msg.channel_id.to_channel(&ctx).await {
-        match channel {
-            Channel::Guild(channel) => {
-                if channel.kind == ChannelType::Text {
-                    channel
-                } else {
-                    return;
-                }
-            }
-            _ => return,
-        }
-    } else {
-        return;
-    };
-
     let guild_id = match msg.guild_id {
         Some(id) => id,
         None => return,
+    };
+
+    // ----- Unwrap Data -----
+    let channel = ctx
+        .cache
+        .guild(guild_id)
+        .and_then(|g| g.channels.get(&msg.channel_id).cloned());
+
+    let channel = match channel {
+        Some(c) if c.kind == ChannelType::Text => c,
+        _ => match msg.channel_id.to_channel(&ctx.http).await {
+            Ok(Channel::Guild(c)) if c.kind == ChannelType::Text => c,
+            _ => return,
+        },
     };
 
     add("Load channel & guild stuff");
@@ -158,15 +156,21 @@ pub async fn message(ctx: Context, msg: Message) {
 
     add("Checking command");
 
-    let member = match guild_id.member(&ctx.http, msg.author.id).await {
-        Ok(m) => m,
-        Err(e) => {
-            error!(
-                "Failed to fetch member during message handler: {}",
-                e.to_string()
-            );
-            return;
-        }
+    let member = if let Some(guild) = ctx.cache.guild(guild_id) {
+        guild.members.get(&msg.author.id).cloned()
+    } else {
+        None
+    };
+
+    let member = match member {
+        Some(m) => m,
+        None => match guild_id.member(&ctx.http, msg.author.id).await {
+            Ok(m) => m,
+            Err(e) => {
+                error!("Failed to fetch member: {}", e);
+                return;
+            }
+        },
     };
 
     add("Fetch member");

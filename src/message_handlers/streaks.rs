@@ -53,7 +53,7 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
 
         reply!(
             ctx,
-            CreateMessage::new().content(":x: Uh-oh! You're streak has been reset :(")
+            CreateMessage::new().content(":x: Uh-oh! Your streak has been reset :(")
         )?;
     } else if diff_days == 0 {
         if let None = ctx.user_data.last_talking_streak {
