@@ -19,3 +19,6 @@ CREATE TABLE swear_jar (
     uses INT NOT NULL DEFAULT 0,
     UNIQUE(user_id, server_id, word)
 );
+
+ALTER TABLE server_count_ruins ADD ruined_by TEXT;
+ALTER TABLE server_count ADD allow_consecutive_counts INTEGER DEFAULT 0 NOT NULL;

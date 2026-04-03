@@ -1,5 +1,6 @@
 mod analytics;
 mod bump_detector;
+mod counting;
 mod react_bot;
 mod swear_jar;
 mod template;
@@ -11,6 +12,7 @@ use tracing::instrument;
 
 #[instrument]
 pub async fn handle_message_handlers(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
+    counting::handle(ctx).await?;
     analytics::handle(ctx).await?;
     bump_detector::handle(ctx).await?;
     xp::handle(ctx).await?;

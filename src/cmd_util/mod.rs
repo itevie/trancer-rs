@@ -112,6 +112,7 @@ pub struct TrancerRunnerContext {
     pub economy: Economy,
     pub command_name: String,
     pub original_command: String,
+    pub full_args: String,
 }
 
 #[derive(Default, Clone)]

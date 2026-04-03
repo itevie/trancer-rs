@@ -1,6 +1,7 @@
 mod birthdays;
 mod cowsay;
 mod eight_ball;
+mod math_eval;
 mod random_colour;
 mod rate;
 mod rizz;
@@ -15,5 +16,6 @@ cmd_import_map!(
     birthdays,
     cowsay,
     set_birthday,
-    random_colour
+    random_colour,
+    math_eval
 );

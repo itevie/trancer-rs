@@ -3,6 +3,7 @@ use serenity::prelude::TypeMapKey;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 
+#[derive(Clone)]
 pub struct Database {
     pub connection: Arc<Mutex<Connection>>,
 }

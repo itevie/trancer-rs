@@ -2,6 +2,7 @@
 
 mod cmd_util;
 mod commands;
+mod dashboard;
 mod database;
 mod events;
 mod message_handlers;
@@ -27,7 +28,7 @@ struct Handler;
 
 #[tokio::main]
 async fn main() {
-    tracing_subscriber::fmt::init();
+    tracing_subscriber::fmt().init();
     init_cached_usernames_database();
     let config = load_config().unwrap();
     info!("Starting bot...");
@@ -48,11 +49,11 @@ async fn main() {
 
     string.push_str("\n===== Crafting Recipies =====\n\n");
 
-    for recipie in CRAFTING_RECIPES.iter() {
+    for recipe in CRAFTING_RECIPES.iter() {
         string.push_str(&format!(
             "{}: {}\n",
-            recipie.0,
-            recipie
+            recipe.0,
+            recipe
                 .1
                 .iter()
                 .map(|x| format!("{}: {}, ", x.0, x.1))
@@ -89,17 +90,19 @@ async fn main() {
         let mut data = client.data.write().await;
         let db = Database::new(config.general.data_dir);
 
-        db.run("DELETE FROM economy", &[]);
-        db.run(
-            "DELETE FROM aquired_items
-                    WHERE NOT EXISTS (
-                        SELECT 1
-                        FROM items
-                        WHERE items.id = aquired_items.item_id
-                          AND items.tag = 'collectable'
-                    );",
-            &[],
-        );
+        tokio::spawn(dashboard::run_http(db.clone()));
+
+        // db.run("DELETE FROM economy", &[]);
+        // db.run(
+        //     "DELETE FROM aquired_items
+        //             WHERE NOT EXISTS (
+        //                 SELECT 1
+        //                 FROM items
+        //                 WHERE items.id = aquired_items.item_id
+        //                   AND items.tag = 'collectable'
+        //             );",
+        //     &[],
+        // );
 
         data.insert::<Database>(db);
         data.insert::<XpLastAwards>(Arc::default());

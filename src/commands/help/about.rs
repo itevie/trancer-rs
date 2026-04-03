@@ -15,7 +15,7 @@ command_file! {
         description: "Get some basic details about the bot!".to_string(),
         details: Default::default(),
 
-        handler: trancer_handler!(|ctx, args| {
+        handler: trancer_handler!(|ctx, _args| {
             // TODO: Finish these details
             Ok(TrancerResponseType::Big(CreateMessage::new().embed(
                 create_embed().title("About Trancer!")

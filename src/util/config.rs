@@ -15,6 +15,12 @@ pub struct TrancerConfig {
     pub dev_bot: TrancerDevBotConfig,
     pub channels: TrancerChannelsConfig,
     pub dawnagotchi: TrancerDawnagotchiConfig,
+    pub counting: TrancerCountingConfig,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TrancerCountingConfig {
+    pub ruins_to_be_banned: u32,
 }
 
 #[derive(Debug, Deserialize)]

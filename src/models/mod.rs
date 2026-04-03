@@ -4,6 +4,7 @@ pub mod blacklisted;
 pub mod card;
 pub mod command_creation;
 pub mod confession;
+pub mod couting;
 pub mod dawnagotchi;
 pub mod economy;
 pub mod favourite_spiral;

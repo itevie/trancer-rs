@@ -90,6 +90,7 @@ pub async fn message(ctx: Context, msg: Message) {
         guild_id,
         command_name: "loading".to_string(),
         original_command: msg.content.to_string(),
+        full_args: "".to_string(),
     };
 
     if let Err(err) = handle_message_handlers(&context).await {
@@ -114,6 +115,8 @@ pub async fn message(ctx: Context, msg: Message) {
 
     let command_name = args.args[0].clone();
     args.args.remove(0);
+
+    context.full_args = args.args.join(" ");
 
     let Some(cmd) = commands.iter().find(|cmd| {
         cmd.name().eq(command_name.as_str())
