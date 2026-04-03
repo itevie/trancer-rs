@@ -1,6 +1,7 @@
 mod analytics;
 mod bump_detector;
 mod counting;
+mod dawn_checker;
 mod react_bot;
 mod streaks;
 mod swear_jar;
@@ -21,5 +22,6 @@ pub async fn handle_message_handlers(ctx: &TrancerRunnerContext) -> Result<(), T
     react_bot::handle(ctx).await?;
     trancer_english_commands::handle(ctx).await?;
     swear_jar::handle(ctx).await?;
+    dawn_checker::handle(ctx).await?;
     Ok(())
 }

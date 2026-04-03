@@ -48,6 +48,17 @@ impl Dawnagotchi {
         }
     }
 
+    pub async fn remove(&self, ctx: &Context) -> rusqlite::Result<()> {
+        let data_lock = ctx.data.read().await;
+        let db = data_lock.get::<Database>().unwrap();
+
+        db.run(
+            "UPDATE dawnagotchi SET alive = false WHERE owner_id = ?",
+            &[&self.owner_id],
+        )?;
+        Ok(())
+    }
+
     pub async fn create(ctx: &Context, user_id: UserId) -> rusqlite::Result<Self> {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();

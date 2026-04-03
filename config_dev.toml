@@ -55,5 +55,16 @@ currency_max = 200
 currency_min = 75
 currency_max = 150
 
+[payouts.dawn]
+caring_min = 20
+caring_max = 40
+caring_limit = 1800000
+
+caring_all_100_min = 100
+caring_all_100_max = 150
+caring_all_100_limit = 43200000
+
+not_caring_punishment = 1000
+
 [counting]
 ruins_to_be_banned = 3

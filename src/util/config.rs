@@ -83,6 +83,7 @@ pub struct TrancerEconomyConfig {
 pub struct TrancerPayoutsConfig {
     pub bumps: TrancerBumpPayoutsConfig,
     pub daily: TrancerDailyPayoutsConfig,
+    pub dawn: TrancerDawnagotchiPayoutsConfig,
 }
 
 #[derive(Debug, Deserialize)]
@@ -95,6 +96,19 @@ pub struct TrancerBumpPayoutsConfig {
 pub struct TrancerDailyPayoutsConfig {
     pub currency_min: u32,
     pub currency_max: u32,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TrancerDawnagotchiPayoutsConfig {
+    pub caring_min: u32,
+    pub caring_max: u32,
+    pub caring_limit: u32,
+
+    pub caring_all_100_min: u32,
+    pub caring_all_100_max: u32,
+    pub caring_all_100_limit: u32,
+
+    pub not_caring_punishment: u32,
 }
 
 lazy_static! {
