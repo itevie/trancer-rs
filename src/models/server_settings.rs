@@ -52,7 +52,10 @@ impl_from_row!(ServerSettings, ServerSettingsFields {
     react_bot: bool,
 
     birthday_channel_id: Option<String>,
-    birthday_announcement_text: String
+    birthday_announcement_text: String,
+
+    streak_reactions: bool,
+    streak_end_reactions: bool,
 });
 
 impl ServerSettings {

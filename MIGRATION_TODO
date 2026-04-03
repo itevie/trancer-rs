@@ -22,3 +22,6 @@ CREATE TABLE swear_jar (
 
 ALTER TABLE server_count_ruins ADD ruined_by TEXT;
 ALTER TABLE server_count ADD allow_consecutive_counts INTEGER DEFAULT 0 NOT NULL;
+
+ALTER TABLE server_settings ADD streak_reactions INTEGER DEFAULT 0 NOT NULL;
+ALTER TABLE server_settings ADD streak_end_reactions INTEGER DEFAULT 1 NOT NULL;
