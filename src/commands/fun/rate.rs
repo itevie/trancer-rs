@@ -46,7 +46,7 @@ command_file! {
         handler: trancer_handler!(|_ctx, args| {
             let amount = random_number_from_string(&format!("{}-{}", args.user.name, args.what), -5, 100);
             Ok(TrancerResponseType::Content(
-                format!("According to my calculation... **{}** is... **{}% {}**", args.user.name , amount, args.what)
+                format!("According to my calculation... **{}** is... **{}% {}**", args.user.name, amount, args.what)
             ))
         }),
     }

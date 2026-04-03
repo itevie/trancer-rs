@@ -10,16 +10,32 @@ use crate::models::user_data::UserData;
 use crate::util::cached_usernames::set_cached_username;
 use crate::util::embeds::create_embed;
 use crate::util::lang::{permission_names, warn};
+use crate::util::pagination::paginate;
 use crate::{commands, reply, something_happened};
 use chrono::{DateTime, Utc};
 use chrono_humanize::HumanTime;
+use config::Map;
 use serenity::all::{
-    Channel, ChannelType, Context, CreateMessage, EventHandler, Message, ReactionType,
+    Channel, ChannelType, Context, CreateMessage, EventHandler, Message, ReactionType, Timestamp,
 };
+use std::collections::HashMap;
 use tracing::error;
 
 pub async fn message(ctx: Context, msg: Message) {
     set_cached_username(msg.author.id.to_string(), msg.author.name.clone());
+
+    let mut times: HashMap<String, i64> = HashMap::new();
+    let mut start = Timestamp::now().timestamp_millis();
+
+    let mut add = |reason: &str| {
+        times.insert(
+            reason.to_string(),
+            Timestamp::now().timestamp_millis() - start,
+        );
+        start = Timestamp::now().timestamp_millis();
+    };
+
+    add("Receive");
 
     // ----- Guards -----
     if msg.author.id == ctx.cache.current_user().id {
@@ -47,6 +63,8 @@ pub async fn message(ctx: Context, msg: Message) {
         None => return,
     };
 
+    add("Load channel & guild stuff");
+
     let server_settings = match ServerSettings::fetch(&ctx, guild_id).await {
         Ok(ok) => ok,
         Err(e) => {
@@ -57,6 +75,8 @@ pub async fn message(ctx: Context, msg: Message) {
             return;
         }
     };
+
+    add("Load server settings");
 
     let user_data = match UserData::fetch(&ctx, msg.author.id, guild_id).await {
         Ok(ok) => ok,
@@ -69,6 +89,8 @@ pub async fn message(ctx: Context, msg: Message) {
         }
     };
 
+    add("Load user_data");
+
     let economy = match Economy::fetch(&ctx, msg.author.id).await {
         Ok(ok) => ok,
         Err(e) => {
@@ -79,6 +101,8 @@ pub async fn message(ctx: Context, msg: Message) {
             return;
         }
     };
+
+    add("Load economy");
 
     let mut context = TrancerRunnerContext {
         sy: ctx.clone(),
@@ -92,6 +116,8 @@ pub async fn message(ctx: Context, msg: Message) {
         original_command: msg.content.to_string(),
         full_args: "".to_string(),
     };
+
+    add("Create context");
 
     if let Err(err) = handle_message_handlers(&context).await {
         error!("Failed while running message handlers (ignoring): {err}")
@@ -130,6 +156,8 @@ pub async fn message(ctx: Context, msg: Message) {
     };
     context.command_name = cmd.name();
 
+    add("Checking command");
+
     let member = match guild_id.member(&ctx.http, msg.author.id).await {
         Ok(m) => m,
         Err(e) => {
@@ -140,6 +168,8 @@ pub async fn message(ctx: Context, msg: Message) {
             return;
         }
     };
+
+    add("Fetch member");
 
     // ----- Command Guard Checks -----
     if let Some(user_permission) = cmd.details().user_permissions {
@@ -170,6 +200,8 @@ pub async fn message(ctx: Context, msg: Message) {
             return;
         }
     }
+
+    add("Command guard checks");
 
     if let Some(r) = cmd.details().ratelimit {
         let ratelimit = match Ratelimit::fetch(&ctx, msg.author.id, cmd.name()).await {
@@ -209,6 +241,8 @@ pub async fn message(ctx: Context, msg: Message) {
         }
     }
 
+    add("Ratelimit");
+
     if cmd.details().requires_message_reference && msg.referenced_message.is_none() {
         let _ = reply!(
             context,
@@ -224,6 +258,8 @@ pub async fn message(ctx: Context, msg: Message) {
             .await;
     }
 
+    add("Everything else");
+
     // ----- Command Running -----
     let response = match cmd.run(context.clone(), args).await {
         Ok(response) => response,
@@ -236,6 +272,18 @@ pub async fn message(ctx: Context, msg: Message) {
             return;
         }
     };
+
+    add("Command Execution");
+
+    reply!(
+        context,
+        CreateMessage::new().content(
+            times
+                .iter()
+                .map(|x| format!("{}: {}ms\n", x.0, x.1))
+                .collect::<String>()
+        )
+    );
 
     reply_response_type(&context, response).await
 }

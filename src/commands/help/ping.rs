@@ -4,6 +4,7 @@ use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{TrancerCommand, TrancerError, TrancerResponseType};
 use crate::{command_argument_struct, command_file};
+use serenity::all::Timestamp;
 use std::collections::HashMap;
 
 command_argument_struct!(PingArgs {});
@@ -15,8 +16,8 @@ command_file! {
         description: "This is a test".to_string(),
         details: Default::default(),
 
-        handler: trancer_handler!(|ctx, args| {
-            Ok(TrancerResponseType::Content("pong".to_string()))
+        handler: trancer_handler!(|ctx, _args| {
+            Ok(TrancerResponseType::Content(format!("Pong! Took {}ms", Timestamp::now().timestamp_millis() - ctx.msg.timestamp.timestamp_millis())))
         }),
     }
 }
