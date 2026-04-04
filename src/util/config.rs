@@ -16,6 +16,13 @@ pub struct TrancerConfig {
     pub channels: TrancerChannelsConfig,
     pub dawnagotchi: TrancerDawnagotchiConfig,
     pub counting: TrancerCountingConfig,
+    pub persistent_messages: TrancerPersistentMessagesConfig,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TrancerPersistentMessagesConfig {
+    pub economy_channel: Option<String>,
+    pub random_command_channel: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]

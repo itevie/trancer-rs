@@ -79,7 +79,6 @@ macro_rules! reply {
         }
     };
 }
-
 command_argument_struct!(CommandHasNoArgs {});
 command_argument_struct!(OnlyUserArgs {
     user: User, PCACV::User

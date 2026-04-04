@@ -75,3 +75,34 @@ pub async fn leaderboard(options: LeaderboardOptions) -> Result<(), TrancerError
     })
     .await
 }
+
+pub fn leaderboard_string(
+    data: Vec<(i32, String)>,
+    formatter: LeaderboardFormatter,
+) -> Vec<String> {
+    let mut sorted = data.iter().collect::<Vec<&(i32, String)>>();
+    sorted.sort_by(|a, b| b.0.cmp(&a.0));
+
+    sorted
+        .iter()
+        .map(|(i, x)| {
+            (
+                match &formatter {
+                    LeaderboardFormatter::Normal => format!("**{}**", i),
+                    LeaderboardFormatter::Eco => currency_str(&i.to_string()),
+                    LeaderboardFormatter::Suffix(suffix) => format!("**{} {}**", i, suffix),
+                },
+                x.clone(),
+            )
+        })
+        .enumerate()
+        .map(|(i, x)| {
+            format!(
+                "**{}**. {}: {}",
+                i + 1,
+                get_cached_username(x.1.clone()),
+                x.0
+            )
+        })
+        .collect::<Vec<String>>()
+}

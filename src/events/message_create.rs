@@ -110,6 +110,7 @@ pub async fn message(ctx: Context, msg: Message) {
         user_data,
         economy,
         guild_id,
+        user_id: msg.author.id,
         command_name: "loading".to_string(),
         original_command: msg.content.to_string(),
         full_args: "".to_string(),
@@ -279,15 +280,15 @@ pub async fn message(ctx: Context, msg: Message) {
 
     add("Command Execution");
 
-    reply!(
-        context,
-        CreateMessage::new().content(
-            times
-                .iter()
-                .map(|x| format!("{}: {}ms\n", x.0, x.1))
-                .collect::<String>()
-        )
-    );
+    // let _ = reply!(
+    //     context,
+    //     CreateMessage::new().content(
+    //         times
+    //             .iter()
+    //             .map(|x| format!("{}: {}ms\n", x.0, x.1))
+    //             .collect::<String>()
+    //     )
+    // );
 
     reply_response_type(&context, response).await
 }

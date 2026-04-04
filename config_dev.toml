@@ -68,3 +68,7 @@ not_caring_punishment = 1000
 
 [counting]
 ruins_to_be_banned = 3
+
+[persistent_messages]
+economy_channel = "1489778928729198783"
+random_command_channel = "1489778928729198783"

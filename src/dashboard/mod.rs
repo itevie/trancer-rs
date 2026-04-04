@@ -9,8 +9,8 @@ struct AppState {
     db: Database,
 }
 
-async fn handler(State(state): State<AppState>) -> String {
-    format!("ok")
+async fn handler(State(_state): State<AppState>) -> String {
+    "ok".to_string()
 }
 
 pub async fn run_http(db: Database) {

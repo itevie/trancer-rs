@@ -30,7 +30,7 @@ command_file! {
             ..Default::default()
         },
 
-        handler: trancer_handler!(|ctx, args| {
+        handler: trancer_handler!(|_ctx, args| {
             let result = std::process::Command::new("cowsay").arg(args.text.clone()).output()?;
             Ok(TrancerResponseType::Content(format!("```{}```", String::from_utf8_lossy(&result.stdout))))
         }),

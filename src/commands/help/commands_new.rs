@@ -14,7 +14,7 @@ command_file!(TrancerCommand::<CommandHasNoArgs> {
     t: TrancerCommandType::Help,
     details: Default::default(),
 
-    handler: trancer_handler!(|ctx, args| {
+    handler: trancer_handler!(|ctx, _args| {
         let data = CommandCreation::get_all(&ctx.sy).await?;
 
         paginate(PaginationOptions {

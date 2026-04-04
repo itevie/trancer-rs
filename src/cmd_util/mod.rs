@@ -1,6 +1,6 @@
 use crate::cmd_util::arg_parser::{map_and_validate, CommandArgumentStruct, ParsedArguments};
 use crate::cmd_util::args::TrancerArguments;
-use serenity::all::{GuildChannel, GuildId, Message, Permissions};
+use serenity::all::{GuildChannel, GuildId, Message, Permissions, UserId};
 use serenity::builder::CreateMessage;
 use serenity::client::Context;
 use std::collections::HashMap;
@@ -106,6 +106,7 @@ pub struct TrancerRunnerContext {
     pub sy: Context,
     pub msg: Message,
     pub guild_id: GuildId,
+    pub user_id: UserId,
     pub channel: GuildChannel,
     pub server_settings: ServerSettings,
     pub user_data: UserData,

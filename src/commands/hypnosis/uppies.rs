@@ -18,7 +18,7 @@ command_file! {
             ..Default::default()
         },
 
-        handler: trancer_handler!(|ctx, args| {
+        handler: trancer_handler!(|_ctx, _args| {
             let mut rng = rand::thread_rng();
             let item = PHRASES.get(rng.gen_range(0..PHRASES.len())).unwrap();
             Ok(TrancerResponseType::Content(item.to_string()))

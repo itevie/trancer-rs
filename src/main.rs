@@ -73,7 +73,7 @@ async fn main() {
     string.push_str("level up reward = eco_reward * level\n");
     string.push_str(&format!("{:?}", CONFIG.xp));
 
-    fs::write(
+    let _ = fs::write(
         "/home/isabella/Documents/projects/rust/trancer-rs/balance.txt",
         string,
     );

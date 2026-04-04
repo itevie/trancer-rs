@@ -5,14 +5,11 @@ use crate::util::cached_usernames::get_cached_username;
 use crate::util::db_date::DbDate;
 use crate::util::embeds::create_embed;
 use crate::util::pagination::{paginate, Field, PaginationDataType, PaginationOptions};
-use chrono::format::Numeric::Timestamp;
-use chrono::{DateTime, Utc};
 use rusqlite::Error::QueryReturnedNoRows;
 use serenity::all::{
     Channel, ChannelId, Context, CreateEmbed, CreateEmbedFooter, GuildId, Message, MessageId, User,
     UserId,
 };
-use serenity::builder::GetMessages;
 
 impl_from_row!(Quote, QuoteField {
    id: u32,

@@ -117,9 +117,9 @@ async fn make_dawn_message_components(
     let image_bytes = dawn.make_dawn_image();
     let attachment = CreateAttachment::bytes(image_bytes, "dawn.png");
 
-    let imageEmbed = embed.image("attachment://dawn.png");
+    let image_embed = embed.image("attachment://dawn.png");
 
-    Ok((imageEmbed, buttons, attachment))
+    Ok((image_embed, buttons, attachment))
 }
 
 async fn edit_dawn_message(
