@@ -4,6 +4,7 @@ use crate::trancer_config::all_pronouns::ALL_PRONOUNS;
 use crate::util::config::CONFIG;
 use chrono::{DateTime, TimeZone};
 use serenity::all::{Permissions, User};
+use std::collections::HashMap;
 use std::fmt::Display;
 
 pub fn pronoun<S: Into<String>>(user1: &User, user2: &User, same_prn: S, diff_prn: S) -> String {
@@ -213,4 +214,50 @@ pub fn englishify_list(items: Vec<String>, use_or: bool) -> String {
     }
 
     finished.clone()
+}
+
+pub struct CurlyStringParts {
+    pub user: Option<User>,
+    pub user_id: Option<String>,
+    pub user_username: Option<String>,
+}
+
+pub fn replace_curly_string(s: String, given_parts: CurlyStringParts) -> String {
+    // Build replacements
+    let replacements = [
+        (
+            "mention",
+            given_parts
+                .user
+                .as_ref()
+                .map(|u| format!("<@{}>", u.id))
+                .or(given_parts.user_id.as_ref().map(|id| format!("<@{}>", id))),
+        ),
+        (
+            "user_id",
+            given_parts
+                .user
+                .as_ref()
+                .map(|u| u.id.to_string())
+                .or(given_parts.user_id.clone()),
+        ),
+        (
+            "username",
+            given_parts
+                .user
+                .as_ref()
+                .map(|u| u.name.clone())
+                .or(given_parts.user_username.clone()),
+        ),
+    ];
+
+    // Apply replacements
+    let mut finished_string = s;
+    for (key, value) in replacements {
+        if let Some(val) = value {
+            finished_string = finished_string.replace(&format!("{{{}}}", key), &val);
+        }
+    }
+
+    finished_string
 }

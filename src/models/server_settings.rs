@@ -76,6 +76,22 @@ impl ServerSettings {
         }
     }
 
+    pub async fn fetch_all(ctx: &Context) -> rusqlite::Result<Vec<Self>> {
+        let data_lock = ctx.data.read().await;
+        let db = data_lock.get::<Database>().unwrap();
+
+        let result = db.get_many(
+            "SELECT * FROM server_settings",
+            &[],
+            ServerSettings::from_row,
+        );
+
+        match result {
+            Ok(result) => Ok(result),
+            Err(e) => Err(e),
+        }
+    }
+
     pub async fn create(ctx: &Context, server_id: GuildId) -> rusqlite::Result<Self> {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();

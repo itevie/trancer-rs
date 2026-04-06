@@ -32,9 +32,10 @@ command_file! {
         },
 
         handler: trancer_handler!(|ctx, args| {
+            println!("{}", args.date);
             let date = match parse_date(&args.date) {
                 Ok(ok) => ok,
-                Err(err) => return Ok(content_response("You need to give a date like YYYY-MM (2026-03), or YYYY-MM-DD (2026-03-25)\nThe thing that's wrong: ".to_owned() + &*err))
+                Err(err) => return Ok(content_response("You need to give a date like YYYY-MM-DD (03-25), or MM-DD (2026-03-25)\nThe thing that's wrong: ".to_owned() + &*err))
             };
 
             ctx.user_data.update_key(&ctx.sy, UserDataFields::birthday, date.clone()).await?;

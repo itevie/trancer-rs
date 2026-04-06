@@ -1,7 +1,7 @@
 use crate::cmd_util::TrancerError;
 use crate::database::Database;
 use crate::{enum_with_sql, impl_from_row};
-use chrono::{DateTime, Datelike, NaiveDate, TimeZone, Utc};
+use chrono::{DateTime, Datelike, Local, NaiveDate, TimeZone, Utc};
 use rusqlite::Error::QueryReturnedNoRows;
 use rusqlite::ToSql;
 use serenity::all::{GuildId, UserId};
@@ -51,6 +51,7 @@ impl_from_row!(UserData, UserDataFields {
     relationships: bool,
     count_banned: bool,
     birthday: Option<String>,
+    birthday_last_announced: Option<String>,
     talking_streak: u32,
     last_talking_streak: Option<String>,
     highest_talking_streak: u32,
@@ -106,6 +107,39 @@ impl UserData {
         };
 
         Ok(Some(next))
+    }
+
+    pub(crate) fn is_birthday_today(&self) -> bool {
+        let Some(birthday) = self.birthday.clone() else {
+            return false;
+        };
+
+        let today = Local::now().date_naive();
+        let today_month = today.month();
+        let today_day = today.day();
+
+        // Handle ????-MM-DD
+        if birthday.starts_with("????") {
+            let parts: Vec<&str> = birthday.split('-').collect();
+            if parts.len() != 3 {
+                return false;
+            }
+
+            let month = parts[1].parse::<u32>().ok();
+            let day = parts[2].parse::<u32>().ok();
+
+            return match (month, day) {
+                (Some(m), Some(d)) => m == today_month && d == today_day,
+                _ => false,
+            };
+        }
+
+        // Handle YYYY-MM-DD
+        if let Ok(date) = NaiveDate::parse_from_str(&birthday, "%Y-%m-%d") {
+            return date.month() == today_month && date.day() == today_day;
+        }
+
+        false
     }
 
     /// Fetch a UserData for a specific user
