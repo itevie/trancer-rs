@@ -11,7 +11,7 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
     let last_talk: DateTime<Utc> = if let Some(t) = ctx.user_data.last_talking_streak.clone() {
         t.parse()?
     } else {
-        Utc::now()
+        Utc::now() - Duration::days(1)
     };
 
     let now = Utc::now();
