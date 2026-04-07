@@ -16,7 +16,15 @@ pub struct TrancerConfig {
     pub channels: TrancerChannelsConfig,
     pub dawnagotchi: TrancerDawnagotchiConfig,
     pub counting: TrancerCountingConfig,
+    pub qotd: TrancerQotdConfig,
     pub persistent_messages: TrancerPersistentMessagesConfig,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TrancerQotdConfig {
+    pub hour: u32,
+    pub channel: Option<String>,
+    pub content: String,
 }
 
 #[derive(Debug, Deserialize)]

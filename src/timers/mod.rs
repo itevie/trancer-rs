@@ -7,6 +7,7 @@ use tracing::{error, instrument};
 mod birthday_checker;
 mod change_status;
 mod persistent_messages;
+mod qotd;
 mod reload_cached_usernames;
 
 macro_rules! timer {
@@ -32,6 +33,7 @@ pub fn start_all(ctx: Context) {
     timer!(30, reload_cached_usernames::run, ctx.clone());
     timer!(60 * 30, persistent_messages::run, ctx.clone());
     timer!(60 * 120, birthday_checker::run, ctx.clone());
+    timer!(60 * 60 * 12, qotd::run, ctx.clone());
 }
 
 #[instrument]

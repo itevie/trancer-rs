@@ -27,6 +27,11 @@ play_time_add = 14400000
 [analytics]
 enabled = true
 
+[qotd]
+hour = 14
+channel = "1257430062723108865"
+content = "<@&1257477180858962013>"
+
 [xp]
 min = 0
 max = 5

@@ -65,7 +65,6 @@ command_file! {
             let item = get_item_name(args.item)?;
             AquiredItem::give_item_to(&ctx.sy, ctx.msg.author.id, item.id, wanted_amount).await?;
 
-
             Ok(TrancerResponseType::Content(format!(
                 "You crafted {} for {}",
                 item_text(item, wanted_amount),
