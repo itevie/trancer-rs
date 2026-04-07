@@ -3,6 +3,7 @@ use crate::commands;
 use crate::models::economy::Economy;
 use crate::models::persistent_messages::{PersistentMessages, PersistentMessagesFields};
 use crate::models::server_settings::ServerSettings;
+use crate::models::user_data::UserData;
 use crate::util::config::CONFIG;
 use crate::util::embeds::create_embed;
 use crate::util::leaderboard::{leaderboard_string, LeaderboardFormatter};
@@ -22,23 +23,33 @@ pub async fn run(ctx: Context) -> Result<(), TrancerError> {
         let mut message =
             get_message(&ctx, "economy".to_string(), economy_channel, server_id).await?;
 
-        let data = Economy::fetch_all(&ctx)
+        let eco_data = Economy::fetch_all(&ctx)
             .await?
             .iter()
             .map(|x| (x.balance, x.user_id.clone()))
             .collect::<Vec<(i32, String)>>();
-        let mut l_str = leaderboard_string(data, LeaderboardFormatter::Eco);
-        l_str.truncate(10);
+        let mut eco_l_str = leaderboard_string(eco_data, LeaderboardFormatter::Eco);
+        eco_l_str.truncate(10);
+
+        let streak_data = UserData::fetch_for_server(&ctx, server_id)
+            .await?
+            .iter()
+            .map(|x| (x.talking_streak as i32, x.user_id.clone()))
+            .collect::<Vec<(i32, String)>>();
+        let mut streak_l_str = leaderboard_string(
+            streak_data,
+            LeaderboardFormatter::Suffix("days".to_string()),
+        );
+        streak_l_str.truncate(10);
 
         message
             .edit(
                 &ctx.http,
                 EditMessage::new()
-                    .embed(
-                        create_embed()
-                            .title("Top 10 Economy")
-                            .description(l_str.join("\n")),
-                    )
+                    .embed(create_embed().title("Top 10...").fields([
+                        ("Economy", eco_l_str.join("\n"), true),
+                        ("Streaks", streak_l_str.join("\n"), true),
+                    ]))
                     .content(""),
             )
             .await?;
