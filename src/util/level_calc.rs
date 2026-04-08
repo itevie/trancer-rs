@@ -43,7 +43,7 @@ pub fn calc_everything(xp: u32) -> CalcEverything {
     let progress = if needed_xp == 0 {
         100.0
     } else {
-        ((xp - current_level_xp) as f64 / needed_xp as f64) * 100.0
+        (xp.saturating_sub(current_level_xp) as f64 / needed_xp as f64) * 100.0
     };
     let amount_progress = next_level_xp - xp;
 

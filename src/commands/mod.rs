@@ -12,6 +12,7 @@ mod economy;
 mod fun;
 mod help;
 mod hypnosis;
+mod images;
 mod items;
 mod quotes;
 mod server;
@@ -41,7 +42,8 @@ cmd_import_map!(
     items,
     quotes,
     swear_jar,
-    dawnagotchi
+    dawnagotchi,
+    images
 );
 
 #[macro_export]

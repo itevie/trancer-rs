@@ -1,12 +1,14 @@
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
 use crate::models::economy::MoneyAddReason;
+use crate::models::level_role::LevelRole;
 use crate::models::user_data::UserDataFields;
 use crate::reply;
 use crate::util::config::CONFIG;
-use crate::util::lang::currency;
+use crate::util::lang::{currency, englishify_list};
 use crate::util::level_calc::calculate_level;
-use crate::util::other::random_range;
-use chrono::{DateTime, Utc};
+use crate::util::other::{give_role, random_range};
+use chrono::{DateTime, Duration, Utc};
+use serenity::all::RoleId;
 use serenity::builder::CreateMessage;
 use serenity::prelude::TypeMapKey;
 use std::collections::HashMap;
@@ -56,6 +58,7 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
         .increment(&ctx.sy, UserDataFields::xp, award as i32)
         .await?;
     let post_level = calculate_level(ctx.user_data.xp + award);
+    println!("{pre_level} {post_level} {award}");
 
     if pre_level != post_level && ctx.server_settings.level_notifications {
         let mut reward: Vec<String> = vec![];
@@ -66,14 +69,28 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
             ctx.economy
                 .add_money(&ctx.sy, amount, Some(MoneyAddReason::Messaging))
                 .await?;
+            println!("Add {}", amount);
         }
 
-        // TODO: Add level roles
+        if let Some(level_role) =
+            LevelRole::fetch_by_level(&ctx.sy, ctx.guild_id, post_level).await?
+        {
+            if let Some(role_id) = level_role.role_id {
+                let roles = ctx.guild_id.roles(&ctx.sy.http).await?;
+                let role_id = role_id.parse::<u64>()?;
+                // TODO: Handle error properly
+
+                if let Some(role) = roles.iter().find(|r| r.0.get() == role_id) {
+                    give_role(&ctx.sy, &ctx.msg.member(&ctx.sy.http).await?, role.1).await?;
+                    reward.push(format!("role {}", role.1.name));
+                }
+            }
+        }
 
         reply!(ctx, CreateMessage::new().content(
             format!("Well-done! You levelled up from level **{pre_level}** to **{post_level}**! :cyclone:{}",
                 if !reward.is_empty() {
-                    format!("\n\nYou got: {}", reward.join(", "))
+                    format!("\n\nYou got: {}", englishify_list(reward.clone(), false))
                 } else {
                     "".to_string()
                 }

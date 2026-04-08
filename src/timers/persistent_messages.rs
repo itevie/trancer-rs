@@ -34,6 +34,8 @@ pub async fn run(ctx: Context) -> Result<(), TrancerError> {
         let streak_data = UserData::fetch_for_server(&ctx, server_id)
             .await?
             .iter()
+            .filter(|x| x.talking_streak > 0)
+            .map(|x| x.clone())
             .map(|x| (x.talking_streak as i32, x.user_id.clone()))
             .collect::<Vec<(i32, String)>>();
         let mut streak_l_str = leaderboard_string(

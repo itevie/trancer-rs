@@ -26,10 +26,6 @@ pub async fn run(ctx: Context) -> Result<(), TrancerError> {
         .unwrap_or(Local::now() - Duration::days(1));
     let now = Local::now();
 
-    println!("{}", now);
-    println!("{}", time);
-    println!("{}", now.hour());
-
     if (now - time) > Duration::days(1) && now.hour() == CONFIG.qotd.hour {
         let all_questions = QotdQuestion::fetch_all(&ctx, CONFIG.server.id.parse()?)
             .await?

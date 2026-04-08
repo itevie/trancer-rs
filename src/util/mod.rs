@@ -4,6 +4,7 @@ pub mod config;
 pub mod db_date;
 pub mod define;
 pub mod embeds;
+pub mod image_gen;
 pub mod lang;
 pub mod leaderboard;
 pub mod level_calc;

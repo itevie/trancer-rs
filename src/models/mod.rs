@@ -11,6 +11,7 @@ pub mod favourite_spiral;
 pub mod giveaway;
 pub mod giveaway_entry;
 pub mod item;
+pub mod level_role;
 pub mod persistent_messages;
 pub mod qotd_question;
 pub mod quote;
