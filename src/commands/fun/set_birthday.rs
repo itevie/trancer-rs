@@ -16,7 +16,7 @@ command_argument_struct!(GetQuoteArgs {
 command_file! {
     TrancerCommand::<GetQuoteArgs> {
         name: "setbirthday".to_string(),
-        t: TrancerCommandType::Quotes,
+        t: TrancerCommandType::Fun,
         description: "Set your birthday in Trancer".to_string(),
         details: TrancerDetails {
             aliases: None,
@@ -32,10 +32,9 @@ command_file! {
         },
 
         handler: trancer_handler!(|ctx, args| {
-            println!("{}", args.date);
             let date = match parse_date(&args.date) {
                 Ok(ok) => ok,
-                Err(err) => return Ok(content_response("You need to give a date like YYYY-MM-DD (03-25), or MM-DD (2026-03-25)\nThe thing that's wrong: ".to_owned() + &*err))
+                Err(err) => return Ok(content_response("You need to give a date like YYYY/MM/DD (2026/03/25), or MM/DD (03/25)\nThe thing that's wrong: ".to_owned() + &*err))
             };
 
             ctx.user_data.update_key(&ctx.sy, UserDataFields::birthday, date.clone()).await?;
@@ -47,12 +46,12 @@ command_file! {
 
 fn parse_date(input: &str) -> Result<String, String> {
     // Try full date (YYYY-M-D)
-    if let Ok(date) = NaiveDate::parse_from_str(input, "%Y-%-m-%-d") {
-        return Ok(date.format("%Y-%m-%d").to_string());
+    if let Ok(date) = NaiveDate::parse_from_str(input, "%Y/%-m/%-d") {
+        return Ok(date.format("%Y/%m/%d").to_string());
     }
 
     // Try MM-DD
-    let parts: Vec<&str> = input.split('-').collect();
+    let parts: Vec<&str> = input.split('/').collect();
     if parts.len() == 2 {
         let month: u32 = parts[0]
             .parse()
@@ -63,7 +62,7 @@ fn parse_date(input: &str) -> Result<String, String> {
 
         // Validate using a dummy year (leap-safe)
         if NaiveDate::from_ymd_opt(2024, month, day).is_some() {
-            return Ok(format!("????-{:02}-{:02}", month, day));
+            return Ok(format!("????-{:02}/{:02}", month, day));
         }
     }
 
