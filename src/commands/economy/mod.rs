@@ -11,6 +11,7 @@ mod pay;
 mod remove_money;
 mod rigged_coinflip;
 mod select_job;
+mod shop;
 mod xp;
 
 cmd_import_map!(
@@ -25,5 +26,6 @@ cmd_import_map!(
     fish,
     select_job,
     list_jobs,
+    shop,
     rigged_coinflip
 );
