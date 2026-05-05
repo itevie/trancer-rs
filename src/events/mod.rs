@@ -1,10 +1,12 @@
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
 use crate::Handler;
-use serenity::all::{Context, CreateMessage, EventHandler, Member, Message, Ready};
+use serenity::all::{Context, CreateMessage, EventHandler, GuildId, Member, Message, Ready, User};
 use serenity::async_trait;
 use tracing::error;
 
 mod guild_member_addition;
+mod guild_member_ban;
+mod guild_member_remove;
 mod message_create;
 mod ready;
 
@@ -20,6 +22,24 @@ impl EventHandler for Handler {
 
     async fn guild_member_addition(&self, ctx: Context, new_member: Member) {
         guild_member_addition::guild_member_addition(ctx, new_member).await;
+    }
+
+    async fn guild_member_removal(
+        &self,
+        ctx: Context,
+        guild_id: GuildId,
+        user: User,
+        _member_data_if_available: Option<Member>,
+    ) {
+        guild_member_remove::guild_member_remove(ctx, guild_id, user)
+            .await
+            .unwrap_or_else(|err| eprintln!("Guild Member Removal Error: {}", err))
+    }
+
+    async fn guild_ban_addition(&self, ctx: Context, guild_id: GuildId, user: User) {
+        guild_member_ban::guild_member_ban(ctx, guild_id, user)
+            .await
+            .unwrap_or_else(|err| eprintln!("Guild Member Ban Error: {}", err))
     }
 }
 
