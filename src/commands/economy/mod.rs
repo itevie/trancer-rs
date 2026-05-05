@@ -6,9 +6,11 @@ mod craft;
 mod daily;
 mod fish;
 mod leaderboard_money;
+mod list_jobs;
 mod pay;
 mod remove_money;
 mod rigged_coinflip;
+mod select_job;
 mod xp;
 
 cmd_import_map!(
@@ -21,5 +23,7 @@ cmd_import_map!(
     add_money,
     remove_money,
     fish,
+    select_job,
+    list_jobs,
     rigged_coinflip
 );

@@ -294,6 +294,7 @@ pub fn parse_args(contents: String) -> ParsedArguments {
     let mut chars = contents.chars().peekable();
     let mut wick: Option<String> = None;
     let mut in_wick_name = false;
+    let mut in_quotes = false;
     let mut current = String::new();
 
     while let Some(c) = chars.next() {
@@ -303,27 +304,42 @@ pub fn parse_args(contents: String) -> ParsedArguments {
                     current.push(next);
                 }
             }
+
+            '"' => {
+                in_quotes = !in_quotes;
+            }
+
             ' ' => {
-                if wick.is_some() {
+                if in_quotes {
+                    current.push(' ');
+                } else if wick.is_some() {
                     continue;
                 } else if in_wick_name {
                     wick = Some(std::mem::take(&mut current));
                     in_wick_name = false;
                 } else {
-                    parsed.args.push(std::mem::take(&mut current));
+                    if !current.is_empty() {
+                        parsed.args.push(std::mem::take(&mut current));
+                    }
                 }
             }
+
             '?' => {
-                if let Some(w) = wick.take() {
+                if in_quotes {
+                    current.push('?');
+                } else if let Some(w) = wick.take() {
                     parsed.wick.insert(w, std::mem::take(&mut current));
                     in_wick_name = true;
                 } else if !in_wick_name {
-                    parsed.args.push(std::mem::take(&mut current));
+                    if !current.is_empty() {
+                        parsed.args.push(std::mem::take(&mut current));
+                    }
                     in_wick_name = true;
                 } else {
                     current.clear();
                 }
             }
+
             _ => current.push(c),
         }
     }
