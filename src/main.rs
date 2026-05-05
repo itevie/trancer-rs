@@ -106,6 +106,8 @@ async fn main() {
         //     &[],
         // );
 
+        println!("{:?}", env::var("S3_ENDPOINT"));
+
         data.insert::<Database>(db);
         data.insert::<XpLastAwards>(Arc::default());
     }

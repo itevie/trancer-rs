@@ -10,4 +10,5 @@ pub mod leaderboard;
 pub mod level_calc;
 pub mod other;
 pub mod pagination;
+pub mod r3;
 pub mod random_rewards;

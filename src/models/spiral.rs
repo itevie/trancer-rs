@@ -1,8 +1,10 @@
 use crate::cmd_util::TrancerError;
 use crate::database::Database;
 use crate::impl_from_row;
+use crate::models::user_data::UserDataFields;
 use rand::Rng;
-use serenity::all::Message;
+use rusqlite::ToSql;
+use serenity::all::{Message, UserId};
 use serenity::client::Context;
 
 impl_from_row!(Spiral, SpiralFiends {
@@ -14,6 +16,24 @@ impl_from_row!(Spiral, SpiralFiends {
 });
 
 impl Spiral {
+    pub async fn add(
+        ctx: &Context,
+        link: String,
+        author: UserId,
+        file_name: String,
+    ) -> rusqlite::Result<Spiral> {
+        let data_lock = ctx.data.read().await;
+        let db = data_lock.get::<Database>().unwrap();
+
+        let mut result = db.get_many(
+            "INSERT INTO spirals (link, sent_by, file_name) VALUES (?1, ?2, ?3) RETURNING *;",
+            &[&link, &author.get(), &file_name],
+            Spiral::from_row,
+        )?;
+
+        Ok(result.remove(0))
+    }
+
     pub async fn get_all(ctx: &Context) -> rusqlite::Result<Vec<Spiral>> {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
@@ -25,6 +45,19 @@ impl Spiral {
         let all = Spiral::get_all(ctx).await?;
         let mut rng = rand::thread_rng();
         Ok(all[rng.gen_range(0..all.len())].clone())
+    }
+
+    pub async fn get_by_link(ctx: &Context, link: &str) -> rusqlite::Result<Option<Spiral>> {
+        let data_lock = ctx.data.read().await;
+        let db = data_lock.get::<Database>().unwrap();
+
+        let spirals = db.get_many(
+            "SELECT * FROM spirals WHERE link = ?1",
+            &[&link],
+            Spiral::from_row,
+        )?;
+
+        Ok(spirals.into_iter().next())
     }
 
     pub async fn get_from_message(
@@ -49,5 +82,22 @@ impl Spiral {
         Err(TrancerError::Generic(
             "Could not find a spiral from that message".to_string(),
         ))
+    }
+
+    pub async fn update_key<T>(
+        &self,
+        ctx: &Context,
+        key: SpiralFiends,
+        value: T,
+    ) -> rusqlite::Result<()>
+    where
+        T: ToSql + Send + Sync + 'static,
+    {
+        let data_lock = ctx.data.read().await;
+        let db = data_lock.get::<Database>().unwrap();
+        let sql = format!("UPDATE spirals SET {} = ?1 WHERE id = ?2", key.as_str());
+
+        db.run(&sql, &[&value, &self.id])?;
+        Ok(())
     }
 }
