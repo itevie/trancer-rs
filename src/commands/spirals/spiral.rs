@@ -25,25 +25,20 @@ command_file! {
         handler: trancer_handler!(|ctx, _args| {
             let spiral = Spiral::get_random(&ctx.sy).await?;
 
-            let fav_id = format!("spiral_fav:{}", spiral.id);
-            let info_id = format!("spiral_info:{}", spiral.id);
-
-            // Send message with buttons
             let msg = ctx.msg.channel_id.send_message(&ctx.sy.http, CreateMessage::new().content(&spiral.link)
                 .components(
                     vec![CreateActionRow::Buttons(vec![
-                         CreateButton::new(&fav_id)
+                         CreateButton::new("favourite")
                             .emoji('⭐')
                             .style(ButtonStyle::Primary),
 
-                        CreateButton::new(&info_id)
+                        CreateButton::new("info")
                             .emoji('ℹ')
                             .style(ButtonStyle::Secondary),
                     ])]
                 )
             ).await?;
 
-            // Listen for button clicks (only for this message)
             while let Some(interaction) = ComponentInteractionCollector::new(&ctx.sy)
                 .message_id(msg.id)
                 .timeout(Duration::from_secs(60))
@@ -51,7 +46,7 @@ command_file! {
             {
                 let custom_id = &interaction.data.custom_id;
 
-                if let Some(id) = custom_id.strip_prefix("spiral_fav:") {
+                if custom_id == "favourite" {
                     if FavouriteSpiral::exists(&ctx.sy, interaction.user.id, spiral.id).await? {
                         interaction.create_response(
                             &ctx.sy.http,
@@ -75,7 +70,7 @@ command_file! {
                         ).await?;
                 }
 
-                if let Some(id) = custom_id.strip_prefix("spiral_info:") {
+                if custom_id == "info" {
 
                 }
             }

@@ -99,7 +99,7 @@ command_file! {
 }
 
 pub async fn download_image(url: &str, folder: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let url = &normalize_imgur(url);
+    let url = &normalize_tenor(&normalize_imgur(url));
     let response = reqwest::get(url).await?;
 
     if !response.status().is_success() {
@@ -150,5 +150,23 @@ fn normalize_imgur(url: &str) -> String {
         let id = url.split('/').last().unwrap_or("");
         return format!("https://i.imgur.com/{}.gif", id);
     }
+    url.to_string()
+}
+
+fn normalize_tenor(url: &str) -> String {
+    // Already direct media link
+    if url.contains("media.tenor.com") {
+        return url.to_string();
+    }
+
+    // Handle tenor.com/view/...-ID
+    if url.contains("tenor.com") {
+        if let Some(id) = url.split('-').last() {
+            // Strip query params if any
+            let id = id.split('?').next().unwrap_or(id);
+            return format!("https://media.tenor.com/{}/tenor.gif", id);
+        }
+    }
+
     url.to_string()
 }

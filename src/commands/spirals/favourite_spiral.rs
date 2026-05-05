@@ -19,7 +19,7 @@ command_file! {
 
         handler: trancer_handler!(|ctx, _args| {
             let Some(spiral) = FavouriteSpiral::get_random_for(&ctx.sy, ctx.msg.author.id).await? else {
-              return Ok(content_response(warn(format!("You do not have any favourite spirals!\n\nReply to a spiral the bot has sent with `{}afs`", ctx.server_settings.prefix))))
+              return Ok(content_response(warn(format!("You do not have any favourite spirals!\n\nReply to a spiral the bot has sent with `{}afs` or press the favourite button!", ctx.server_settings.prefix))))
             };
 
             Ok(TrancerResponseType::Content(spiral.link))
