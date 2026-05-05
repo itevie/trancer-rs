@@ -9,7 +9,6 @@ use crate::util::embeds::create_embed;
 use crate::util::lang::list;
 use crate::util::level_calc::calculate_level;
 use crate::util::pagination::{paginate, Field, PaginationDataType, PaginationOptions};
-use serenity::builder::CreateEmbedFooter;
 
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {

@@ -3,9 +3,8 @@ use crate::cmd_util::args::{Argument, ArgumentDetails, StringArgTypeFlag, Trance
 use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{content_response, trancer_handler, TrancerDetails};
-use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
+use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError};
 use crate::commands::ArgType;
-use crate::commands::CommandHasNoArgs;
 use crate::models::economy::EconomyFields;
 use crate::trancer_config::all_jobs::ALL_JOBS;
 use crate::util::level_calc::calculate_level;

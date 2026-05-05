@@ -8,7 +8,6 @@ use crate::models::couting::ServerCount;
 use crate::util::cached_usernames::get_cached_username;
 use crate::util::embeds::create_embed;
 use crate::util::pagination::{paginate, PaginationDataType, PaginationOptions};
-use chrono::Utc;
 
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {

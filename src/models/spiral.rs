@@ -1,7 +1,6 @@
 use crate::cmd_util::TrancerError;
 use crate::database::Database;
 use crate::impl_from_row;
-use crate::models::user_data::UserDataFields;
 use rand::Rng;
 use rusqlite::ToSql;
 use serenity::all::{Message, UserId};

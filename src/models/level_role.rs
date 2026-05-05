@@ -1,6 +1,5 @@
 use crate::database::Database;
 use crate::impl_from_row;
-use log::Level;
 use rusqlite::Error;
 use serenity::all::{Context, GuildId};
 

@@ -8,7 +8,7 @@ use crate::util::config::CONFIG;
 use crate::util::embeds::create_embed;
 use crate::util::leaderboard::{leaderboard_string, LeaderboardFormatter};
 use rand::prelude::{SliceRandom, StdRng};
-use rand::{thread_rng, SeedableRng};
+use rand::SeedableRng;
 use serenity::all::{
     ChannelId, Context, CreateMessage, EditMessage, GuildChannel, GuildId, Message,
 };
@@ -121,7 +121,7 @@ async fn setup_persistent_message(
 ) -> Result<PersistentMessages, TrancerError> {
     let channel = channel_id.to_channel(&ctx.http).await?;
 
-    let guild_channel: GuildChannel = match channel {
+    let _guild_channel: GuildChannel = match channel {
         serenity::model::channel::Channel::Guild(gc) => gc,
         _ => return Err(TrancerError::Generic("Not a guild channel".to_string())),
     };

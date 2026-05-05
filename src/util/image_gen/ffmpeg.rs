@@ -1,9 +1,8 @@
 use crate::cmd_util::TrancerError;
 use crate::util::config::CONFIG;
 use std::fs;
-use std::fs::exists;
 use std::path::{Path, PathBuf};
-use std::process::{Command, ExitStatus};
+use std::process::Command;
 
 fn get_font_file() -> Result<&'static str, TrancerError> {
     let fonts = [

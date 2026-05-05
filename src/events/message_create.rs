@@ -10,11 +10,9 @@ use crate::models::user_data::UserData;
 use crate::util::cached_usernames::set_cached_username;
 use crate::util::embeds::create_embed;
 use crate::util::lang::{permission_names, warn};
-use crate::util::pagination::paginate;
 use crate::{commands, reply, something_happened};
 use chrono::{DateTime, Utc};
 use chrono_humanize::HumanTime;
-use config::Map;
 use serenity::all::{
     Channel, ChannelType, Context, CreateMessage, EventHandler, Message, ReactionType, Timestamp,
 };

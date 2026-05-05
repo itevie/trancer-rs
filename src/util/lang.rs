@@ -4,7 +4,6 @@ use crate::trancer_config::all_pronouns::ALL_PRONOUNS;
 use crate::util::config::CONFIG;
 use chrono::{DateTime, TimeZone};
 use serenity::all::{Permissions, User};
-use std::collections::HashMap;
 use std::fmt::Display;
 
 pub fn pronoun<S: Into<String>>(user1: &User, user2: &User, same_prn: S, diff_prn: S) -> String {

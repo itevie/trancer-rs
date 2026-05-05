@@ -1,15 +1,12 @@
-use crate::cmd_util::arg_parser::{CommandArgumentStruct, PCACV};
 use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{content_response, trancer_handler, TrancerDetails};
-use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
+use crate::cmd_util::{TrancerCommand, TrancerError};
+use crate::command_file;
 use crate::commands::CommandHasNoArgs;
 use crate::models::spiral::{Spiral, SpiralFiends};
 use crate::util::config::CONFIG;
 use crate::util::r3::{create_r2_client, upload_to_r2};
-use crate::{command_argument_struct, command_file};
-use dotenvy::dotenv;
-use std::collections::HashMap;
 use std::env;
 use std::path::Path;
 use tokio::io::AsyncWriteExt;

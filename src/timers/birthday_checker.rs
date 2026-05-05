@@ -4,7 +4,7 @@ use crate::models::user_data::{UserData, UserDataFields};
 use crate::util::cached_usernames::get_cached_username;
 use crate::util::lang::{replace_curly_string, CurlyStringParts};
 use chrono::{DateTime, Local};
-use serenity::all::{Channel, ChannelId, ChannelType, Context, CreateMessage, GuildId, UserId};
+use serenity::all::{Channel, ChannelId, ChannelType, Context, CreateMessage, GuildId};
 use tracing::instrument;
 
 #[instrument]

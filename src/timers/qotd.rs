@@ -4,12 +4,10 @@ use crate::models::state_config::{StateConfig, StateConfigFields};
 use crate::util::cached_usernames::get_cached_username;
 use crate::util::config::CONFIG;
 use crate::util::embeds::create_embed;
-use chrono::{DateTime, Duration, Local, Timelike, Utc};
+use chrono::{DateTime, Duration, Local, Timelike};
 use rand::prelude::{SliceRandom, StdRng};
 use rand::SeedableRng;
-use serenity::all::{
-    Channel, ChannelId, ChannelType, Context, CreateEmbed, CreateEmbedFooter, CreateMessage,
-};
+use serenity::all::{Channel, ChannelId, ChannelType, Context, CreateEmbedFooter, CreateMessage};
 use tracing::instrument;
 
 #[instrument]
