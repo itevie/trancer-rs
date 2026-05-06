@@ -65,7 +65,6 @@ command_file! {
 
                 let spiral = Spiral::add(&ctx.sy, link.clone(), reference.author.id, path.clone()).await?;
 
-                println!("{:?}", env::var("S3_ENDPOINT"));
                 if let Ok(_) = env::var("S3_ENDPOINT") {
                     // Upload to S3 bucket
                     let key = format!("spirals/{}.gif", spiral.id);

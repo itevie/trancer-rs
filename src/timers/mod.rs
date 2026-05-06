@@ -5,6 +5,7 @@ use tokio::time::interval;
 use tracing::{error, instrument};
 
 mod birthday_checker;
+mod bump_reminder;
 mod change_status;
 mod persistent_messages;
 mod qotd;
@@ -34,6 +35,7 @@ pub fn start_all(ctx: Context) {
     timer!(60 * 30, persistent_messages::run, ctx.clone());
     timer!(60 * 120, birthday_checker::run, ctx.clone());
     timer!(60 * 60 * 12, qotd::run, ctx.clone());
+    timer!(60 * 10, bump_reminder::run, ctx.clone());
 }
 
 #[instrument]

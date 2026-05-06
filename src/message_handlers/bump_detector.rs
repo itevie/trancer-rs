@@ -9,7 +9,7 @@ use crate::util::random_rewards::{
     englishify_random_reward, generate_random_rewards, give_random_reward, RandomRewardItemOptions,
     RandomRewardOptions,
 };
-use chrono::Utc;
+use chrono::{Local, Utc};
 use serenity::all::{CreateMessage, MessageInteractionMetadata};
 use tracing::{error, instrument};
 
@@ -42,20 +42,13 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
         .increment(&ctx.sy, UserDataFields::bumps, 1)
         .await?;
     ctx.server_settings
-        .update_key(
-            &ctx.sy,
-            ServerSettingsFields::last_bump,
-            Utc::now().to_rfc3339(),
-        )
-        .await?;
-    ctx.server_settings
         .update_key(&ctx.sy, ServerSettingsFields::bump_reminded, false)
         .await?;
     ctx.server_settings
         .update_key(
             &ctx.sy,
             ServerSettingsFields::last_bump,
-            command.user.id.to_string(),
+            Local::now().timestamp(),
         )
         .await?;
 
