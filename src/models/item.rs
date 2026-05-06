@@ -64,6 +64,18 @@ impl Item {
         ALL_ITEMS.get().unwrap().clone()
     }
 
+    pub fn get_by_name(name: &str) -> Item {
+        Item::get_all()
+            .iter()
+            .find(|x| x.name == name)
+            .unwrap()
+            .clone()
+    }
+
+    pub fn get_by_id(id: u32) -> Item {
+        Item::get_all().iter().find(|x| x.id == id).unwrap().clone()
+    }
+
     pub async fn get_all_db(ctx: &Context) -> rusqlite::Result<Vec<Item>> {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();

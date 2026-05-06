@@ -11,20 +11,14 @@ pub struct WorkJob {
 
 #[derive(Debug)]
 pub struct RandomRewardOptions {
-    pub currency: Option<RandomMinMax>,
+    pub currency: Option<(u32, u32)>,
     pub items: Option<ItemReward>,
 }
 
 #[derive(Debug)]
-pub struct RandomMinMax {
-    pub min: u32,
-    pub max: u32,
-}
-
-#[derive(Debug)]
 pub struct ItemReward {
-    pub pool: &'static [(&'static str, f32)],
-    pub count: RandomMinMax,
+    pub pool: &'static [(&'static str, f64)],
+    pub count: (u32, u32),
 }
 
 pub static ALL_JOBS: Lazy<HashMap<&'static str, WorkJob>> = Lazy::new(|| {
@@ -41,7 +35,7 @@ pub static ALL_JOBS: Lazy<HashMap<&'static str, WorkJob>> = Lazy::new(|| {
                 "You contemplated your life as a trash picker, anyway, here's your $r.",
             ],
             rewards: RandomRewardOptions {
-                currency: Some(RandomMinMax { min: 1, max: 20 }),
+                currency: Some((1, 20)),
                 items: Some(ItemReward {
                     pool: &[
                         ("dirt", 0.7),
@@ -50,7 +44,7 @@ pub static ALL_JOBS: Lazy<HashMap<&'static str, WorkJob>> = Lazy::new(|| {
                         ("rock", 0.2),
                         ("lottery-ticket", 0.01),
                     ],
-                    count: RandomMinMax { min: 0, max: 2 },
+                    count: (0, 2),
                 }),
             },
         },
@@ -67,7 +61,7 @@ pub static ALL_JOBS: Lazy<HashMap<&'static str, WorkJob>> = Lazy::new(|| {
                 "You found a revolutionary way to save $c, the manager gave you $r!",
             ],
             rewards: RandomRewardOptions {
-                currency: Some(RandomMinMax { min: 5, max: 30 }),
+                currency: Some((5, 30)),
                 items: Some(ItemReward {
                     pool: &[
                         ("rock", 0.9),
@@ -75,7 +69,7 @@ pub static ALL_JOBS: Lazy<HashMap<&'static str, WorkJob>> = Lazy::new(|| {
                         ("stone-pickaxe", 0.2),
                         ("emerald-pickaxe", 0.001),
                     ],
-                    count: RandomMinMax { min: 0, max: 3 },
+                    count: (0, 3),
                 }),
             },
         },
@@ -88,10 +82,10 @@ pub static ALL_JOBS: Lazy<HashMap<&'static str, WorkJob>> = Lazy::new(|| {
             description: "A worshipper for the Trancer gods",
             phrases: &["You prayed to the Trancer gods and they blessed you with $r"],
             rewards: RandomRewardOptions {
-                currency: Some(RandomMinMax { min: 10, max: 80 }),
+                currency: Some((10, 80)),
                 items: Some(ItemReward {
                     pool: &[("gold", 0.5), ("angle-fish", 0.3), ("diamond", 0.01)],
-                    count: RandomMinMax { min: 1, max: 3 },
+                    count: (1, 3),
                 }),
             },
         },

@@ -98,9 +98,9 @@ impl RandomRewardPresets {
 
 #[derive(Debug)]
 pub struct RandomRewardResult {
-    currency: u32,
+    pub currency: u32,
     /// Vec<(id, amount)>
-    items: HashMap<u32, u32>,
+    pub items: HashMap<u32, u32>,
 }
 
 pub async fn generate_random_rewards(

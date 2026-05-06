@@ -8,10 +8,12 @@ mod fish;
 mod leaderboard_money;
 mod list_jobs;
 mod pay;
+mod recipies;
 mod remove_money;
 mod rigged_coinflip;
 mod select_job;
 mod shop;
+mod work;
 mod xp;
 
 cmd_import_map!(
@@ -27,5 +29,7 @@ cmd_import_map!(
     select_job,
     list_jobs,
     shop,
+    recipies,
+    work,
     rigged_coinflip
 );
