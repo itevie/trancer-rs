@@ -1,3 +1,4 @@
+mod apod;
 mod birthdays;
 mod cowsay;
 mod eight_ball;
@@ -17,5 +18,6 @@ cmd_import_map!(
     cowsay,
     set_birthday,
     random_colour,
-    math_eval
+    math_eval,
+    apod
 );

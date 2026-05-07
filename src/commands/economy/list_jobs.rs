@@ -34,7 +34,7 @@ command_file! {
                         Field {
                             name: job.0.to_string(),
                             value: job.1.description.to_string() + "\n" + &*list(vec![
-                                ("Level Required", format!("{} ({})", job.1.level_required, if level > job.1.level_required {
+                                ("Level Required", format!("{} ({})", job.1.level_required, if level >= job.1.level_required {
                                     "✅"
                                 } else {
                                     ":x:"
