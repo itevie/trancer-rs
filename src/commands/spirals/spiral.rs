@@ -52,7 +52,9 @@ command_file! {
                             &ctx.sy.http,
                             CreateInteractionResponse::Message(
                                 CreateInteractionResponseMessage::new()
-                                    .content("You have already favourited this spiral!".to_string())
+                                    .content(format!(
+                                        "You have already favourited this spiral!\nType `{}rfs {}` to unfavourite", ctx.server_settings.prefix, spiral.id
+                                    ))
                                     .ephemeral(true),
                             )
                         ).await?;

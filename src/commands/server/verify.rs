@@ -1,10 +1,10 @@
 use crate::cmd_util::types::TrancerCommandType;
-use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{content_response, generic, trancer_handler, TrancerDetails};
+use crate::cmd_util::{CommandTrait, TrancerError};
 use crate::cmd_util::{TrancerCommand, TrancerResponseType};
 use crate::command_file;
 use crate::commands::CommandHasNoArgs;
-use crate::util::lang::warn;
+use crate::util::lang::{replace_curly_string, warn, CurlyStringParts};
 use crate::util::other::give_role;
 use serenity::all::{ChannelId, CreateMessage, Permissions, ReactionType, RoleId};
 
@@ -25,7 +25,10 @@ command_file! {
                 return Ok(content_response(warn("This server does not have a verify or a unverified role!")));
             }
 
-            let referenced_message = ctx.clone().msg.referenced_message.unwrap();
+            let Some(referenced_message) = ctx.clone().msg.referenced_message else {
+                return Err(TrancerError::NonScary("You need to reply to a message to verify a member!".to_string()));
+            };
+
             let member = ctx.guild_id.member(&ctx.sy, referenced_message.author.id).await.map_err(|x| generic(
                 format!("Failed to fetch member for verification: {}", x),
             ))?;
@@ -48,8 +51,13 @@ command_file! {
                     None => return Err(generic("The channel to send the verified message in is not a guild channel"))
                 };
 
-                // TODO: Make it replace the variables
-                channel.send_message(&ctx.sy, CreateMessage::new().content(msg)).await?;
+                channel.send_message(&ctx.sy, CreateMessage::new().content(
+                    replace_curly_string(msg, CurlyStringParts {
+                        user: Some(member.user.clone()),
+                        user_id: Some(member.user.id.to_string()),
+                        user_username: Some(member.user.name),
+                    })
+                )).await?;
             }
 
             referenced_message.react(&ctx.sy, ReactionType::Unicode("✅".to_string())).await?;

@@ -121,14 +121,19 @@ pub async fn message(ctx: Context, msg: Message) {
     }
 
     // ----- Command Checking -----
-    if !msg
+    let mention = format!("<@{}>", ctx.cache.current_user().id);
+
+    let contents = if msg
         .content
         .starts_with(context.server_settings.prefix.as_str())
     {
+        msg.content[context.server_settings.prefix.len()..].trim()
+    } else if msg.content.starts_with(&mention) {
+        msg.content[mention.len()..].trim()
+    } else {
         return;
-    }
+    };
 
-    let contents = msg.content[context.server_settings.prefix.len()..].trim();
     let commands = commands::init();
     let mut args = parse_args(contents.to_string());
 

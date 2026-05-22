@@ -80,7 +80,7 @@ command_file! {
     }
 }
 
-async fn make_dawn_message_components(
+pub async fn make_dawn_message_components(
     ctx: &TrancerRunnerContext,
 ) -> Result<(CreateEmbed, CreateActionRow, CreateAttachment), TrancerError> {
     let dawn = match Dawnagotchi::fetch(&ctx.sy, ctx.msg.author.id).await {
@@ -122,7 +122,7 @@ async fn make_dawn_message_components(
     Ok((image_embed, buttons, attachment))
 }
 
-async fn edit_dawn_message(
+pub async fn edit_dawn_message(
     ctx: &TrancerRunnerContext,
     to_edit: &mut Message,
 ) -> Result<(), TrancerError> {
@@ -140,7 +140,7 @@ async fn edit_dawn_message(
     Ok(())
 }
 
-async fn send_dawn_message(ctx: &TrancerRunnerContext) -> Result<Message, TrancerError> {
+pub async fn send_dawn_message(ctx: &TrancerRunnerContext) -> Result<Message, TrancerError> {
     let parts = make_dawn_message_components(&ctx).await?;
 
     let msg = ctx

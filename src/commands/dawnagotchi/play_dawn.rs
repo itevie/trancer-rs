@@ -3,6 +3,7 @@ use crate::cmd_util::CommandTrait;
 use crate::cmd_util::{content_response, trancer_handler, TrancerDetails};
 use crate::cmd_util::{TrancerCommand, TrancerResponseType};
 use crate::command_file;
+use crate::commands::dawnagotchi::get_dawnagotchi::send_dawn_message;
 use crate::commands::CommandHasNoArgs;
 use crate::models::dawnagotchi::Dawnagotchi;
 
@@ -22,6 +23,7 @@ command_file! {
             };
 
            dawn.play(&ctx.sy).await?;
+            send_dawn_message(&ctx).await?;
 
             Ok(TrancerResponseType::None)
         }),

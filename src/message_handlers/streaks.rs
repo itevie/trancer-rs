@@ -46,15 +46,20 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
     };
 
     if diff_days > 1 {
+        if ctx.user_data.talking_streak >= 5 {
+            let _ = reply!(
+                ctx,
+                CreateMessage::new().content(format!(
+                    ":x: Uh-oh! Your streak has been reset :(\nIt was at **{}**",
+                    ctx.user_data.talking_streak
+                ))
+            );
+        }
+
         ctx.user_data
             .update_key(&ctx.sy, UserDataFields::talking_streak, 0)
             .await?;
         set_time(now).await;
-
-        reply!(
-            ctx,
-            CreateMessage::new().content(":x: Uh-oh! Your streak has been reset :(")
-        )?;
     } else if diff_days == 0 {
         if let None = ctx.user_data.last_talking_streak {
             set_time(now - Duration::days(1)).await;
