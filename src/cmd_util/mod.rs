@@ -121,7 +121,7 @@ pub struct TrancerDetails {
     pub aliases: Option<Vec<String>>,
     pub flags: Option<Vec<TrancerFlag>>,
     pub arguments: Option<TrancerArguments>,
-    pub ratelimit: Option<u32>,
+    pub ratelimit: Option<u64>,
     pub requires_message_reference: bool,
     pub bot_permissions: Option<Permissions>,
     pub user_permissions: Option<Permissions>,

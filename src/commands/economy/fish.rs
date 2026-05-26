@@ -11,7 +11,9 @@ use crate::util::other::random_range;
 use crate::util::random_rewards::{
     englishify_random_reward, generate_random_rewards, give_random_reward, RandomRewardPresets,
 };
+use crate::util::units;
 use serenity::all::{CreateEmbedFooter, CreateMessage};
+use std::time::Duration;
 
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
@@ -20,6 +22,7 @@ command_file! {
         description: "Fish for some fishes in the open sea!".to_string(),
         details: TrancerDetails {
             aliases: Some(vec!["f".to_string()]),
+            ratelimit: Some(units::mins(15)),
             ..Default::default()
         },
 

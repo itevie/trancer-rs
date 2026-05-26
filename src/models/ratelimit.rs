@@ -9,7 +9,7 @@ impl_from_row!(
     Ratelimit,
     RatelimitField {
         user_id: String,
-        command_name: String,
+        command: String,
         last_used: String
     }
 );
@@ -24,7 +24,7 @@ impl Ratelimit {
         let db = data_lock.get::<Database>().unwrap();
 
         let result = db.get_one(
-            "SELECT * FROM ratelimits WHERE user_id = ?1 AND command_name = ?2 LIMIT 1",
+            "SELECT * FROM ratelimits WHERE user_id = ?1 AND command = ?2 LIMIT 1",
             &[&user_id.to_string(), &command_name],
             Ratelimit::from_row,
         );
@@ -32,7 +32,7 @@ impl Ratelimit {
         match result {
             Ok(ok) => Ok(ok),
             Err(QueryReturnedNoRows) => db.get_one(
-                "INSERT INTO ratelimits (user_id, command_name, last_used) VALUES (?1, ?2, ?3) RETURNING *",
+                "INSERT INTO ratelimits (user_id, command, last_used) VALUES (?1, ?2, ?3) RETURNING *",
                 &[&user_id.to_string(), &command_name.to_string(), &Utc.timestamp_opt(0, 0).unwrap().to_rfc3339()],
                 Ratelimit::from_row
             ),
@@ -49,7 +49,7 @@ impl Ratelimit {
         let db = data_lock.get::<Database>().unwrap();
 
         db.run(
-            "UPDATE ratelimits SET last_used = ?1 WHERE user_id = ?2 AND command_name = ?3",
+            "UPDATE ratelimits SET last_used = ?1 WHERE user_id = ?2 AND command = ?3",
             &[
                 &Utc::now().to_rfc3339(),
                 &user_id.to_string(),

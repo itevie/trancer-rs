@@ -1,6 +1,6 @@
-use crate::cmd_util::trancer_handler;
 use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::CommandTrait;
+use crate::cmd_util::{trancer_handler, TrancerDetails};
 use crate::cmd_util::{TrancerCommand, TrancerResponseType};
 use crate::command_file;
 use crate::commands::CommandHasNoArgs;
@@ -9,6 +9,7 @@ use crate::util::embeds::create_embed;
 use crate::util::random_rewards::{
     englishify_random_reward, generate_random_rewards, give_random_reward, RandomRewardPresets,
 };
+use crate::util::units;
 use serenity::all::CreateMessage;
 
 command_file! {
@@ -16,7 +17,10 @@ command_file! {
         name: "daily".to_string(),
         t: TrancerCommandType::Economy,
         description: "Get your daily reward of goodies!".to_string(),
-        details: Default::default(),
+        details: TrancerDetails {
+            ratelimit: Some(units::hours(24)),
+            ..Default::default()
+        },
 
         handler: trancer_handler!(|ctx, _args| {
             let rewards = generate_random_rewards(&ctx.sy, RandomRewardPresets::daily()).await?;

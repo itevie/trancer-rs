@@ -225,13 +225,19 @@ pub async fn message(ctx: Context, msg: Message) {
             .timestamp();
         let now = Utc::now().timestamp();
 
-        if now - prev < r as i64 {
+        let retry_at = prev + r as i64;
+
+        if now < retry_at {
             let _ = reply!(
                 context,
-                CreateMessage::new().embed(create_embed().title(format!(
-                    "Hey! You can't do that! Try again in **{}**",
-                    HumanTime::from(DateTime::from_timestamp(now, 0).unwrap())
-                )))
+                CreateMessage::new().embed(
+                    create_embed()
+                        .title("⏱️ Hey! You can't do that!")
+                        .description(format!(
+                            "Try again **{}**",
+                            HumanTime::from(DateTime::from_timestamp(retry_at, 0).unwrap())
+                        ))
+                )
             );
             return;
         }

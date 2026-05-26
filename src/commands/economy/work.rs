@@ -14,6 +14,7 @@ use crate::util::other::random_range;
 use crate::util::random_rewards::{
     generate_random_rewards, give_random_reward, RandomRewardItemOptions, RandomRewardOptions,
 };
+use crate::util::units;
 use rand::prelude::{SliceRandom, StdRng};
 use rand::SeedableRng;
 use serenity::all::CreateMessage;
@@ -26,6 +27,7 @@ command_file! {
         description: "Work for those special spirals!".to_string(),
         details: TrancerDetails {
             aliases: Some(vec!["w".to_string()]),
+            ratelimit: Some(units::mins(15)),
             ..Default::default()
         },
 

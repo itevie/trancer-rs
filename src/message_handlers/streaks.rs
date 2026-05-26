@@ -21,16 +21,6 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
 
     let diff_days = (today - last_day).num_days();
 
-    if ctx.user_data.talking_streak > ctx.user_data.highest_talking_streak {
-        ctx.user_data
-            .update_key(
-                &ctx.sy,
-                UserDataFields::highest_talking_streak,
-                ctx.user_data.talking_streak,
-            )
-            .await?;
-    };
-
     let set_time = async |now: DateTime<Utc>| {
         let result = ctx
             .user_data
@@ -46,7 +36,7 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
     };
 
     if diff_days > 1 {
-        if ctx.user_data.talking_streak >= 5 {
+        if ctx.user_data.talking_streak >= 5 && ctx.server_settings.streak_end_reactions {
             let _ = reply!(
                 ctx,
                 CreateMessage::new().content(format!(
@@ -57,7 +47,7 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
         }
 
         ctx.user_data
-            .update_key(&ctx.sy, UserDataFields::talking_streak, 0)
+            .update_key(&ctx.sy, UserDataFields::talking_streak, 1)
             .await?;
         set_time(now).await;
     } else if diff_days == 0 {
@@ -71,14 +61,17 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
                 .await?;
         }
 
+        let new_streak = ctx.user_data.talking_streak + 1;
+
         ctx.user_data
-            .update_key(
-                &ctx.sy,
-                UserDataFields::talking_streak,
-                ctx.user_data.talking_streak + 1,
-            )
+            .update_key(&ctx.sy, UserDataFields::talking_streak, new_streak)
             .await?;
-        set_time(now).await;
+
+        if new_streak > ctx.user_data.highest_talking_streak {
+            ctx.user_data
+                .update_key(&ctx.sy, UserDataFields::highest_talking_streak, new_streak)
+                .await?;
+        }
     }
 
     Ok(())
