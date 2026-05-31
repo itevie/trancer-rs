@@ -34,4 +34,4 @@ CREATE TABLE IF NOT EXISTS persistent_messages (
 );
 
 ALTER TABLE server_settings DROP last_bump;
-ALTER TABLE server_settings ADD last_bump INTEGER DEFAULT NULL;
+ALTER TABLE server_settings ADD last_bump TEXT DEFAULT NULL;

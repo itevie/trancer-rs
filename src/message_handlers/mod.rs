@@ -1,3 +1,4 @@
+mod absolute_cinema;
 mod analytics;
 mod bump_detector;
 mod counting;
@@ -23,5 +24,6 @@ pub async fn handle_message_handlers(ctx: &TrancerRunnerContext) -> Result<(), T
     trancer_english_commands::handle(ctx).await?;
     swear_jar::handle(ctx).await?;
     dawn_checker::handle(ctx).await?;
+    absolute_cinema::handle(ctx).await?;
     Ok(())
 }
