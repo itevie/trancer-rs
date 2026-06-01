@@ -1,5 +1,6 @@
 mod absolute_cinema;
 mod analytics;
+mod badge_checker;
 mod bump_detector;
 mod counting;
 mod dawn_checker;
@@ -25,5 +26,6 @@ pub async fn handle_message_handlers(ctx: &TrancerRunnerContext) -> Result<(), T
     swear_jar::handle(ctx).await?;
     dawn_checker::handle(ctx).await?;
     absolute_cinema::handle(ctx).await?;
+    badge_checker::handle(ctx).await?;
     Ok(())
 }

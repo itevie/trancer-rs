@@ -3,23 +3,28 @@ use crate::util::config::CONFIG;
 use crate::util::level_calc;
 use std::future::Future;
 use std::pin::Pin;
-use std::sync::LazyLock;
+use std::sync::{Arc, LazyLock};
 
+#[derive(Clone)]
 pub struct DefinedBadgesOptions {
     pub give_roles: Vec<&'static str>,
 }
 
+#[derive(Clone)]
 pub struct DefinedBadge {
     pub id: &'static str,
     pub name: &'static str,
     pub description: &'static str,
     pub emoji: &'static str,
-    pub check: Box<
-        dyn Fn(
-                TrancerRunnerContext,
-            ) -> Pin<Box<dyn Future<Output = Result<bool, TrancerError>> + Send>>
-            + Send
-            + Sync,
+    pub check: Arc<
+        Box<
+            dyn Fn(
+                    TrancerRunnerContext,
+                )
+                    -> Pin<Box<dyn Future<Output = Result<bool, TrancerError>> + Send>>
+                + Send
+                + Sync,
+        >,
     >,
     pub extra: Option<DefinedBadgesOptions>,
 }
@@ -31,7 +36,7 @@ macro_rules! badge {
             name: $name,
             description: $description,
             emoji: $emoji,
-            check: Box::new(|$ctx| Box::pin(async move { $body })),
+            check: Arc::new(Box::new(|$ctx| Box::pin(async move { $body }))),
             extra: $extra,
         }
     };
@@ -238,6 +243,14 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             "🇨🇵",
             None,
             |_ctx| Ok(false)
+        ),
+        badge!(
+            "pride2026",
+            "Pride 2026",
+            "Pride Month 2026",
+            "🏳️‍🌈",
+            None,
+            |_ctx| Ok(true)
         ),
     ]
 });
