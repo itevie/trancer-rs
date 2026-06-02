@@ -245,6 +245,14 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             |_ctx| Ok(false)
         ),
         badge!(
+            "newyears2026",
+            "New Years 2026",
+            "Survived 2025 (was in the server on 2026/01/01)",
+            "🗓️",
+            None,
+            |_ctx| Ok(false)
+        ),
+        badge!(
             "pride2026",
             "Pride 2026",
             "Pride Month 2026",

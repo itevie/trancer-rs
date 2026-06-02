@@ -35,3 +35,6 @@ CREATE TABLE IF NOT EXISTS persistent_messages (
 
 ALTER TABLE server_settings DROP last_bump;
 ALTER TABLE server_settings ADD last_bump TEXT DEFAULT NULL;
+
+CREATE UNIQUE INDEX idx_aquired_items_item_user
+    ON aquired_items(item_id, user_id);
