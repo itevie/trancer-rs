@@ -1,3 +1,4 @@
+use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::{TrancerError, TrancerResponseType, TrancerRunnerContext};
 use crate::commands::reply_response_type;
 use crate::util::define::handle_define_message;
@@ -29,13 +30,19 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
     };
 
     if let Some(what) = matches(&ctx.msg.content, "what is") {
-        reply_response_type(ctx, handle_define_message(ctx, what).await?).await
+        reply_response_type(
+            ctx,
+            handle_define_message(ctx, what).await?,
+            TrancerCommandType::Help,
+        )
+        .await
     }
 
     if matches(&ctx.msg.content, "is this true").is_some() {
         reply_response_type(
             ctx,
             TrancerResponseType::Content(if random_bool() { "Yes" } else { "No" }.to_string()),
+            TrancerCommandType::Help,
         )
         .await
     }

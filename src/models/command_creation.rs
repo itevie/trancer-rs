@@ -1,6 +1,7 @@
 use crate::database::Database;
 use crate::impl_from_row;
 use chrono::Utc;
+use serde::{Deserialize, Serialize};
 use serenity::client::Context;
 
 impl_from_row!(

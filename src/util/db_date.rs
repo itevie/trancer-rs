@@ -1,7 +1,8 @@
 use chrono::{DateTime, NaiveDateTime, TimeZone, Utc};
 use rusqlite::types::{FromSql, FromSqlError, FromSqlResult, ValueRef};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DbDate(pub DateTime<Utc>);
 
 // chatgpt

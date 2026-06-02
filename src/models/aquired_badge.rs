@@ -1,6 +1,7 @@
 use crate::database::Database;
 use crate::impl_from_row;
 use crate::trancer_config::all_badges::{DefinedBadge, ALL_DEFINED_BADGES};
+use serde::{Deserialize, Serialize};
 use serenity::all::UserId;
 use serenity::client::Context;
 

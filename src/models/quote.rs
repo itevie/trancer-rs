@@ -6,6 +6,7 @@ use crate::util::db_date::DbDate;
 use crate::util::embeds::create_embed;
 use crate::util::pagination::{paginate, Field, PaginationDataType, PaginationOptions};
 use rusqlite::Error::QueryReturnedNoRows;
+use serde::{Deserialize, Serialize};
 use serenity::all::{
     Channel, ChannelId, Context, CreateEmbed, CreateEmbedFooter, GuildId, Message, MessageId, User,
     UserId,

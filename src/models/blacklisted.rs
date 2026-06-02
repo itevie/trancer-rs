@@ -1,4 +1,5 @@
 use crate::{enum_with_sql, impl_from_row};
+use serde::{Deserialize, Serialize};
 
 enum_with_sql!(BlacklistType {
     Channel = "channel",

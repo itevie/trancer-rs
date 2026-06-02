@@ -12,6 +12,7 @@ pub mod giveaway;
 pub mod giveaway_entry;
 pub mod item;
 pub mod level_role;
+pub mod mission;
 pub mod persistent_messages;
 pub mod qotd_question;
 pub mod quote;
@@ -28,7 +29,7 @@ macro_rules! enum_with_sql {
     ($name:ident {$($f:ident = $str:expr),*}) => {
         use rusqlite::types::{FromSql, FromSqlResult, FromSqlError};
 
-        #[derive(Debug, Clone)]
+        #[derive(Debug, Clone, Serialize, Deserialize)]
         pub enum $name {
             $($f),*
         }

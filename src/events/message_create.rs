@@ -116,9 +116,13 @@ pub async fn message(ctx: Context, msg: Message) {
 
     add("Create context");
 
-    if let Err(err) = handle_message_handlers(&context).await {
-        error!("Failed while running message handlers (ignoring): {err}")
-    }
+    let context2 = context.clone();
+
+    tokio::spawn(async move {
+        if let Err(err) = handle_message_handlers(&context2).await {
+            error!("Failed while running message handlers (ignoring): {err}");
+        }
+    });
 
     // ----- Command Checking -----
     let mention = format!("<@{}>", ctx.cache.current_user().id);
@@ -299,5 +303,5 @@ pub async fn message(ctx: Context, msg: Message) {
     //     )
     // );
 
-    reply_response_type(&context, response).await
+    reply_response_type(&context, response, cmd.t()).await
 }

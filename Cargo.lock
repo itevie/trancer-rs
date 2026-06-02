@@ -4110,6 +4110,7 @@ dependencies = [
  "reqwest 0.12.22",
  "rusqlite",
  "serde",
+ "serde_json",
  "serenity",
  "sled",
  "tokio",

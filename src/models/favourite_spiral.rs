@@ -2,6 +2,7 @@ use crate::database::Database;
 use crate::impl_from_row;
 use crate::models::spiral::Spiral;
 use rand::Rng;
+use serde::{Deserialize, Serialize};
 use serenity::all::UserId;
 use serenity::client::Context;
 

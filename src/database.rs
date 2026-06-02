@@ -76,7 +76,8 @@ impl TypeMapKey for Database {
 #[macro_export]
 macro_rules! impl_from_row {
     ($struct_name:ident, $enum_name:ident { $( $field:ident : $typ:ty ),* $(,)? }) => {
-        #[derive(Debug, Clone)]
+
+        #[derive(Debug, Clone, Serialize, Deserialize)]
         pub struct $struct_name {
             $(
                 pub $field: $typ,

@@ -4,6 +4,7 @@ use crate::{enum_with_sql, impl_from_row};
 use chrono::{DateTime, Datelike, Local, NaiveDate, TimeZone, Utc};
 use rusqlite::Error::QueryReturnedNoRows;
 use rusqlite::ToSql;
+use serde::{Deserialize, Serialize};
 use serenity::all::{GuildId, UserId};
 use serenity::client::Context;
 use std::collections::HashMap;

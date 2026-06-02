@@ -5,6 +5,7 @@ use crate::util::config::CONFIG;
 use chrono::Utc;
 use image::ImageFormat;
 use rusqlite::ToSql;
+use serde::{Deserialize, Serialize};
 use serenity::all::{Context, UserId};
 use std::io::Cursor;
 

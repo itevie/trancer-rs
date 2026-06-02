@@ -3,6 +3,7 @@ use crate::impl_from_row;
 use crate::models::user_data::{UserData, UserDataFields};
 use crate::util::config::CONFIG;
 use chrono::Utc;
+use serde::{Deserialize, Serialize};
 use serenity::all::{ChannelId, Context, GuildId, UserId};
 
 impl_from_row!(ServerCount, ServerCountFields {

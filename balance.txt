@@ -60,17 +60,17 @@ lottery-ticket[None]: 250, 0, true
 ===== Crafting Recipies =====
 
 stone-pickaxe: rock: 3, stick: 1, 
-emerald-pickaxe: stick: 1, emerald: 3, 
+emerald-pickaxe: emerald: 3, stick: 1, 
 pendulum: stick: 1, emerald: 1, 
 
 ===== Rewards from commands =====
 
 Daily:
-Currency: 75-150
-Items (itemId:weight,): Any item can be given (1-7 items)
+Currency: 75-500
+Items (itemId:weight,): Any item can be given (1-10 items)
 
 ===== XP Config =====
 
 after = last lavel + after = every level's xp after
 level up reward = eco_reward * level
-TrancerXpConfig { min: 0, max: 5, levels: [25, 50, 75, 100, 150, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1600, 1800, 2000, 2500, 5000, 5500, 6000, 6500, 7000, 7500, 8000, 8500, 9000, 9500, 10000, 11000], after: 1500, exclude: ["1257420480953057321", "1257417475621130351", "1257426818479161394"], time_between: 120000, eco_reward: 100 }
+TrancerXpConfig { min: 0, max: 5, levels: [25, 50, 75, 100, 150, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1400, 1600, 1800, 2000, 2500, 5000, 5500, 6000, 6500, 7000, 7500, 8000, 8500, 9000, 9500, 10000, 11000], after: 1500, exclude: ["1257420480953057321", "1257417475621130351", "1257426818479161394"], time_between: 120, eco_reward: 100 }

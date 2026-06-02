@@ -3,6 +3,7 @@ use crate::database::Database;
 use crate::impl_from_row;
 use rand::Rng;
 use rusqlite::ToSql;
+use serde::{Deserialize, Serialize};
 use serenity::all::{Message, UserId};
 use serenity::client::Context;
 

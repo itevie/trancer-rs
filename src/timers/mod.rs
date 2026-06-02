@@ -18,12 +18,12 @@ macro_rules! timer {
             let mut ticker = interval(Duration::from_secs($amount));
 
             loop {
+                ticker.tick().await;
+
                 match ($func)(ctx2.clone()).await {
                     Ok(_) => (),
                     Err(err) => handle_error(err),
                 }
-
-                ticker.tick().await;
             }
         })
     };

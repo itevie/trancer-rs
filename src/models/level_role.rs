@@ -1,6 +1,7 @@
 use crate::database::Database;
 use crate::impl_from_row;
 use rusqlite::Error;
+use serde::{Deserialize, Serialize};
 use serenity::all::{Context, GuildId};
 
 impl_from_row!(LevelRole, LevelRoleFields {

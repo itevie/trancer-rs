@@ -46,7 +46,7 @@ exclude = [
     "1257417475621130351",
     "1257426818479161394",
 ]
-time_between = 120000
+time_between = 120
 eco_reward = 100
 
 [economy]
@@ -58,7 +58,7 @@ currency_max = 200
 
 [payouts.daily]
 currency_min = 75
-currency_max = 150
+currency_max = 500
 
 [payouts.dawn]
 caring_min = 20

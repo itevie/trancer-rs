@@ -1,6 +1,7 @@
 use crate::database::Database;
 use crate::impl_from_row;
 use rusqlite::ToSql;
+use serde::{Deserialize, Serialize};
 use serenity::all::Context;
 
 impl_from_row!(StateConfig, StateConfigFields {
@@ -16,13 +17,16 @@ impl StateConfig {
 
         match db.get_one("SELECT * FROM config;", &[], StateConfig::from_row) {
             Ok(ok) => ok,
-            Err(_) => db
-                .get_one(
-                    "INSERT INTO config DEFAULT VALUES RETURNING *",
-                    &[],
-                    StateConfig::from_row,
-                )
-                .unwrap(),
+            Err(e) => {
+                println!("{:?}", e);
+                return db
+                    .get_one(
+                        "INSERT INTO config DEFAULT VALUES RETURNING *",
+                        &[],
+                        StateConfig::from_row,
+                    )
+                    .unwrap();
+            }
         }
     }
 

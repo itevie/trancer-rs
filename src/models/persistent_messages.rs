@@ -1,6 +1,7 @@
 use crate::database::Database;
 use crate::impl_from_row;
 use rusqlite::ToSql;
+use serde::{Deserialize, Serialize};
 use serenity::all::{ChannelId, Context, GuildId, MessageId};
 
 impl_from_row!(

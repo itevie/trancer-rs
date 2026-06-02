@@ -6,11 +6,13 @@ use crate::util::config::CONFIG;
 use crate::util::lang::{currency, englishify_list, item_text};
 use rand::prelude::SliceRandom;
 use rand::{random, Rng};
+use serde::{Deserialize, Serialize};
 use serenity::all::UserId;
 use serenity::client::Context;
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 
+#[derive(Clone, Debug)]
 pub struct RandomRewardItemOptions {
     /// Leave Some(None) for completely random items, otherwise Some(Some(Vec<id, weighht>))
     pub(crate) items: Option<Vec<(u32, f64)>>,
@@ -19,6 +21,7 @@ pub struct RandomRewardItemOptions {
     pub(crate) count: (u32, u32),
 }
 
+#[derive(Clone, Debug)]
 pub struct RandomRewardOptions {
     /// Currency to give (min, max)
     pub(crate) currency: Option<(u32, u32)>,
@@ -66,7 +69,7 @@ impl RandomRewardPresets {
             )),
             items: Some(RandomRewardItemOptions {
                 items: None,
-                count: (1, 7),
+                count: (1, 10),
             }),
         }
     }
@@ -96,7 +99,7 @@ impl RandomRewardPresets {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct RandomRewardResult {
     pub currency: u32,
     /// Vec<(id, amount)>
@@ -114,8 +117,12 @@ pub async fn generate_random_rewards(
     };
 
     if let Some(currency) = options.currency {
-        let mut rng = rand::thread_rng();
-        result.currency = rng.gen_range(currency.0..currency.1);
+        if currency.0 == currency.1 {
+            result.currency = currency.0;
+        } else {
+            let mut rng = rand::thread_rng();
+            result.currency = rng.gen_range(currency.0..currency.1);
+        }
     }
 
     if let Some(items) = options.items {

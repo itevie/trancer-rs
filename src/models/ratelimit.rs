@@ -2,6 +2,7 @@ use crate::database::Database;
 use crate::impl_from_row;
 use chrono::{TimeZone, Utc};
 use rusqlite::Error::QueryReturnedNoRows;
+use serde::{Deserialize, Serialize};
 use serenity::all::UserId;
 use serenity::client::Context;
 

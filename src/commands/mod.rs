@@ -1,7 +1,11 @@
 use crate::cmd_util::arg_parser::{CommandArgumentStruct, PCACV};
 use crate::cmd_util::args::{ArgType, Argument, ArgumentDetails, TrancerArguments};
+use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::{ArgumentError, TrancerError, TrancerResponseType, TrancerRunnerContext};
 use crate::command_argument_struct;
+use crate::models::mission::TrancerMission;
+use rand::rngs::StdRng;
+use rand::{Rng, SeedableRng};
 use serenity::all::{CreateMessage, User};
 use std::collections::HashMap;
 use tracing::error;
@@ -97,14 +101,44 @@ pub fn only_user_args(allow_bots: bool, infer: bool) -> TrancerArguments {
     }
 }
 
-pub async fn reply_response_type(ctx: &TrancerRunnerContext, response: TrancerResponseType) {
+pub async fn reply_response_type(
+    ctx: &TrancerRunnerContext,
+    response: TrancerResponseType,
+    t: TrancerCommandType,
+) {
+    let mut prepend = "".to_string();
+
+    if t == TrancerCommandType::Economy {
+        if let Ok(result) = TrancerMission::check_missions(&ctx).await {
+            let mut rng = StdRng::from_entropy();
+
+            if result.contains("completed") || rng.gen_ratio(1, 5) {
+                prepend += &result;
+            }
+        }
+    }
+
+    if prepend.len() > 0 {
+        prepend = prepend
+            .lines()
+            .map(|x| format!("> {x}"))
+            .collect::<Vec<String>>()
+            .join("\n");
+    }
+
     match response {
-        TrancerResponseType::Content(string) => {
-            // Ignore the error, because if it errors then it doesn't matter
-            // probably likely a timeout issue.
+        TrancerResponseType::Content(mut string) => {
+            if prepend.len() > 0 {
+                string = prepend + "\n\n" + &string;
+            }
+
             let _ = reply!(ctx, CreateMessage::new().content(string.as_str()));
         }
-        TrancerResponseType::Big(big) => {
+        TrancerResponseType::Big(mut big) => {
+            if prepend.len() > 0 {
+                big = big.clone().content(prepend);
+            }
+
             let _ = reply!(ctx, big.clone());
         }
         TrancerResponseType::None => (),

@@ -1,5 +1,6 @@
 use crate::database::Database;
 use crate::impl_from_row;
+use serde::{Deserialize, Serialize};
 use serenity::all::{Context, GuildId, UserId};
 
 impl_from_row!(

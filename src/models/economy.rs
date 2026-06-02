@@ -2,6 +2,7 @@ use crate::database::Database;
 use crate::impl_from_row;
 use rusqlite::Error::QueryReturnedNoRows;
 use rusqlite::ToSql;
+use serde::{Deserialize, Serialize};
 use serenity::all::UserId;
 use serenity::client::Context;
 use std::fmt::Display;

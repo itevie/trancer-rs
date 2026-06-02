@@ -4,6 +4,7 @@ use crate::impl_from_row;
 use crate::trancer_config::all_items::ALL_ITEMS_DEF;
 use once_cell::sync::OnceCell;
 use rusqlite::Error::QueryReturnedNoRows;
+use serde::{Deserialize, Serialize};
 use serenity::client::Context;
 
 impl_from_row!(Item, ItemField {

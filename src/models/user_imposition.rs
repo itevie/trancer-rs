@@ -1,6 +1,7 @@
 use crate::database::Database;
 use crate::impl_from_row;
 use crate::models::user_data::HypnoStatus;
+use serde::{Deserialize, Serialize};
 use serenity::all::{Context, UserId};
 use std::collections::HashMap;
 
