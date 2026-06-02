@@ -5,5 +5,5 @@ pub fn create_embed() -> CreateEmbed {
 }
 
 pub fn base_embed() -> CreateEmbed {
-    CreateEmbed::new().colour((255, 0, 0))
+    CreateEmbed::new().colour((119, 75, 119))
 }
