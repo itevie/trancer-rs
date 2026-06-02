@@ -41,5 +41,15 @@ pub static ALL_PRONOUNS: LazyLock<HashMap<&'static str, PronounSet>> = LazyLock:
                 reflex: "themself",
             },
         ),
+        (
+            "it",
+            PronounSet {
+                sub: "it",
+                obj: "it",
+                poss_adj: "its",
+                poss_prn: "its",
+                reflex: "itself",
+            },
+        ),
     ])
 });
