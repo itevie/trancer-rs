@@ -252,5 +252,13 @@ pub static ALL_DEFINED_BADGES: LazyLock<Vec<DefinedBadge>> = LazyLock::new(|| {
             None,
             |_ctx| Ok(true)
         ),
+        badge!(
+            "newtrancer",
+            "New Trancer",
+            "Used the new trancer in the first month",
+            "👀",
+            None,
+            |_ctx| Ok(true)
+        ),
     ]
 });
