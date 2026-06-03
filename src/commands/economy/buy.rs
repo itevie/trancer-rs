@@ -3,11 +3,10 @@ use crate::cmd_util::args::{ArgType, Argument, ArgumentDetails, TrancerArguments
 use crate::cmd_util::types::TrancerCommandType;
 use crate::cmd_util::{content_response, CommandTrait};
 use crate::cmd_util::{trancer_handler, TrancerDetails};
-use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError, TrancerResponseType};
+use crate::cmd_util::{ArgumentError, TrancerCommand, TrancerError};
 use crate::models::aquired_item::AquiredItem;
-use crate::models::item::{get_item_name, Item};
-use crate::trancer_config::all_recipes::CRAFTING_RECIPES;
-use crate::util::lang::{currency, englishify_list, item_text};
+use crate::models::item::Item;
+use crate::util::lang::currency;
 use crate::{command_argument_struct, command_file};
 use std::collections::HashMap;
 

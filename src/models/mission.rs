@@ -2,7 +2,7 @@ use crate::cmd_util::{TrancerError, TrancerRunnerContext};
 use crate::database::Database;
 use crate::impl_from_row;
 use crate::models::aquired_item::AquiredItem;
-use crate::models::economy::{Economy, MoneyAddReason};
+use crate::models::economy::{Economy, EconomyFields, MoneyAddReason};
 use crate::models::server_settings::ServerSettingsFields;
 use crate::models::user_data::UserData;
 use crate::trancer_config::all_missions::{base_random_rewards, get_defined_missions};
@@ -163,6 +163,14 @@ impl TrancerMission {
                 mission
                     .update_key(&ctx.sy, MissionFields::completed, Utc::now().to_rfc3339())
                     .await?;
+                ctx.economy
+                    .update_key(
+                        &ctx.sy,
+                        EconomyFields::mission_tokens,
+                        ctx.economy.mission_tokens + 1,
+                    )
+                    .await?;
+
                 missions_completed.push(format!(
                     "{}: {}",
                     target_mission.description,

@@ -59,9 +59,9 @@ lottery-ticket[None]: 250, 0, true
 
 ===== Crafting Recipies =====
 
-stone-pickaxe: stick: 1, rock: 3, 
 emerald-pickaxe: stick: 1, emerald: 3, 
 pendulum: stick: 1, emerald: 1, 
+stone-pickaxe: stick: 1, rock: 3, 
 
 ===== Rewards from commands =====
 
