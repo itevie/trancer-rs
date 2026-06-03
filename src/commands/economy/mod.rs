@@ -2,6 +2,7 @@ use crate::cmd_import_map;
 
 mod add_money;
 mod balance;
+mod buy;
 mod craft;
 mod daily;
 mod fish;
@@ -33,5 +34,6 @@ cmd_import_map!(
     recipies,
     work,
     rigged_coinflip,
-    missions
+    missions,
+    buy
 );

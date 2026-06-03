@@ -1,5 +1,6 @@
 use crate::database::Database;
 use crate::impl_from_row;
+use rusqlite::ToSql;
 use serde::{Deserialize, Serialize};
 use serenity::all::UserId;
 use serenity::client::Context;
@@ -61,6 +62,21 @@ impl AquiredItem {
         database.get_many(
             "SELECT * FROM aquired_items WHERE user_id = ?1",
             &[&user_id.to_string()],
+            AquiredItem::from_row,
+        )
+    }
+
+    pub async fn fetch_all_for_by_id(
+        ctx: &Context,
+        user_id: UserId,
+        item_id: u32,
+    ) -> rusqlite::Result<AquiredItem> {
+        let data_lock = ctx.data.read().await;
+        let database = data_lock.get::<Database>().unwrap();
+
+        database.get_one(
+            "SELECT * FROM aquired_items WHERE user_id = ?1 AND item_id = ?2 LIMIT 1",
+            &[&user_id.to_string(), &item_id],
             AquiredItem::from_row,
         )
     }

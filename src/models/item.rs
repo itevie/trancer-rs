@@ -2,6 +2,7 @@ use crate::cmd_util::{generic, TrancerError};
 use crate::database::Database;
 use crate::impl_from_row;
 use crate::trancer_config::all_items::ALL_ITEMS_DEF;
+use crate::util::lang::item_text;
 use once_cell::sync::OnceCell;
 use rusqlite::Error::QueryReturnedNoRows;
 use serde::{Deserialize, Serialize};
@@ -157,5 +158,9 @@ impl Item {
         }
 
         Ok(())
+    }
+
+    pub fn text(&self, amount: u32) -> String {
+        item_text(self.clone(), amount)
     }
 }
