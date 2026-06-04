@@ -9,6 +9,7 @@ mod commands_new;
 mod define;
 mod github;
 mod help;
+mod highest_streaks;
 mod invite;
 mod ping;
 mod profile;
@@ -29,5 +30,6 @@ cmd_import_map!(
     ping,
     profile,
     set_pronoun,
-    streaks
+    streaks,
+    highest_streaks
 );
