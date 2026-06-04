@@ -8,6 +8,7 @@ mod daily;
 mod fish;
 mod leaderboard_money;
 mod list_jobs;
+mod mine;
 mod missions;
 mod pay;
 mod recipies;
@@ -35,5 +36,6 @@ cmd_import_map!(
     work,
     rigged_coinflip,
     missions,
-    buy
+    buy,
+    mine
 );

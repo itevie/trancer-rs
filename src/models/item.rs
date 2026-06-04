@@ -67,6 +67,7 @@ impl Item {
     }
 
     pub fn get_by_name(name: &str) -> Item {
+        println!("Getting item by name: {}", name);
         Item::get_all()
             .iter()
             .find(|x| x.name == name)
@@ -76,6 +77,14 @@ impl Item {
 
     pub fn get_by_id(id: u32) -> Item {
         Item::get_all().iter().find(|x| x.id == id).unwrap().clone()
+    }
+
+    pub fn get_by_tag(tag: String) -> Vec<Item> {
+        Item::get_all()
+            .iter()
+            .filter(|x| x.tag.as_ref() == Some(&tag))
+            .cloned()
+            .collect::<Vec<Item>>()
     }
 
     pub async fn get_all_db(ctx: &Context) -> rusqlite::Result<Vec<Item>> {
