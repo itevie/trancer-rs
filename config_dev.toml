@@ -8,6 +8,7 @@ ignore_most_events = false
 [server]
 id = '1257416273520758814'
 invite_link = 'https://discord.gg/xrjcHcAsj2'
+no_message_handlers = ["1315484267517575168", "1271324224077824051", "1257417603568238684"]
 
 [channels]
 welcomes = "1257417250395263036"

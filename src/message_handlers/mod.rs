@@ -12,10 +12,19 @@ mod trancer_english_commands;
 pub mod xp;
 
 use crate::cmd_util::{TrancerError, TrancerRunnerContext};
+use crate::util::config::CONFIG;
 use tracing::instrument;
 
 #[instrument]
 pub async fn handle_message_handlers(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
+    if CONFIG
+        .server
+        .no_message_handlers
+        .contains(&ctx.channel.id.to_string())
+    {
+        return Ok(());
+    }
+
     counting::handle(ctx).await?;
     streaks::handle(ctx).await?;
     analytics::handle(ctx).await?;

@@ -65,6 +65,7 @@ pub struct TrancerDevBotConfig {
 pub struct TrancerServerConfig {
     pub id: String,
     pub invite_link: String,
+    pub no_message_handlers: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
