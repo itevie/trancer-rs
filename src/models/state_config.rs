@@ -15,17 +15,16 @@ impl StateConfig {
         let data_lock = ctx.data.read().await;
         let db = data_lock.get::<Database>().unwrap();
 
-        match db.get_one("SELECT * FROM config;", &[], StateConfig::from_row) {
+        match db.get_one("SELECT * FROM config LIMIT 1;", &[], StateConfig::from_row) {
             Ok(ok) => ok,
             Err(e) => {
                 println!("{:?}", e);
-                return db
-                    .get_one(
-                        "INSERT INTO config DEFAULT VALUES RETURNING *",
-                        &[],
-                        StateConfig::from_row,
-                    )
-                    .unwrap();
+                db.get_one(
+                    "INSERT INTO config DEFAULT VALUES RETURNING *",
+                    &[],
+                    StateConfig::from_row,
+                )
+                .unwrap()
             }
         }
     }
