@@ -32,14 +32,12 @@ command_file! {
                 .collect::<Result<Vec<_>, _>>()?;
             user_datas.sort_by(|a, b| b.1.cmp(&a.1));
 
-
-
             paginate(PaginationOptions {
                 ctx,
                 embed: create_embed().title("Upcoming Birthdays :birthday:"),
                 page_size: 20,
                 data: PaginationDataType::Description {
-                    data: user_datas.iter().map(|x| format!("**{}**: {} ({})", get_cached_username(x.0.clone()), HumanTime::from(x.1), x.1.format("%Y-%m-%d"))).collect(),
+                    data: user_datas.iter().rev().map(|x| format!("**{}**: {} ({})", get_cached_username(x.0.clone()), HumanTime::from(x.1), x.1.format("%Y-%m-%d"))).collect(),
                     base_description: None,
                 },
 
