@@ -62,6 +62,18 @@ impl QotdQuestion {
         )
     }
 
+    pub async fn unask_questions(ctx: &Context, server_id: GuildId) -> rusqlite::Result<()> {
+        let lock = ctx.data.read().await;
+        let db = lock.get::<Database>().unwrap();
+
+        db.run(
+            "UPDATE qotd_questions SET asked = 0 WHERE server_id = ?1;",
+            &[&server_id.to_string()],
+        )?;
+
+        Ok(())
+    }
+
     pub async fn set_asked(&self, ctx: &Context, asked: bool) -> rusqlite::Result<()> {
         let lock = ctx.data.read().await;
         let db = lock.get::<Database>().unwrap();

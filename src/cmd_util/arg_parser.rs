@@ -1,4 +1,4 @@
-use crate::cmd_util::args::{ArgType, Argument, TrancerArguments};
+use crate::cmd_util::args::{ArgType, Argument, StringArgTypeFlag, TrancerArguments};
 use crate::cmd_util::{ArgumentError, TrancerError, TrancerRunnerContext};
 use crate::util::lang::currency;
 use serenity::all::{User, UserId};
@@ -36,7 +36,7 @@ macro_rules! command_argument_struct {
     };
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ParsedArguments {
     pub args: Vec<String>,
     pub wick: HashMap<String, String>,
@@ -63,6 +63,7 @@ impl PCACV {
         required: bool,
         value: Option<String>,
         ctx: &TrancerRunnerContext,
+        args: ParsedArguments,
     ) -> Result<PCACV, TrancerError> {
         let Some(mut value) = value else {
             return if required {
@@ -161,11 +162,30 @@ impl PCACV {
                     PCACV::OpNumber(Some(ok))
                 })
             }
-            ArgType::String { flags: _ } => Ok(if required {
-                PCACV::String(value)
-            } else {
-                PCACV::OpString(Some(value))
-            }),
+            ArgType::String { ref flags } => {
+                let mut final_value = value;
+
+                if let Some(flags) = flags.clone() {
+                    for flag in flags {
+                        match flag {
+                            StringArgTypeFlag::TakeContent => {
+                                final_value = args.args.join(" ");
+                            }
+                            StringArgTypeFlag::TakeRest => {
+                                return Err(TrancerError::Generic(
+                                    "StringArgTypeFlag::TakeRest not implemented".to_string(),
+                                ))
+                            }
+                        }
+                    }
+                };
+
+                Ok(if required {
+                    PCACV::String(final_value)
+                } else {
+                    PCACV::OpString(Some(final_value))
+                })
+            }
             ArgType::User {
                 allow_bots,
                 infer: _,
@@ -254,7 +274,7 @@ where
                     } else {
                         arg_map.insert(
                             arg.name.clone(),
-                            PCACV::from_arg(arg, required, None, ctx).await?,
+                            PCACV::from_arg(arg, required, None, ctx, args.clone()).await?,
                         );
                         continue;
                     }
@@ -276,7 +296,7 @@ where
 
         arg_map.insert(
             arg.name.clone(),
-            PCACV::from_arg(arg, required, Some(value), ctx).await?,
+            PCACV::from_arg(arg, required, Some(value), ctx, args.clone()).await?,
         );
     }
 

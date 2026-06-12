@@ -18,6 +18,7 @@ mod help;
 mod hypnosis;
 mod images;
 mod items;
+mod qotd;
 mod quotes;
 mod server;
 mod spirals;
@@ -47,7 +48,8 @@ cmd_import_map!(
     quotes,
     swear_jar,
     dawnagotchi,
-    images
+    images,
+    qotd
 );
 
 #[macro_export]

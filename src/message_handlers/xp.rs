@@ -60,7 +60,6 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
         .increment(&ctx.sy, UserDataFields::xp, award as i32)
         .await?;
     let post_level = calculate_level(ctx.user_data.xp + award);
-    println!("{pre_level} {post_level} {award}");
 
     if pre_level != post_level && ctx.server_settings.level_notifications {
         let mut reward: Vec<String> = vec![];
