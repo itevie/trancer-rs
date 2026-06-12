@@ -12,7 +12,7 @@ use serenity::builder::CreateEmbedFooter;
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
         name: "questions".to_string(),
-        t: TrancerCommandType::Economy,
+        t: TrancerCommandType::Qotd,
         description: "Get a list of QOTD questions".to_string(),
         details: TrancerDetails {
             ..Default::default()

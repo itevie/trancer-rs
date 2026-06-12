@@ -22,7 +22,7 @@ command_argument_struct!(SuggestQuestionArgs {
 command_file! {
     TrancerCommand::<SuggestQuestionArgs> {
         name: "suggestquestion".to_string(),
-        t: TrancerCommandType::Economy,
+        t: TrancerCommandType::Qotd,
         description: "Suggest question for the QOTD".to_string(),
         details: TrancerDetails {
             flags: Some(vec![TrancerFlag::AdminOnly]),

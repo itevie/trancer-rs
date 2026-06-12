@@ -14,7 +14,7 @@ use tracing::error;
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
         name: "unaskall".to_string(),
-        t: TrancerCommandType::Economy,
+        t: TrancerCommandType::Qotd,
         description: "Unask all questions".to_string(),
         details: TrancerDetails {
             flags: Some(vec![TrancerFlag::AdminOnly]),
