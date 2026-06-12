@@ -11,7 +11,7 @@ use serde_json::Value;
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
         name: "serversettings".to_string(),
-        t: TrancerCommandType::Qotd,
+        t: TrancerCommandType::Help,
         description: "List all your server's settings".to_string(),
         details: TrancerDetails {
             ..Default::default()
