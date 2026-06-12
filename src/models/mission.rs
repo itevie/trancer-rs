@@ -92,7 +92,6 @@ impl TrancerMission {
             let rewards = base
                 .get(&ms.get(name.as_str()).unwrap().difficulty)
                 .unwrap();
-            println!("{:?}", rewards.clone());
             let reward = generate_random_rewards(ctx, rewards.clone()).await?;
 
             let reward_json = match serde_json::to_string(&reward) {

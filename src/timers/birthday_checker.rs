@@ -9,7 +9,6 @@ use tracing::instrument;
 
 #[instrument]
 pub async fn run(ctx: Context) -> Result<(), TrancerError> {
-    println!("{}", ServerSettings::fetch_all(&ctx).await?.len());
     for server_settings in ServerSettings::fetch_all(&ctx).await? {
         let Some(channel_id) = server_settings.birthday_channel_id else {
             continue;

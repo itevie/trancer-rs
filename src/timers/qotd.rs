@@ -23,16 +23,17 @@ pub async fn run(ctx: Context) -> Result<(), TrancerError> {
 
     let mut config = StateConfig::fetch(&ctx).await;
 
-    println!("{:?} {}", config.last_qotd, today);
     if let Some(last) = &config.last_qotd {
         if let Ok(last_dt) = last.parse::<chrono::DateTime<Local>>() {
             if last_dt.date_naive() == today {
+                println!("QOTD Has already been sent today");
                 return Ok(());
             }
         }
     }
 
     if now.hour() != CONFIG.qotd.hour {
+        println!("QOTD hour is incorrect");
         return Ok(());
     }
 
@@ -73,7 +74,6 @@ pub async fn run(ctx: Context) -> Result<(), TrancerError> {
     config
         .update_key(&ctx, StateConfigFields::last_qotd, Some(now.to_rfc3339()))
         .await?;
-    println!("{:?}", StateConfig::fetch(&ctx).await);
 
     channel
         .send_message(

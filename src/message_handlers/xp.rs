@@ -40,8 +40,6 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
     let now = Utc::now();
     let last = xp.lock().unwrap().get(&ctx.user_data.user_id).cloned();
 
-    println!("{} {:?}", now.to_rfc3339(), last.map(|x| x.to_rfc3339()));
-
     // Time between = "120000"
     if let Some(last) = last {
         if now.timestamp() - last.timestamp() < CONFIG.xp.time_between as i64 {
@@ -70,7 +68,6 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
             ctx.economy
                 .add_money(&ctx.sy, amount, Some(MoneyAddReason::Messaging))
                 .await?;
-            println!("Add {}", amount);
         }
 
         if let Some(level_role) =

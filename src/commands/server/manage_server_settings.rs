@@ -131,23 +131,24 @@ command_file! {
         },
 
         handler: trancer_handler!(|ctx, args| {
+            let settings = settings_registry();
+
             let Some(key) = args.key else {
                 return Ok(TrancerResponseType::Big(
                     CreateMessage::new()
                         .embed(
                             create_embed()
                                 .title("List of settings")
+                                .description(settings.keys().cloned().collect::<Vec<_>>().join("\n"))
                         )
                 ));
             };
-
-            let settings = settings_registry();
 
             if !settings.contains_key(&key.as_str()) {
                 return Err(TrancerError::NonScary("That is not a valid setting!".to_string()));
             }
 
-            let setting = settings.get(&key.as_str()).unwrap().clone();
+            let setting = settings.get(&key.as_str()).unwrap();
 
             let Some(value) = args.value else {
                 return Ok(TrancerResponseType::Big(
