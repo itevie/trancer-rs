@@ -54,7 +54,7 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
     ctx.server_settings
         .update_key(
             &ctx.sy,
-            ServerSettingsFields::last_bump,
+            ServerSettingsFields::last_bumper,
             ctx.user_id.to_string(),
         )
         .await?;
