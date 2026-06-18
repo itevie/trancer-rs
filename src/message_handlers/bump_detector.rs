@@ -51,6 +51,13 @@ pub async fn handle(ctx: &TrancerRunnerContext) -> Result<(), TrancerError> {
             Local::now().timestamp(),
         )
         .await?;
+    ctx.server_settings
+        .update_key(
+            &ctx.sy,
+            ServerSettingsFields::last_bump,
+            ctx.user_id.to_string(),
+        )
+        .await?;
 
     let reward = if ctx.server_settings.server_id == CONFIG.server.id {
         let result = generate_random_rewards(
