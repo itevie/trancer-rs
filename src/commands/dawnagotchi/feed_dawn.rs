@@ -10,7 +10,7 @@ use crate::models::dawnagotchi::Dawnagotchi;
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
         name: "feed".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Dawnagotchi,
         description: "Feed your Dawnagotchi!".to_string(),
         details: TrancerDetails {
             ..Default::default()

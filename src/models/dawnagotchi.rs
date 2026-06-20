@@ -48,6 +48,21 @@ impl Dawnagotchi {
             Err(e) => Err(e),
         }
     }
+    pub async fn fetch_for_revival(ctx: &Context, user_id: UserId) -> rusqlite::Result<Self> {
+        let data_lock = ctx.data.read().await;
+        let db = data_lock.get::<Database>().unwrap();
+
+        let result = db.get_one(
+            "SELECT * FROM dawnagotchi WHERE owner_id = ?1 ORDER BY id DESC LIMIT 1;",
+            &[&user_id.to_string()],
+            Dawnagotchi::from_row,
+        );
+
+        match result {
+            Ok(result) => Ok(result),
+            Err(e) => Err(e),
+        }
+    }
 
     pub async fn remove(&self, ctx: &Context) -> rusqlite::Result<()> {
         let data_lock = ctx.data.read().await;
@@ -57,6 +72,18 @@ impl Dawnagotchi {
             "UPDATE dawnagotchi SET alive = false WHERE owner_id = ?",
             &[&self.owner_id],
         )?;
+        Ok(())
+    }
+
+    pub async fn revive(&self, ctx: &Context) -> rusqlite::Result<()> {
+        let data_lock = ctx.data.read().await;
+        let db = data_lock.get::<Database>().unwrap();
+
+        db.run(
+            "UPDATE dawnagotchi SET alive = true, next_feed = ?2, next_drink = ?2, next_play = ?2 WHERE id = ?1",
+            &[&self.id, &Utc::now().timestamp_millis()]
+        )?;
+
         Ok(())
     }
 

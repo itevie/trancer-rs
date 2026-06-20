@@ -18,7 +18,7 @@ use std::time::Duration;
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
         name: "dawnagotchi".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Dawnagotchi,
         description: "See your Dawnagotchi!".to_string(),
         details: TrancerDetails {
             aliases: Some(vec!["dawn".to_string(), "getdawn".to_string(), "dawndet".to_string()]),

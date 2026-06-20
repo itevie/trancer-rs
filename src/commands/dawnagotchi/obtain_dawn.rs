@@ -9,7 +9,7 @@ use crate::models::dawnagotchi::Dawnagotchi;
 command_file! {
     TrancerCommand::<CommandHasNoArgs> {
         name: "obtaindawnagotchi".to_string(),
-        t: TrancerCommandType::Help,
+        t: TrancerCommandType::Dawnagotchi,
         description: "Start your adventure with the adorable Dawnagotchi!".to_string(),
         details: TrancerDetails {
             aliases: Some(vec!["obtaindawn".to_string(), "setupdawnagotchi".to_string(), "setupdawn".to_string()]),
