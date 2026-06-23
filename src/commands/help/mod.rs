@@ -11,6 +11,7 @@ mod github;
 mod help;
 mod highest_streaks;
 mod invite;
+mod mcauth;
 mod ping;
 mod profile;
 mod set_pronoun;
@@ -31,5 +32,6 @@ cmd_import_map!(
     profile,
     set_pronoun,
     streaks,
-    highest_streaks
+    highest_streaks,
+    mcauth
 );
